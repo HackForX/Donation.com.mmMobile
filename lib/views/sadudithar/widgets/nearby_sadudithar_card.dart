@@ -1,3 +1,4 @@
+import 'package:donation_com_mm_v2/routes/app_pages.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -18,9 +19,9 @@ class NearbySaduditarCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () => Get.to(() =>  SaduditharDetailsView(
-        sadudithar: sadudithar,
-      )),
+      onTap: () =>Get.toNamed(Routes.saduditharDetails,arguments: {
+        'sadudithar':sadudithar
+      }),
       child: Container(
         margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
         decoration: BoxDecoration(
@@ -66,7 +67,7 @@ class NearbySaduditarCard extends StatelessWidget {
                     color:  ColorApp.mainColor,
                   ),
                   child: Text(
-                    "1.2K views / 100 likes",
+                    "${sadudithar.viewCount} views / ${sadudithar.likeCount} likes",
                     style: Theme.of(context).textTheme.labelSmall!.copyWith(
                         fontFamily: "English",
                         fontWeight: FontWeight.w600,
@@ -79,7 +80,7 @@ class NearbySaduditarCard extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.only(top: 8.0, left: 10),
             child: Text(
-              DateFormat('dd.MM.yyyy').format(DateTime.parse(sadudithar.createdAt)),
+             sadudithar.eventDate,
               style: Theme.of(context)
                   .textTheme
                   .labelSmall!
@@ -109,7 +110,7 @@ class NearbySaduditarCard extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.only(left: 10.0, top: 4, bottom: 8),
             child: Text(
-              "လူ${sadudithar.estimatedQuantity}စာ",
+              "${sadudithar.estimatedQuantity}ဦး",
               style: Theme.of(context)
                   .textTheme
                   .labelSmall!

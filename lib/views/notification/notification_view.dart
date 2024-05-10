@@ -1,3 +1,4 @@
+import 'package:donation_com_mm_v2/controllers/notification_controller.dart';
 import 'package:flutter/material.dart';
 
 
@@ -7,8 +8,8 @@ import 'package:intl/intl.dart';
 
 import '../drawer/drawer_view.dart';
 
-class NotificationView extends StatelessWidget {
-  NotificationView({super.key});
+class NotificationView extends GetView<NotificationController> {
+  const NotificationView({super.key});
 
 
 
@@ -19,13 +20,16 @@ class NotificationView extends StatelessWidget {
         appBar: AppBar(
           title: const Text("အသိပေးချက်များ"),
         ),
-        body:Container(
+        body:Obx(()=>Container(
                   decoration: const BoxDecoration(
                     color: Colors.white10,
                   ),
                   child: ListView.builder(
-                    itemCount: 3,
+                    itemCount: controller.notifications.length,
                     itemBuilder: (BuildContext context, int index) {
+                      if(controller.notifications.isEmpty){
+                        return const Center(child: Text("အသိပေးချက်များမရှိသေးပါ"),);
+                      }
                       return Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: ListTile(
@@ -36,21 +40,21 @@ class NotificationView extends StatelessWidget {
                           // leading: CircleAvatar(
                           //     backgroundColor: primaryColor.withOpacity(0.9),
                           //     child: AppConstants.notiIcon),
-                          subtitle: Padding(
+                          subtitle:  Padding(
                             padding: const EdgeInsets.only(top: 7.0),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                               "Test Notification",
+                               controller.notifications[index].body,
                                   style: const TextStyle(
                                       color: Colors.grey,
                                       fontSize: 12,
                                       fontWeight: FontWeight.w500),
                                 ),
                                 const SizedBox(height: 5),
-                                Text(
-                                 "12/2/33",
+                                 Text(
+                                DateFormat('MMM d, y').format(DateTime.parse( controller.notifications[index].createdAt))   ,
                                   style: const TextStyle(
                                     fontSize: 11.0,
                                     fontWeight: FontWeight.normal,
@@ -60,8 +64,9 @@ class NotificationView extends StatelessWidget {
                               ],
                             ),
                           ),
-                          title: Text(
-                          "Test Title",
+                          title:  Text(
+                                                         controller.notifications[index].title,
+
                             style: const TextStyle(
                                 color: Colors.black,
                                 fontSize: 15,
@@ -71,6 +76,6 @@ class NotificationView extends StatelessWidget {
                       );
                     },
                   ),
-                ));
+                )));
   }
 }

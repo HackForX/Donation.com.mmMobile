@@ -373,7 +373,8 @@ class AuthFormWidget extends StatelessWidget {
                   const SizedBox(height: 15),
                   InkWell(
                     onTap: () {
-                      Get.to(() => LoginView());
+                                               Get.offAllNamed(Routes.login);
+
                     },
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,

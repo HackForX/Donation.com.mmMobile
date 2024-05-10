@@ -1,3 +1,5 @@
+import 'package:donation_com_mm_v2/models/sadudithar_comment_response.dart';
+
 class SaduditharResponse {
   final bool status;
   final String message;
@@ -17,6 +19,7 @@ class SaduditharResponse {
 class Sadudithar {
   final int id;
   final String title;
+  final String? description;
   final Category category;
   final City city;
   final Township township;
@@ -25,7 +28,7 @@ class Sadudithar {
   final int estimatedAmount;
   final String estimatedTime;
   final String estimatedQuantity;
-  final dynamic? actualStartTime;
+  final dynamic actualStartTime;
   final dynamic actualEndTime;
   final String eventDate;
   final int isOpen;
@@ -34,14 +37,19 @@ class Sadudithar {
   final String phone;
   final String image;
   final String status;
-  final dynamic latitude;
-  final dynamic longitude;
+  final double? latitude;
+  final double? longitude;
+  final int commentCount;
+  final int likeCount;
+  final int viewCount;
+  final SaduditharLike? like;
   final String createdAt;
   final String updatedAt;
 
   Sadudithar({
     required this.id,
     required this.title,
+     this.description,
     required this.category,
     required this.city,
     required this.township,
@@ -59,8 +67,12 @@ class Sadudithar {
     required this.phone,
     required this.image,
     required this.status,
-    required this.latitude,
-    required this.longitude,
+     this.latitude,
+     this.longitude,
+    required this.commentCount,
+    required this.likeCount,
+    required this.viewCount,
+    this.like,
     required this.createdAt,
     required this.updatedAt,
   });
@@ -69,6 +81,7 @@ class Sadudithar {
     return Sadudithar(
       id: json['id'],
       title: json['title'],
+      description: json['description'],
       category: Category.fromJson(json['category']),
       city: City.fromJson(json['city']),
       township: Township.fromJson(json['township']),
@@ -88,6 +101,10 @@ class Sadudithar {
       status: json['status'],
       latitude: json['latitude'],
       longitude: json['longitude'],
+      commentCount: json['comment_count'],
+      likeCount: json['like_count'],
+      viewCount: json['view_count'],
+      like: json['like']==null?null:SaduditharLike.fromJson(json['like']),
       createdAt: json['created_at'],
       updatedAt: json['updated_at'],
     );

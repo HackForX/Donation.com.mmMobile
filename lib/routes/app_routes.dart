@@ -13,9 +13,14 @@ abstract class Routes {
   static const contactInfo = _Paths.contactInfo;
   static const createNatebanzay = _Paths.createNatebanzay;
   static const createSadudithar = _Paths.createSadudithar;
-
   static const editNatebanzay = _Paths.editNatebanzay;
+  static const viewNatebanzayRequests = _Paths.viewNatebanzayRequests;
+  static const saduditharDetails=_Paths.saduditharDetails;
+  static const saduditharComments=_Paths.saduditharComments;
 
+
+
+static const chat=_Paths.chat;
   static const donorRegister = _Paths.donorRegister;
   static const guide = _Paths.guide;
 
@@ -35,11 +40,20 @@ abstract class _Paths {
   static const contactInfo = '/contactInfo';
   static const createNatebanzay = '/createNatebanzay';
   static const createSadudithar = '/createSadudithar';
-
+static const viewNatebanzayRequests="/viewNatebanzayRequests";
   static const editNatebanzay = '/editNatebanzay';
 
   static const donorRegister = '/donorRegister';
   static const guide = '/guide';
+  static const chat = '/chat';
+
+
+static const saduditharDetails="/saduditharDetails";
+static const saduditharComments="/saduditharComments";
+
+
+
+
 
 
 

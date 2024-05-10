@@ -1,3 +1,4 @@
+import 'package:donation_com_mm_v2/controllers/create_natebanzay_controller.dart';
 import 'package:donation_com_mm_v2/controllers/home_controller.dart';
 import 'package:donation_com_mm_v2/models/item_response.dart';
 import 'package:dropdown_overlay/dropdown_overlay.dart';
@@ -10,7 +11,7 @@ class ItemDropdown extends StatelessWidget {
 
     const ItemDropdown({super.key,required this.controller});
  
-final HomeController controller;
+final CreateNatebanzayController controller;
   @override
   Widget build(BuildContext context) {
 
@@ -53,8 +54,8 @@ final HomeController controller;
                   ],
                 ),
               ),
-            menuPosition: const DropdownMenuPosition(
-              offset: Offset(0, 10),
+        menuPosition: const DropdownMenuPosition(
+              offset: Offset(30, -100),
             ),
             menuConstraints: const BoxConstraints(
               maxHeight: 300,
@@ -66,13 +67,13 @@ final HomeController controller;
               },
               child: Card(
                 elevation: 0,
-                color: item.selected ? ColorApp.mainColor : ColorApp.bgColorGrey,
+                  color: ColorApp.mainColor,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(4),
                 ),
                 child: Padding(
                   padding: const EdgeInsets.all(8),
-                  child: Text(item.value.name,style:  TextStyle(color: item.selected?ColorApp.white:ColorApp.dark),),
+                 child: Text(item.value.name,style:  TextStyle(color: item.selected?ColorApp.secondaryColor:ColorApp.white),),
                 ),
               ),
             ),

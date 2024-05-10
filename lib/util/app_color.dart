@@ -10,6 +10,8 @@ class ColorApp {
   static const Color redColor = Color(0xFFFF3B30);
   static const Color lipstick = Color(0xFFd7143a);
   static const Color blue = Color.fromARGB(255, 52, 10, 169);
+  static const Color green =Color.fromARGB(255, 13, 180, 105);
+
 
   static const Color dark = Color(0xFF424242);
   static const Color white = Color(0xFFf6f6f6);

@@ -50,6 +50,10 @@ class RequestNatebanzayController extends GetxController{
       },
 
       onError: (error) {
+        if(error.statusCode==422){
+        ToastHelper.showErrorToast(context,error.response!.data["message"]);
+          
+        }
         apiCallStatus = ApiCallStatus.error;
   
         update();

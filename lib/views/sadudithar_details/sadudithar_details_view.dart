@@ -1,4 +1,7 @@
+import 'package:donation_com_mm_v2/controllers/sadudithar_details_controller.dart';
+import 'package:donation_com_mm_v2/core/api_call_status.dart';
 import 'package:donation_com_mm_v2/models/sadudithar_response.dart';
+import 'package:donation_com_mm_v2/routes/app_pages.dart';
 import 'package:donation_com_mm_v2/util/app_color.dart';
 import 'package:donation_com_mm_v2/util/assets_path.dart';
 import 'package:donation_com_mm_v2/views/drawer/drawer_view.dart';
@@ -8,41 +11,53 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 
 import 'package:get/get.dart';
 import 'package:html/parser.dart' show parse;
+import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../sadudithar/widgets/sadidithar_map_view.dart';
 
 
-class SaduditharDetailsView extends StatelessWidget {
-  final Sadudithar sadudithar;
-  // final String id;
-  const SaduditharDetailsView({
+
+class SaduditharDetailsView extends GetView<SaduditharDetailsController> {
+
+
+
+   SaduditharDetailsView({
     super.key,
-    required this.sadudithar
+
   });
+
+  final sadudithar=Get.arguments['sadudithar'];
 
   // final HomeController controller = Get.find<HomeController>();
 
   @override
   Widget build(BuildContext context) {
-    // WidgetsBinding.instance.addPostFrameCallback((_) {
-    //   controller.getDonationDetails(id);
-    //   controller.toggleView(id);
-    // });
-    return Scaffold(
+
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      controller.getDetails(sadudithar.id);
+
+      controller.getComments(sadudithar.id);
+      controller.view(sadudithar.id, context);
+    
+    });
+ 
+    return  Scaffold(
       drawer:  DrawerView(),
       appBar: AppBar(
-        actions: const [
-          // ItemDetailsHeartButtonWidget(
-          //   controller: controller,
-          // )
-        ],
+     
         title: const Text("အသေးစိတ်"),
+       
       ),
-      body: ListView(
+      body:Obx(() {
+        if(controller.sadudithar==null){
+          return const Center(child: CircularProgressIndicator(),);
+        }
+        return ListView(
         padding: const EdgeInsets.symmetric(horizontal: 13, vertical: 10),
         children: [
            SaduditharImageWidget(
-            sadudithar: sadudithar,
+            sadudithar: controller.sadudithar!,
           ),
           const SizedBox(
             height: 25,
@@ -54,7 +69,7 @@ class SaduditharDetailsView extends StatelessWidget {
                 child: Padding(
                   padding: const EdgeInsets.only(left: 15.0),
                   child: Text(
-                    "${sadudithar.user.name} မှ လှူဒါန်းသည်",
+                    "${controller.sadudithar!.user.name} မှ လှူဒါန်းသည်",
                     style: Theme.of(context).textTheme.labelLarge!.copyWith(
                         fontFamily: "Myanmar",
                         fontWeight: FontWeight.w600,
@@ -62,14 +77,17 @@ class SaduditharDetailsView extends StatelessWidget {
                   ),
                 ),
               ),
-              Expanded(
+              
+           Expanded(
                 child: GestureDetector(
-                  child: Image.asset(
-                    IconPath.likeIcon,
+                  child: Icon(
+                controller.sadudithar!.like!=null?Icons.favorite:Icons.favorite_outline,
                     color:ColorApp.mainColor,
-                    height: 23,
+                    size: 23,
                   ),
-                  onTap: () {},
+                  onTap: () {
+                    controller.like(sadudithar.id, context);
+                  },
                 ),
               ),
             ],
@@ -77,7 +95,7 @@ class SaduditharDetailsView extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.only(left: 15.0, top: 12),
             child: Text(
-              "Dec 12,2023 ${sadudithar.estimatedTime}",
+              "Dec 12,2023 ${controller.sadudithar!.estimatedTime}",
               style: Theme.of(context).textTheme.labelLarge!.copyWith(
                   fontFamily: "Myanmar",
                   fontWeight: FontWeight.w200,
@@ -91,7 +109,7 @@ class SaduditharDetailsView extends StatelessWidget {
                 Expanded(
                   flex: 8,
                   child: Text(
-                sadudithar.title,
+                controller.sadudithar!.title,
                     style: Theme.of(context).textTheme.titleLarge!.copyWith(
                         fontFamily: "Myanmar",
                         fontWeight: FontWeight.w700,
@@ -101,7 +119,7 @@ class SaduditharDetailsView extends StatelessWidget {
                 const Spacer(),
                 Image.asset(
                                       IconPath.viewIcon,
-
+      
                   height: 20,
                   color: ColorApp.dark,
                 ),
@@ -109,7 +127,7 @@ class SaduditharDetailsView extends StatelessWidget {
                   width: 7,
                 ),
                 Text(
-                  "1.2K",
+                  controller.sadudithar!.viewCount.toString(),
                   style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                       fontWeight: FontWeight.w500, color: ColorApp.dark),
                 ),
@@ -118,7 +136,7 @@ class SaduditharDetailsView extends StatelessWidget {
                 ),
                 Image.asset(
                                    IconPath.commentIcon,
-
+      
                   height: 18,
                   color: ColorApp.dark,
                 ),
@@ -126,7 +144,7 @@ class SaduditharDetailsView extends StatelessWidget {
                   width: 7,
                 ),
                 Text(
-                  "1K",
+               controller.sadudithar!.commentCount.toString(),
                   style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                       fontWeight: FontWeight.w500, color: ColorApp.dark),
                 ),
@@ -142,7 +160,7 @@ class SaduditharDetailsView extends StatelessWidget {
                   width: 7,
                 ),
                 Text(
-                  "100",
+              controller.sadudithar!.likeCount.toString(),
                   style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                       fontWeight: FontWeight.w500, color: ColorApp.dark),
                 )
@@ -152,7 +170,7 @@ class SaduditharDetailsView extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.only(left: 23.0, top: 10),
             child: Text(
-              "စတုဒိသာအစီအစဉ်အသေးစိတ် - ၈နာရီမှ ၁၀နာရီထိ ကျွေးမွေးပါမည်",
+            controller.sadudithar!.description??"",
               style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                   fontFamily: "Myanmar",
                   fontWeight: FontWeight.w400,
@@ -160,7 +178,31 @@ class SaduditharDetailsView extends StatelessWidget {
             ),
           ),
           const SizedBox(
-            height: 30,
+            height: 10,
+          ),
+   Obx(()=>         controller.sadudithar!.latitude!=null||controller.sadudithar!.longitude!=null?  InkWell(
+    onTap:() {
+      Get.to(()=>SaduditharMapView(latitude: controller.sadudithar!.latitude??0.0, longitude: controller.sadudithar!.longitude??0.0));
+    },
+     child: Container(
+                margin: const EdgeInsets.symmetric(horizontal: 10),
+                padding: const EdgeInsets.symmetric(horizontal: 10),
+                height: 40,
+                decoration: BoxDecoration(
+                  color: ColorApp.mainColor,
+                  borderRadius: const BorderRadius.all(Radius.circular(10))
+                ),
+                child: Row(
+                children: [
+                   Text("မြေပုံတွင်ကြည့်မည်",style: TextStyle(color: ColorApp.secondaryColor,fontWeight: FontWeight.w400,fontSize: 12),),
+                   const Spacer()
+     ,             Icon(Icons.map,color:ColorApp.secondaryColor)
+                ],
+                          ),
+              ),
+   ):const SizedBox(),),
+               const SizedBox(
+            height: 24,
           ),
           Row(
             children: [
@@ -192,7 +234,7 @@ class SaduditharDetailsView extends StatelessWidget {
                         child: Container(
                           alignment: Alignment.center,
                           child: Text(
-                          sadudithar.category.name,
+                          controller.sadudithar!.category.name,
                           style: Theme.of(context)
                                 .textTheme
                                 .labelLarge!
@@ -235,7 +277,7 @@ class SaduditharDetailsView extends StatelessWidget {
                       Expanded(
                         flex: 2,
                         child: Text(
-                         sadudithar.estimatedAmount.toString(),
+                         controller.sadudithar!.estimatedQuantity.toString(),
                           style: Theme.of(context)
                               .textTheme
                               .labelLarge!
@@ -277,7 +319,7 @@ class SaduditharDetailsView extends StatelessWidget {
                       Expanded(
                         flex: 2,
                         child: Text(
-                          sadudithar.address,
+                          controller.sadudithar!.address,
                           style: Theme.of(context)
                               .textTheme
                               .labelLarge!
@@ -305,15 +347,20 @@ class SaduditharDetailsView extends StatelessWidget {
                   ),
             ),
           ),
-          Container(
+        ListView.builder(
+      itemCount:controller.comments.length<5?controller.comments.length:5 ,
+      shrinkWrap: true,
+      primary: false,
+      itemBuilder: (BuildContext context, int index) {
+        return        Container(
             padding: const EdgeInsets.only(top: 18, left: 15),
             margin: const EdgeInsets.symmetric(horizontal: 5, vertical: 14),
             decoration: const BoxDecoration(color: ColorApp.bgColor),
             child: Row(
               children: [
-                const CircleAvatar(
+                 const CircleAvatar(
                   radius: 30,
-                  backgroundImage: AssetImage("assets/images/profile.jpg"),
+                  backgroundImage: AssetImage(ImagePath.profile),
                 ),
                 const SizedBox(
                   width: 10,
@@ -325,7 +372,8 @@ class SaduditharDetailsView extends StatelessWidget {
                       Row(
                         children: [
                           Text(
-                            "Dec 12,2023",
+                             
+                            DateFormat('MMM d, y').format(DateTime.parse( controller.comments[index].createdAt))   ,
                             style: Theme.of(context)
                                 .textTheme
                                 .labelSmall!
@@ -338,7 +386,7 @@ class SaduditharDetailsView extends StatelessWidget {
                             width: 15,
                           ),
                           Text(
-                            "Nay Yair Linn",
+                           controller.comments[index].user.name,
                             style: Theme.of(context)
                                 .textTheme
                                 .labelSmall!
@@ -353,7 +401,7 @@ class SaduditharDetailsView extends StatelessWidget {
                         height: 7,
                       ),
                       Text(
-                        "ကျေးဇူးအများကြီးတင်ပါသည်ဗျာ လှူဒါန်းပေးလို့ ကျန်းမာပါစေ",
+                       controller.comments[index].comment,
                         style: Theme.of(context).textTheme.labelLarge!.copyWith(
                             fontWeight: FontWeight.w500,
                             color: ColorApp.dark,
@@ -364,81 +412,25 @@ class SaduditharDetailsView extends StatelessWidget {
                 ),
               ],
             ),
-          ),
-          Container(
-            padding: const EdgeInsets.only(top: 5, left: 15),
-            margin: const EdgeInsets.symmetric(horizontal: 5, vertical: 14),
-            decoration: const BoxDecoration(color: ColorApp.bgColor),
-            child: Row(
-              children: [
-                const CircleAvatar(
-                  radius: 30,
-                  backgroundImage: AssetImage("assets/images/profile.jpg"),
-                ),
-                const SizedBox(
-                  width: 10,
-                ),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        children: [
-                          Text(
-                            "Dec 12,2023",
-                            style: Theme.of(context)
-                                .textTheme
-                                .labelSmall!
-                                .copyWith(
-                                    fontWeight: FontWeight.w500,
-                                    color: ColorApp.dark,
-                                    fontFamily: "English"),
-                          ),
-                          const SizedBox(
-                            width: 15,
-                          ),
-                          Text(
-                            "Nyi Ye Lwin",
-                            style: Theme.of(context)
-                                .textTheme
-                                .labelSmall!
-                                .copyWith(
-                                    fontWeight: FontWeight.w500,
-                                    color: ColorApp.dark,
-                                    fontFamily: "English"),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(
-                        height: 7,
-                      ),
-                      Text(
-                        "Arigatou gozahmai",
-                        style: Theme.of(context).textTheme.labelLarge!.copyWith(
-                            fontWeight: FontWeight.w500,
-                            color: ColorApp.dark,
-                            fontFamily: "English"),
-                      )
-                    ],
-                  ),
-                ),
-              ],
-            ),
+          );
+      },
           )
+          
         ],
-      ),
+      );
+      }),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       floatingActionButton: Padding(
         padding: const EdgeInsets.only(bottom: 20.0, right: 20),
         child: FloatingActionButton(
             backgroundColor: ColorApp.mainColor,
             onPressed: () {
-              // launchMap(
-              //     controller.donationDetailsStream.value!.mapAddress ?? '');
-              // Get.to(() => const MyMapView());
+              Get.toNamed(Routes.saduditharComments,arguments: {
+                'sadudithar_id':sadudithar.id,
+              });
             },
             child: Image.asset(
-              "assets/images/pin.png",
+        IconPath.commentIcon,
               color: ColorApp.white,
               height: 24,
             )),

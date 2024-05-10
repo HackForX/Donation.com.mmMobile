@@ -23,124 +23,130 @@ class NateBanZayView extends GetView<HomeController> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-           floatingActionButton: FloatingActionButton.extended(
-          backgroundColor: ColorApp.mainColor,
-          elevation: 1,
-          onPressed: () {
-            Get.toNamed(Routes.createNatebanzay);
-          },
-          label: Text("ပစ္စည်းလှူမည်",
-              style: Theme.of(context).textTheme.titleMedium!.copyWith(
+    return RefreshIndicator(
+        onRefresh: () async{
+        controller.getNatebanzays();
+      },
+      child: Scaffold(
+             floatingActionButton: FloatingActionButton.extended(
+            backgroundColor: ColorApp.mainColor,
+            elevation: 1,
+            onPressed: () {
+              Get.toNamed(Routes.createNatebanzay);
+            },
+            label: Text("ပစ္စည်းလှူမည်",
+                style: Theme.of(context).textTheme.titleMedium!.copyWith(
+                    color: ColorApp.white,
+                    fontWeight: FontWeight.w500,
+                    fontFamily: "Myanmar")),
+            icon: Padding(
+                padding: const EdgeInsets.all(5.0),
+                child: Image.asset(
+                 IconPath.editIcon,
+                  height: 22,
                   color: ColorApp.white,
-                  fontWeight: FontWeight.w500,
-                  fontFamily: "Myanmar")),
-          icon: Padding(
-              padding: const EdgeInsets.all(5.0),
-              child: Image.asset(
-               IconPath.editIcon,
-                height: 22,
-                color: ColorApp.white,
-              ))),
-      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-      drawer:  DrawerView(),
-      appBar: AppBar(
-        title: const Text("နိဗ္ဗာန်စျေး"),
-      ),
-      body: Obx(()=>ListView(children: [
-        Padding(
-          padding: const EdgeInsets.only(left: 16.0, top: 20, right: 16),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text("အနီးအနားတွင်ရှိသော",
-                  style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                      fontWeight: FontWeight.w600, fontFamily: "Myanmar")),
-              Text("အားလုံးကြည့်မည်",
-                  style: Theme.of(context).textTheme.labelMedium!.copyWith(
-                      color: ColorApp.dark,
-                      fontWeight: FontWeight.w500,
-                      fontFamily: "Myanmar")),
-            ],
+                ))),
+        floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+        drawer:  DrawerView(),
+        appBar: AppBar(
+          title: const Text("နိဗ္ဗာန်စျေး"),
+        ),
+        body: Obx(()=>ListView(children: [
+          Padding(
+            padding: const EdgeInsets.only(left: 16.0, top: 20, right: 16),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text("အနီးအနားတွင်ရှိသော",
+                    style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                        fontWeight: FontWeight.w600, fontFamily: "Myanmar")),
+                Text("အားလုံးကြည့်မည်",
+                    style: Theme.of(context).textTheme.labelMedium!.copyWith(
+                        color: ColorApp.dark,
+                        fontWeight: FontWeight.w500,
+                        fontFamily: "Myanmar")),
+              ],
+            ),
           ),
-        ),
-        const SizedBox(
-          height: 10,
-        ),
-         SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: Row(
-            children:controller.natebanzays.map((natebanzay) =>    NatebanzayCard(natebanzay: natebanzay,requestNatebanzayController: _requestNatebanzayController,), ).toList()
+          const SizedBox(
+            height: 10,
           ),
-        ),
-        Padding(
-          padding: const EdgeInsets.only(left: 16.0, top: 20, right: 16),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text("အမျိုးအစားအလိုက်",
-                  style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                      fontWeight: FontWeight.w600, fontFamily: "Myanmar")),
-              Text("အားလုံးကြည့်မည်",
-                  style: Theme.of(context).textTheme.labelMedium!.copyWith(
-                      color: ColorApp.dark,
-                      fontWeight: FontWeight.w500,
-                      fontFamily: "Myanmar")),
-            ],
-          ),
-        ),
-        const SizedBox(
-          height: 10,
-        ),
-         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 10.0),
-          child: SingleChildScrollView(
+           SingleChildScrollView(
             scrollDirection: Axis.horizontal,
             child: Row(
-              
-              children: controller.items.map((item) =>   InkWell(
-              onTap: (){
-                controller.setItem(item);
-              },
-              child: ItemWidget(
-                  name: item.name,
-                  isSelected: item==controller.selectedItem,
-                ),
-            ), ).toList()),
+              children:controller.natebanzays.map((natebanzay) =>    NatebanzayCard(natebanzay: natebanzay,requestNatebanzayController: _requestNatebanzayController,), ).toList()
+            ),
           ),
-        ),
-        
-
-        const SizedBox(
-          height: 10,
-        ),
-        ItemNatebanzaysList(homeController:controller, requestNatebanzayController: _requestNatebanzayController),
-        Padding(
-          padding: const EdgeInsets.only(left: 16.0, top: 20, right: 16),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text("နေရာအလိုက်",
-                  style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                      fontWeight: FontWeight.w600, fontFamily: "Myanmar")),
-              Text("အားလုံးကြည့်မည်",
-                  style: Theme.of(context).textTheme.labelMedium!.copyWith(
-                      color: ColorApp.dark,
-                      fontWeight: FontWeight.w500,
-                      fontFamily: "Myanmar")),
-            ],
+          Padding(
+            padding: const EdgeInsets.only(left: 16.0, top: 20, right: 16),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text("အမျိုးအစားအလိုက်",
+                    style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                        fontWeight: FontWeight.w600, fontFamily: "Myanmar")),
+                Text("အားလုံးကြည့်မည်",
+                    style: Theme.of(context).textTheme.labelMedium!.copyWith(
+                        color: ColorApp.dark,
+                        fontWeight: FontWeight.w500,
+                        fontFamily: "Myanmar")),
+              ],
+            ),
           ),
-        ),
-        const SizedBox(
-          height: 10,
-        ),
-         SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: Row(
-                 children:controller.natebanzays.map((natebanzay) =>    NatebanzayCard(natebanzay: natebanzay,requestNatebanzayController: _requestNatebanzayController,), ).toList()
+          const SizedBox(
+            height: 10,
           ),
-        )
-      ]),)
+           Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 10.0),
+            child: SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                
+                children: controller.items.map((item) =>   InkWell(
+                onTap: (){
+                  controller.setItem(item);
+                },
+                child: ItemWidget(
+                    name: item.name,
+                    isSelected: item==controller.selectedItem,
+                  ),
+              ), ).toList()),
+            ),
+          ),
+          
+      
+          const SizedBox(
+            height: 10,
+          ),
+          ItemNatebanzaysList(homeController:controller, requestNatebanzayController: _requestNatebanzayController),
+          Padding(
+            padding: const EdgeInsets.only(left: 16.0, top: 20, right: 16),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text("နေရာအလိုက်",
+                    style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                        fontWeight: FontWeight.w600, fontFamily: "Myanmar")),
+                Text("အားလုံးကြည့်မည်",
+                    style: Theme.of(context).textTheme.labelMedium!.copyWith(
+                        color: ColorApp.dark,
+                        fontWeight: FontWeight.w500,
+                        fontFamily: "Myanmar")),
+              ],
+            ),
+          ),
+          const SizedBox(
+            height: 10,
+          ),
+           SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+                   children:controller.natebanzays.map((natebanzay) =>    NatebanzayCard(natebanzay: natebanzay,requestNatebanzayController: _requestNatebanzayController,), ).toList()
+            ),
+          ),
+          const SizedBox(height: 20,),
+        ]),)
+      ),
     );
   }
 }
@@ -353,7 +359,7 @@ class NatebanzayCard extends StatelessWidget {
                               padding: const EdgeInsets.only(
                                 top: 2.0,
                               ),
-                              child: Text("အိမ်သုံးပစ္စည်း",
+                              child: Text(natebanzay.item.name,
                                   style: Theme.of(context)
                                       .textTheme
                                       .bodySmall
@@ -441,7 +447,7 @@ class NatebanzayCard extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.only(left: 12.0, top: 10),
                   child: Text(
-                      "Size 18 ပဲရှိပါတယ်ဗျ ဖုန်းနံပတ် ၀၉၇၈၃၁၅၀၄ ကို ဆက်သွယ်လိုက်ပါခင်ဗျာ ယူခါနီးကျရင်",
+                     natebanzay.note??"",
                       style: Theme.of(context).textTheme.labelMedium?.copyWith(
                           fontWeight: FontWeight.w300,
                           color: ColorApp.dark,
@@ -566,15 +572,11 @@ class NatebanzayCard extends StatelessWidget {
         });
   }
 List<String> extractPhotos(String jsonString) {
-  // Parse the JSON string
 
-  // Remove escape sequences (if any)
   final photosWithoutEscape = jsonString.replaceAll('\\', '');
 
-  // Remove leading and trailing quotes and square brackets
   final photosWithoutBrackets = photosWithoutEscape.substring(2, photosWithoutEscape.length - 2);
 
-  // Split the string into a list of image URLs
   final imageUrls = photosWithoutBrackets.split('","');
 
   return imageUrls;

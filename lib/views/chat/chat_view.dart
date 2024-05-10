@@ -1,60 +1,81 @@
+import 'package:donation_com_mm_v2/controllers/natebanzay_chat_controller.dart';
+import 'package:donation_com_mm_v2/util/assets_path.dart';
+import 'package:donation_com_mm_v2/util/share_pref_helper.dart';
 import 'package:donation_com_mm_v2/views/drawer/drawer_view.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
-class ChatView extends StatelessWidget {
+class ChatView extends GetView<NatebanzayChatController> {
   ChatView({super.key});
+final requesterId=Get.arguments['requester_id'];
+final uploaderId=Get.arguments['uploader_id'];
+final isRequester=Get.arguments['isRequester'];
 
   final TextEditingController _messageController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        drawer:  DrawerView(),
-        appBar: AppBar(title: const Text("Chat")),
-        body: const SingleChildScrollView(
-            child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-          child: Column(children: [
-            ChatMessage(text: "Hello", isSender: false),
-            ChatMessage(text: "Hello", isSender: true),
-            ChatMessage(text: "Hi from api", isSender: true),
-            ChatMessage(text: "Hello Hi", isSender: true),
-            ChatMessage(text: "Hi", isSender: false),
-          ]),
-        )),
-        bottomNavigationBar: SizedBox(
-          height: 76,
-          child: Column(
-            children: [
-              const Divider(),
-              Row(children: [
-                Expanded(
-                  child: TextField(
-                    controller: _messageController,
-                    style: Theme.of(context).textTheme.bodyLarge!.copyWith(),
-                    decoration: InputDecoration(
-                        contentPadding: const EdgeInsets.only(left: 10),
-                        border: InputBorder.none,
-                        hintText: "Send a message.....",
-                        hintStyle: Theme.of(context)
-                            .textTheme
-                            .titleMedium!
-                            .copyWith()),
-                  ),
-                ),
-                IconButton(
-                    onPressed: () {
-                      // ToastHelper.showSuccessToast(context, "Sending..");
-                    },
-                    icon: Image.asset(
-                      "assets/images/send.png",
-                      height: 22,
-                      color: Colors.black,
-                    ))
-              ]),
-            ],
-          ),
-        ));
+controller.getChat(requesterId, uploaderId) ;
+    return Obx(() {
+      print("isRequester $isRequester",);
+
+      print("RequesterId $requesterId",);
+      print("Uploader $uploaderId",);
+      print("Current ${MySharedPref.getUserId()}");
+
+      return RefreshIndicator(
+        onRefresh: () async{
+          // controller.getChat(requesterId, uploaderId) ;
+        },
+        child: Scaffold(
+          drawer:  DrawerView(),
+          appBar: AppBar(title: const Text("Chat")),
+          body:  SingleChildScrollView(
+              child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+            child: Column(children: controller.messages.map((message) =>       ChatMessage(text: message.message, isSender:message.senderId==MySharedPref.getUserId()?true:false),).toList()),
+          )),
+          bottomNavigationBar: Padding(
+   padding:  EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom ),
+            child: SizedBox(
+              height: 76,
+              child: Column(
+                children: [
+                  const Divider(),
+                  Row(children: [
+                    Expanded(
+                      child: TextField(
+                        controller: _messageController,
+                        style: Theme.of(context).textTheme.bodyLarge!.copyWith(),
+                        decoration: InputDecoration(
+                            contentPadding: const EdgeInsets.only(left: 10),
+                            border: InputBorder.none,
+                            hintText: "Send a message.....",
+                            hintStyle: Theme.of(context)
+                                .textTheme
+                                .titleMedium!
+                                .copyWith()),
+                      ),
+                    ),
+                    IconButton(
+                        onPressed: () {
+                       controller.sendMessage(context,controller.chatId, MySharedPref.getUserId()??1,isRequester?uploaderId:requesterId , _messageController.text);
+              //          WidgetsBinding.instance.addPostFrameCallback((_){
+              //       controller.getChat(requesterId, uploaderId) ;
+              //  });
+                        },
+                        icon: Image.asset(
+                       IconPath.sendIcon,
+                          height: 22,
+                          color: Colors.black,
+                        ))
+                  ]),
+                ],
+              ),
+            ),
+          )),
+      );
+    });
   }
 }
 
@@ -63,10 +84,10 @@ class ChatMessage extends StatelessWidget {
   final bool isSender;
 
   const ChatMessage({
-    Key? key,
+    super.key,
     required this.text,
     required this.isSender,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -85,7 +106,7 @@ class ChatMessage extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                isSender ? 'You' : 'Tecxplorer',
+                isSender ? 'You' : 'From',
                 style: TextStyle(
                   color: isSender ? Colors.white : Colors.black,
                   fontWeight: FontWeight.bold,

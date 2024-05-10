@@ -31,6 +31,7 @@ class Natebanzay {
   final String? photos; // Can be null (handle as a list of strings)
   final String status;
   final Item item;
+  final int requestedCount;
   final DateTime createdAt;
   final DateTime updatedAt;
 
@@ -46,6 +47,7 @@ class Natebanzay {
      this.user,
     // this.photos,
     required this.status,
+    required this.requestedCount,
     required this.createdAt,
     required this.updatedAt,
   });
@@ -58,9 +60,10 @@ class Natebanzay {
         phone: json['phone'] as String,
         note: json['note'] as String?,
         item: Item.fromJson(json['item'],),
-        user: json['user']==null?null:User.fromJson(json['user'] as Map<String, dynamic>),
+        user: json['user']==null?null:User.fromJson(json['user']),
         photos: json['photos'],
         status: json['status'] as String,
+        requestedCount:json['requested_count'],
         createdAt: DateTime.parse(json['created_at'] as String),
         updatedAt: DateTime.parse(json['updated_at'] as String),
       );

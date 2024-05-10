@@ -9,35 +9,44 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 
-class RequestedView extends GetView<HomeController> {
-  const RequestedView({super.key});
+class ShareNatebanzayView extends GetView<HomeController> {
+  const ShareNatebanzayView({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      drawer:  DrawerView(),
-      appBar: AppBar(
-        title: const Text("မျှဝေရန်"),
-      ),
-      body: GetBuilder<HomeController>(builder: (controller){
-        return ListView.builder(
-          itemCount: controller.natebanzaysRequested.length,
-          itemBuilder: (BuildContext context, int index) {
-            return  RequestsItemCardWidget(
-natebanzay: controller.natebanzaysRequested[index],
+    return RefreshIndicator(
+      onRefresh: () async{
+        controller.getNatebanzaysRequested();
+      },
+      child: Scaffold(
+        drawer:  DrawerView(),
+        appBar: AppBar(
+          title: const Text("မျှဝေရန်"),
+        ),
+        body: GetBuilder<HomeController>(builder: (controller){
+          return ListView.builder(
+            itemCount: controller.natebanzaysRequested.length,
+            itemBuilder: (BuildContext context, int index) {
+              return  RequestsItemCardWidget(
+      natebanzay: controller.natebanzaysRequested[index],
+      controller: controller,
+            );
+            },
+            
           );
-          },
-        );
-      },)
+        },)
+      ),
     );
   }
 }
 
 class RequestsItemCardWidget extends StatelessWidget {
+  final HomeController controller;
   final Natebanzay natebanzay;
 
   const RequestsItemCardWidget({
     super.key,
+    required this.controller,
     required this.natebanzay,
   });
 
@@ -66,7 +75,7 @@ class RequestsItemCardWidget extends StatelessWidget {
             padding: const EdgeInsets.all(15),
             decoration:  BoxDecoration(
               image:
-                  DecorationImage(image: NetworkImage("${AppConfig.baseUrl}/storage/images/natebanzay_photos/${extractPhotos(natebanzay.photos!)[0]}"), fit: BoxFit.cover),
+               natebanzay.photos==null?   const DecorationImage(image: AssetImage(ImagePath.test), fit: BoxFit.cover):   DecorationImage(image: NetworkImage("${AppConfig.baseUrl}/storage/images/natebanzay_photos/${extractPhotos(natebanzay.photos!)[0]}"), fit: BoxFit.cover),
             ),
           ),
           Expanded(
@@ -95,7 +104,7 @@ class RequestsItemCardWidget extends StatelessWidget {
                     height: 4,
                   ),
                   Text(
-                    "လူ (၁၀)ဦး မှ တောင်းခံထားသည်",
+                    "${natebanzay.requestedCount.toString()}ဦး မှ တောင်းခံထားသည်",
                     style: Theme.of(context).textTheme.labelMedium!.copyWith(
                         fontWeight: FontWeight.w400,
                         color: ColorApp.dark,
@@ -135,21 +144,26 @@ class RequestsItemCardWidget extends StatelessWidget {
                   Row(
                     children: [
                       Expanded(
-                          child: Container(
-                        padding: const EdgeInsets.only(
-                            top: 8, left: 4, right: 4, bottom: 8),
-                        decoration: BoxDecoration(
-                            color: ColorApp.dark.withOpacity(0.9),
-                            borderRadius:
-                                const BorderRadius.all(Radius.circular(15))),
-                        child: Image.asset(
-                                      IconPath.viewIcon,
-
-                          height: 20,
-                          width: 20,
-                          color: ColorApp.white,
-                        ),
-                      )),
+                          child: InkWell(
+                            onTap: ()=>Get.toNamed(Routes.viewNatebanzayRequests,arguments: {
+                              "natebanzay_id":natebanzay.id
+                            }),
+                            child: Container(
+                                                    padding: const EdgeInsets.only(
+                              top: 8, left: 4, right: 4, bottom: 8),
+                                                    decoration: BoxDecoration(
+                              color: ColorApp.dark.withOpacity(0.9),
+                              borderRadius:
+                                  const BorderRadius.all(Radius.circular(15))),
+                                                    child: Image.asset(
+                                        IconPath.viewIcon,
+                            
+                            height: 20,
+                            width: 20,
+                            color: ColorApp.white,
+                                                    ),
+                                                  ),
+                          )),
                       const SizedBox(
                         width: 10,
                       ),
@@ -178,20 +192,25 @@ class RequestsItemCardWidget extends StatelessWidget {
                         width: 10,
                       ),
                       Expanded(
-                          child: Container(
-                        padding: const EdgeInsets.only(
-                            top: 8, left: 4, right: 4, bottom: 8),
-                        decoration: BoxDecoration(
-                            color: ColorApp.lipstick.withOpacity(0.9),
-                            borderRadius:
-                                const BorderRadius.all(Radius.circular(15))),
-                        child: Image.asset(
-                        IconPath.deleteIcon,
-                          height: 20,
-                          width: 20,
-                          color: ColorApp.white,
-                        ),
-                      )),
+                          child: InkWell(
+                            onTap: (){
+                              showDeleteDialog(context, controller,natebanzay.id);
+                            },
+                            child: Container(
+                                                    padding: const EdgeInsets.only(
+                              top: 8, left: 4, right: 4, bottom: 8),
+                                                    decoration: BoxDecoration(
+                              color: ColorApp.lipstick.withOpacity(0.9),
+                              borderRadius:
+                                  const BorderRadius.all(Radius.circular(15))),
+                                                    child: Image.asset(
+                                                    IconPath.deleteIcon,
+                            height: 20,
+                            width: 20,
+                            color: ColorApp.white,
+                                                    ),
+                                                  ),
+                          )),
                     ],
                   )
                 ],
@@ -204,6 +223,29 @@ class RequestsItemCardWidget extends StatelessWidget {
   }
 
 
+}
+
+void showDeleteDialog(BuildContext context,HomeController controller,int id){
+showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: const Text('Donation.com.mm'),
+            content: const Text('ဖျက်ရန်သေချာပီလား?'),
+            actions: [
+              TextButton(
+                onPressed: () =>Get.back(),
+                child: const Text('မလုပ်တော့ပါ'),
+              ),
+              TextButton(
+                onPressed: () {
+                  controller.deleteNatebanzay(id, context);
+                  Get.back();
+                },
+                child: const Text('လုပ်မည်'),
+              ),
+            ],
+          ),
+        );
 }
 
   List<String> extractPhotos(String jsonString) {

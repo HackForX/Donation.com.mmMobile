@@ -1,7 +1,9 @@
 import 'package:donation_com_mm_v2/controllers/home_controller.dart';
 import 'package:donation_com_mm_v2/models/natebanay_request_response.dart';
+import 'package:donation_com_mm_v2/routes/app_pages.dart';
 import 'package:donation_com_mm_v2/util/app_color.dart';
 import 'package:donation_com_mm_v2/util/app_config.dart';
+import 'package:donation_com_mm_v2/util/toast_helper.dart';
 import 'package:donation_com_mm_v2/views/drawer/drawer_view.dart';
 import 'package:flutter/material.dart';
 
@@ -11,23 +13,28 @@ import '../../util/assets_path.dart';
 
 
 
-class RequestsView extends GetView<HomeController> {
-  const RequestsView({super.key});
+class GetNatebanzaysView extends GetView<HomeController> {
+  const GetNatebanzaysView({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        drawer:  DrawerView(),
-        appBar: AppBar(
-          title: const Text("ရယူရန်"),
-        ),
-        body:GetBuilder<HomeController>(builder: (controller)=>ListView.builder(
-          itemCount: controller.natebanzaysRequests.length,
-          itemBuilder: (BuildContext context, int index) {
-            return    RequestedItemCardWidget(
-               natebanzayRequest: controller.natebanzaysRequests[index],);
-          },
-        ),));
+    return RefreshIndicator(
+        onRefresh: () async{
+        controller.getNatebanzaysRequests();
+      },
+      child: Scaffold(
+          drawer:  DrawerView(),
+          appBar: AppBar(
+            title: const Text("ရယူရန်"),
+          ),
+          body:GetBuilder<HomeController>(builder: (controller)=>ListView.builder(
+            itemCount: controller.natebanzaysRequests.length,
+            itemBuilder: (BuildContext context, int index) {
+              return    RequestedItemCardWidget(
+                 natebanzayRequest: controller.natebanzaysRequests[index],);
+            },
+          ),)),
+    );
   }
 }
 
@@ -72,7 +79,7 @@ final NatebanzayRequest natebanzayRequest;
                                   backgroundColor: ColorApp.mainColor,
                                 ),
                                 Text(
-                                  "Tecxplorer",
+                               natebanzayRequest.uploader.name,
                                   style: Theme.of(context)
                                       .textTheme
                                       .bodyMedium
@@ -93,92 +100,22 @@ final NatebanzayRequest natebanzayRequest;
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Row(
-                                  children: [
-                                    Text("ဖိနပ် (1ခု)",
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .titleMedium
-                                            ?.copyWith(
-                                                fontWeight: FontWeight.w700,
-                                                color: ColorApp.dark,
-                                                fontFamily: "Myanmar")),
-                                    const SizedBox(
-                                      width: 5,
-                                    ),
-                                    Row(
-                                      children: [
-                                        Image.asset(
-                                          IconPath.viewIcon,
-                                          color: ColorApp.mainColor,
-                                          height: 15,
-                                        ),
-                                        const SizedBox(
-                                          width: 5,
-                                        ),
-                                        Text("1K",
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .bodySmall!
-                                                .copyWith(
-                                                  color: ColorApp.mainColor,
-                                                  fontFamily: "English",
-                                                ))
-                                      ],
-                                    ),
-                                    const SizedBox(
-                                      width: 5,
-                                    ),
-                                    Row(
-                                      children: [
-                                        Image.asset(
-                                         IconPath.likeIcon,
-                                          color: ColorApp.mainColor,
-                                          height: 15,
-                                        ),
-                                        const SizedBox(
-                                          width: 5,
-                                        ),
-                                        Text("10K",
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .bodySmall!
-                                                .copyWith(
-                                                  color:ColorApp.mainColor,
-                                                  fontFamily: "English",
-                                                ))
-                                      ],
-                                    ),
-                                    const SizedBox(
-                                      width: 5,
-                                    ),
-                                    Row(
-                                      children: [
-                                        Image.asset(
-                                          "assets/images/comment.png",
-                                          color:ColorApp.mainColor,
-                                          height: 15,
-                                        ),
-                                        const SizedBox(
-                                          width: 5,
-                                        ),
-                                        Text("10K",
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .bodySmall!
-                                                .copyWith(
-                                                  color: ColorApp.mainColor,
-                                                  fontFamily: "English",
-                                                ))
-                                      ],
-                                    )
-                                  ],
+                                Text("${natebanzayRequest.natebanzay.name} (${natebanzayRequest.natebanzay.quantity}ခု)",
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .titleMedium
+                                        ?.copyWith(
+                                            fontWeight: FontWeight.w700,
+                                            color: ColorApp.dark,
+                                            fontFamily: "Myanmar")),
+                                const SizedBox(
+                                  width: 5,
                                 ),
                                 Padding(
                                   padding: const EdgeInsets.only(
                                     top: 2.0,
                                   ),
-                                  child: Text("အိမ်သုံးပစ္စည်း",
+                                  child: Text(natebanzayRequest.natebanzay.item.name,
                                       style: Theme.of(context)
                                           .textTheme
                                           .bodySmall
@@ -191,7 +128,7 @@ final NatebanzayRequest natebanzayRequest;
                                   padding: const EdgeInsets.only(
                                     top: 4.0,
                                   ),
-                                  child: Text("ရန်ကုန်လှည်းတန်းမြို့နယ်",
+                                  child: Text(natebanzayRequest.natebanzay.address,
                                       style: Theme.of(context)
                                           .textTheme
                                           .labelSmall
@@ -200,6 +137,63 @@ final NatebanzayRequest natebanzayRequest;
                                               color: ColorApp.dark,
                                               fontFamily: "Myanmar")),
                                 ),
+                                const SizedBox(height: 10,),
+                                     Row(children: [
+                                    Image.asset(
+                                  IconPath.viewIcon,
+                                      color: ColorApp.mainColor,
+                                      height: 15,
+                                    ),
+                                    const SizedBox(
+                                      width: 5,
+                                    ),
+                                    Text("1K",
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodySmall!
+                                            .copyWith(
+                                              color: ColorApp.mainColor,
+                                              fontFamily: "English",
+                                            )),
+                                const SizedBox(
+                                  width: 5,
+                                ),
+                            Image.asset(
+                                    IconPath.likeIcon,
+                                      color: ColorApp.mainColor,
+                                      height: 15,
+                                    ),
+                                    const SizedBox(
+                                      width: 5,
+                                    ),
+                                    Text("10K",
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodySmall!
+                                            .copyWith(
+                                              color: ColorApp.mainColor,
+                                              fontFamily: "English",
+                                            )),
+                                const SizedBox(
+                                  width: 5,
+                                ),
+                               Image.asset(
+                                    IconPath.commentIcon,
+                                      color: ColorApp.mainColor,
+                                      height: 15,
+                                    ),
+                                    const SizedBox(
+                                      width: 5,
+                                    ),
+                                    Text("10K",
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodySmall!
+                                            .copyWith(
+                                              color: ColorApp.mainColor,
+                                              fontFamily: "English",
+                                            ))
+                            ],)
                               ],
                             ),
                           ),
@@ -209,7 +203,7 @@ final NatebanzayRequest natebanzayRequest;
                     Padding(
                       padding: const EdgeInsets.only(left: 12.0, top: 10),
                       child: Text(
-                          "Size 18 ပဲရှိပါတယ်ဗျ ဖုန်းနံပတ် ၀၉၇၈၃၁၅၀၄ ကို ဆက်သွယ်လိုက်ပါခင်ဗျာ ယူခါနီးကျရင်",
+                   natebanzayRequest.natebanzay.note??"",
                           style: Theme.of(context)
                               .textTheme
                               .labelMedium
@@ -229,67 +223,26 @@ final NatebanzayRequest natebanzayRequest;
                                   color: ColorApp.dark,
                                   fontFamily: "English")),
                     ),
-                    SizedBox(
-                      height: 200,
-                      child: SingleChildScrollView(
-                          scrollDirection: Axis.horizontal,
-                          child: Row(
-                            children: [
-                              Container(
-                                height: 150,
-                                width: 200,
-                                padding: const EdgeInsets.all(15),
-                                decoration: const BoxDecoration(
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(10)),
-                                  image: DecorationImage(
-                                      image: AssetImage(
-                                          "assets/images/photo6.png"),
-                                      fit: BoxFit.cover),
-                                ),
-                              ),
-                              Container(
-                                height: 150,
-                                width: 200,
-                                padding: const EdgeInsets.all(15),
-                                decoration: const BoxDecoration(
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(10)),
-                                  image: DecorationImage(
-                                      image: AssetImage(
-                                          "assets/images/photo6.png"),
-                                      fit: BoxFit.cover),
-                                ),
-                              ),
-                              Container(
-                                height: 150,
-                                width: 200,
-                                padding: const EdgeInsets.all(15),
-                                decoration: const BoxDecoration(
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(10)),
-                                  image: DecorationImage(
-                                      image: AssetImage(
-                                          "assets/images/photo6.png"),
-                                      fit: BoxFit.cover),
-                                ),
-                              ),
-                              Container(
-                                height: 150,
-                                width: 200,
-                                padding: const EdgeInsets.all(15),
-                                decoration: const BoxDecoration(
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(10)),
-                                  image: DecorationImage(
-                                      image: AssetImage(
-                                          "assets/images/photo6.png"),
-                                      fit: BoxFit.cover),
-                                ),
-                              ),
-                            ],
-                          )),
-                    ),
+                  SizedBox(
+                  height: 200,
+                  child: SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Row(
+                        children: natebanzayRequest.natebanzay.photos!=null?extractPhotos(natebanzayRequest.natebanzay.photos??"").map((e) =>   Container(
+                            height: 150,
+                            width: 200,
+                            margin: const EdgeInsets.all(10),
+                            padding: const EdgeInsets.all(15),
+                            decoration:  BoxDecoration(
+                              borderRadius:
+                                  const BorderRadius.all(Radius.circular(10)),
+                              image: DecorationImage(
+                                  image:NetworkImage("${AppConfig.baseUrl}/storage/images/natebanzay_photos/$e"),
+                                  fit: BoxFit.cover),
+                            ),
+                          ),).toList():[const SizedBox()]
+                      )),
+                ),
                     const Spacer(),
                     Container(
                       margin: const EdgeInsets.symmetric(
@@ -302,6 +255,7 @@ final NatebanzayRequest natebanzayRequest;
                               height: 48,
                               child: ElevatedButton(
                                   style: ElevatedButton.styleFrom(
+                                    foregroundColor: ColorApp.secondaryColor,
                                       backgroundColor: ColorApp.mainColor,
                                       shape: const RoundedRectangleBorder(
                                           borderRadius: BorderRadius.all(
@@ -316,7 +270,7 @@ final NatebanzayRequest natebanzayRequest;
                                       ),
                                       Image.asset(
                                     IconPath.commentIcon,
-                                        color: ColorApp.white,
+                                        color: ColorApp.secondaryColor,
                                         height: 18,
                                       ),
                                     ],
@@ -331,12 +285,22 @@ final NatebanzayRequest natebanzayRequest;
                               height: 48,
                               child: ElevatedButton(
                                   style: ElevatedButton.styleFrom(
+                                    foregroundColor: ColorApp.secondaryColor,
+
                                       backgroundColor: ColorApp.mainColor,
                                       shape: const RoundedRectangleBorder(
                                           borderRadius: BorderRadius.all(
                                               Radius.circular(30)))),
                                   onPressed: () {
-                                    // Get.to(() => ChatView());
+                                    if(natebanzayRequest.status=='Accepted'){
+                                      Get.toNamed(Routes.chat,arguments: {
+                                        'uploader_id':natebanzayRequest.uploaderId,
+                                        'requester_id':natebanzayRequest.requesterId,
+                                        'isRequester':true
+                                      });
+                                    }else{
+                                      ToastHelper.showErrorToast(context, "စကားပြော၍မရသေးပါ");
+                                    }
                                   },
                                   child: Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
@@ -347,7 +311,7 @@ final NatebanzayRequest natebanzayRequest;
                                       ),
                                       Image.asset(
                          IconPath.chatIcon,
-                                        color: ColorApp.white,
+                                        color: ColorApp.secondaryColor,
                                         height: 18,
                                       ),
                                     ],
@@ -379,7 +343,13 @@ final NatebanzayRequest natebanzayRequest;
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Container(
+            natebanzayRequest.natebanzay.photos==null?      Container(
+              height: 150,
+              width: 150,
+              padding: const EdgeInsets.all(15),
+           child: const Icon(Icons.image,size: 50,),
+            
+            ):  Container(
               height: 150,
               width: 150,
               padding: const EdgeInsets.all(15),
@@ -435,7 +405,7 @@ final NatebanzayRequest natebanzayRequest;
                     height: 4,
                   ),
                   Text(
-                    "Tecxplorer မှ",
+                    "${natebanzayRequest.uploader.name} မှ",
                     style: Theme.of(context).textTheme.labelMedium!.copyWith(
                         fontWeight: FontWeight.w300,
                         color: ColorApp.dark,
@@ -459,4 +429,16 @@ final NatebanzayRequest natebanzayRequest;
       ),
     );
   }
+
+  List<String> extractPhotos(String jsonString) {
+
+  final photosWithoutEscape = jsonString.replaceAll('\\', '');
+
+  final photosWithoutBrackets = photosWithoutEscape.substring(2, photosWithoutEscape.length - 2);
+
+  final imageUrls = photosWithoutBrackets.split('","');
+
+  return imageUrls;
+}
+
 }

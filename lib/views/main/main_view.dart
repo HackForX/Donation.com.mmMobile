@@ -2,8 +2,8 @@ import 'package:donation_com_mm_v2/routes/app_pages.dart';
 import 'package:donation_com_mm_v2/util/app_color.dart';
 import 'package:donation_com_mm_v2/util/assets_path.dart';
 import 'package:donation_com_mm_v2/views/natebanzay/%20natebanzay_view.dart';
-import 'package:donation_com_mm_v2/views/requests/requests_view.dart';
-import 'package:donation_com_mm_v2/views/requested/requested_view.dart';
+
+import 'package:donation_com_mm_v2/views/share_natebanzay/share_natebanzay_view.dart';
 import 'package:donation_com_mm_v2/views/sadudithar/sadudithar_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -11,6 +11,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 
 import '../../controllers/custom_menu_controller.dart';
+import '../get_natebanzay/get_natebanzays_view.dart';
 
 class MainView extends StatelessWidget {
   MainView({super.key});
@@ -30,8 +31,8 @@ class MainView extends StatelessWidget {
             // HomeAppBarWidget(),
             const SaduditharView(),
             NateBanZayView(),
-           const RequestsView(),
-        const RequestedView(),
+           const GetNatebanzaysView(),
+        const ShareNatebanzayView(),
 
           ],
         ),

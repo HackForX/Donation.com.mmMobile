@@ -1,4 +1,7 @@
+import 'package:donation_com_mm_v2/controllers/edit_natebanzay_controller.dart';
 import 'package:donation_com_mm_v2/models/natebanzay_response.dart';
+import 'package:donation_com_mm_v2/util/toast_helper.dart';
+import 'package:donation_com_mm_v2/views/edit_natebanzay/widgets/edit_item_dropdown.dart';
 import 'package:flutter/material.dart';
 
 
@@ -13,7 +16,7 @@ import 'package:donation_com_mm_v2/views/drawer/drawer_view.dart';
 
 import 'package:get/get.dart';
 
-class EditNatebanzayView extends GetView<CreateNatebanzayController> {
+class EditNatebanzayView extends GetView<EditNatebanzayController> {
    EditNatebanzayView({super.key,});
 final natebanzay=Get.arguments['natebanzay'];
 
@@ -23,22 +26,28 @@ final natebanzay=Get.arguments['natebanzay'];
   final TextEditingController _phoneController=TextEditingController();
   final TextEditingController _noteController=TextEditingController();
   final GlobalKey<FormState> _formKey=GlobalKey<FormState>();
-  final HomeController _homeController=Get.find<HomeController>();
+   List<String> _photos=[];
+
   @override
   Widget build(BuildContext context) {
    WidgetsBinding.instance.addPostFrameCallback((_){
-      _homeController.getItems();
+      controller.getItems();
       _nameController.text=natebanzay.name;
       _quantityController.text=natebanzay.quantity;
       _addressController.text=natebanzay.address;
       _phoneController.text=natebanzay.phone;
       _noteController.text=natebanzay.note??"";
-      _homeController.setItem(natebanzay.item);
+      if(natebanzay.photos!=null){
+        _photos=extractPhotos(natebanzay.photos)  ;
+      }
+      
+      controller.setItem(natebanzay.item);
 
 
     });
-  return GetBuilder<CreateNatebanzayController>(builder: (controller)=>Scaffold(
+  return Obx(()=>Scaffold(
       drawer:  DrawerView(),
+
       appBar: AppBar(
         title: const Text(
           "Donation.com.mm",
@@ -62,6 +71,7 @@ final natebanzay=Get.arguments['natebanzay'];
             Padding(
               padding:  const EdgeInsets.only(top: 14.0),
               child: TextFormField(
+               
               controller: _nameController,
                 validator: (value){
                   if(value==null||value.isEmpty){
@@ -81,6 +91,7 @@ final natebanzay=Get.arguments['natebanzay'];
             Padding(
               padding: const EdgeInsets.only(top: 14.0),
               child: TextFormField(
+               
                 controller: _quantityController,
                  validator: (value){
                   if(value==null||value.isEmpty){
@@ -99,15 +110,17 @@ final natebanzay=Get.arguments['natebanzay'];
             ),
             Padding(
               padding: const EdgeInsets.only(top:14.0),
-              child: ItemDropdown(controller: _homeController),
+              child: EditItemDropdown(controller: controller),
             ),
-         Obx(()=> Padding(
-               padding: const EdgeInsets.only(top: 14.0,left: 10),
-              child:    _homeController.selectedItem.name=='အမျိုးအစားရွေးပါ'?const Text("အမျိုးအစားလိုအပ်ပါသည်",style: TextStyle(color: ColorApp.lipstick,fontSize: 12,fontWeight: FontWeight.w200,fontFamily: "Myanmar"),):const SizedBox(),
-            ),),
+     controller.selectedItem.name=='အမျိုးအစားရွေးပါ'?  const Padding(
+               padding: EdgeInsets.only(top: 14.0,left: 10),
+              child:    Text("အမျိုးအစားလိုအပ်ပါသည်",style: TextStyle(color: ColorApp.lipstick,fontSize: 12,fontWeight: FontWeight.w200,fontFamily: "Myanmar"),)
+            ):const SizedBox(),
+            
             Padding(
               padding: const EdgeInsets.only(top: 14.0),
               child: TextFormField(
+             
                  validator: (value){
                   if(value==null||value.isEmpty){
                     return "လိပ်စာလိုအပ်ပါသည်";
@@ -124,12 +137,16 @@ final natebanzay=Get.arguments['natebanzay'];
             Padding(
               padding: const EdgeInsets.only(top: 14.0),
               child: TextFormField(
+             
+                keyboardType: TextInputType.number,
                  validator: (value){
                   if(value==null||value.isEmpty){
                     return "ဖုန်းနံပတ်လိုအပ်ပါသည်";
                   }
                   return null;
                 },
+                
+
               controller: _phoneController,
                 decoration: InputDecoration(
                     hintText: "ဖုန်းနံပတ်",
@@ -140,6 +157,7 @@ final natebanzay=Get.arguments['natebanzay'];
             Padding(
               padding: const EdgeInsets.only(top: 14.0),
               child: TextFormField(
+              
                   validator: (value){
                   if(value==null||value.isEmpty){
                     return "မှတ်ချက်လိုအပ်ပါသည်";
@@ -154,7 +172,7 @@ final natebanzay=Get.arguments['natebanzay'];
                         fontWeight: FontWeight.w500, fontFamily: "Myanmar")),
               ),
             ),
-               Padding(
+           Padding(
               padding: const EdgeInsets.only(top: 14.0),
               child: InkWell(
                 onTap: (){
@@ -167,13 +185,14 @@ final natebanzay=Get.arguments['natebanzay'];
                 
                     borderRadius: BorderRadius.all(Radius.circular(15))
                   ),
-                  child: const Text("ပုံတင်မည်"),),
+                  child:  Text(_photos.isNotEmpty?"ပုံ${_photos.length}ပုံတင်ထားပါသညါ":"ပုံတင်မည်")),
               )
             ),
-            Padding(
-               padding: const EdgeInsets.only(top: 14.0,left: 10),
-              child: controller.pickedPhotos==null?const Text("ပုံလိုအပ်ပါသည်",style: TextStyle(color: ColorApp.lipstick,fontSize: 12,fontWeight: FontWeight.w200,fontFamily: "Myanmar"),):const SizedBox(),
-            )
+            // Padding(
+            //    padding: const EdgeInsets.only(top: 14.0,left: 10),
+            //   child: controller.pickedPhotos.isEmpty||_photos.isEmpty?const Text("ပုံလိုအပ်ပါသည်",style: TextStyle(color: ColorApp.lipstick,fontSize: 12,fontWeight: FontWeight.w200,fontFamily: "Myanmar"),):const SizedBox(),
+            // ),
+            const SizedBox(height: 60,),
           ],
         ),
       ),
@@ -213,8 +232,10 @@ final natebanzay=Get.arguments['natebanzay'];
                       shape: const RoundedRectangleBorder(
                           borderRadius: BorderRadius.all(Radius.circular(15)))),
                   onPressed: () {
-                    if(_formKey.currentState!.validate()){
-                      controller.createNatebanzay(_nameController.text, _quantityController.text, _addressController.text, MySharedPref.getUserId()??11,1, _phoneController.text, "pending",_noteController.text,context);
+                    if(_formKey.currentState!.validate()&&controller.selectedItem.name!='အမျိုးအစားရွေးပါ'){
+                      controller.editNatebanzay(natebanzay.id,_nameController.text, _quantityController.text, _addressController.text, MySharedPref.getUserId()??11,controller.selectedItem.id, _phoneController.text, "pending",_noteController.text,context);
+                    }else{
+                      ToastHelper.showErrorToast(context, "လိုအပ်များရှိနေပါသည်");
                     }
                   },
                   child: controller.apiCallStatus==ApiCallStatus.loading?const ButtonLoaderWidget():Text(
@@ -236,5 +257,17 @@ final natebanzay=Get.arguments['natebanzay'];
  final burmeseDigitRegex = RegExp(r'^[\u1040-\u1049]+$');
  print(burmeseDigitRegex.hasMatch(value));
   return  burmeseDigitRegex.hasMatch(value);
+}
+
+
+List<String> extractPhotos(String jsonString) {
+
+  final photosWithoutEscape = jsonString.replaceAll('\\', '');
+
+  final photosWithoutBrackets = photosWithoutEscape.substring(2, photosWithoutEscape.length - 2);
+
+  final imageUrls = photosWithoutBrackets.split('","');
+
+  return imageUrls;
 }
 }

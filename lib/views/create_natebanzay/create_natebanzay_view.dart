@@ -4,6 +4,7 @@ import 'package:donation_com_mm_v2/core/api_call_status.dart';
 import 'package:donation_com_mm_v2/util/app_color.dart';
 import 'package:donation_com_mm_v2/util/button_loader_widget.dart';
 import 'package:donation_com_mm_v2/util/share_pref_helper.dart';
+import 'package:donation_com_mm_v2/util/toast_helper.dart';
 import 'package:donation_com_mm_v2/views/create_natebanzay/widgets/item_dropdown.dart';
 import 'package:donation_com_mm_v2/views/drawer/drawer_view.dart';
 import 'package:flutter/material.dart';
@@ -21,16 +22,15 @@ class CreateNatebanzayView extends GetView<CreateNatebanzayController> {
   final TextEditingController _phoneController=TextEditingController();
   final TextEditingController _noteController=TextEditingController();
   final GlobalKey<FormState> _formKey=GlobalKey<FormState>();
-  final HomeController _homeController=Get.find<HomeController>();
+  
   @override
   Widget build(BuildContext context) {
    WidgetsBinding.instance.addPostFrameCallback((_){
-      _homeController.getItems();
+      controller.getItems();
     });
-  return GetBuilder<CreateNatebanzayController>(builder: (controller)=>Scaffold(
+  return Obx(()=>Scaffold(
       drawer:  DrawerView(),
- 
-      extendBody: true,
+
       appBar: AppBar(
         title: const Text(
           "Donation.com.mm",
@@ -78,9 +78,9 @@ class CreateNatebanzayView extends GetView<CreateNatebanzayController> {
                   if(value==null||value.isEmpty){
                     return "အရေအတွက်လိုအပ်ပါသည်";
                   }
-                  if(!isBurmeseDigits(value)){
-                  return "ဥပမာ-၁၀၀,၂၀၀,၃၀၀(ကွက်လပ်မပါရ)";
-                  }
+                  // if(!isBurmeseDigits(value)){
+                  // return "ဥပမာ-၁၀၀,၂၀၀,၃၀၀(ကွက်လပ်မပါရ)";
+                  // }
                   return null;
                 },
                 decoration: InputDecoration(
@@ -91,12 +91,13 @@ class CreateNatebanzayView extends GetView<CreateNatebanzayController> {
             ),
             Padding(
               padding: const EdgeInsets.only(top:14.0),
-              child: ItemDropdown(controller: _homeController),
+              child: ItemDropdown(controller: controller),
             ),
-         Obx(()=> Padding(
-               padding: const EdgeInsets.only(top: 14.0,left: 10),
-              child:    _homeController.selectedItem.name=='အမျိုးအစားရွေးပါ'?const Text("အမျိုးအစားလိုအပ်ပါသည်",style: TextStyle(color: ColorApp.lipstick,fontSize: 12,fontWeight: FontWeight.w200,fontFamily: "Myanmar"),):const SizedBox(),
-            ),),
+     controller.selectedItem.name=='အမျိုးအစားရွေးပါ'?  const Padding(
+               padding: EdgeInsets.only(top: 14.0,left: 10),
+              child:    Text("အမျိုးအစားလိုအပ်ပါသည်",style: TextStyle(color: ColorApp.lipstick,fontSize: 12,fontWeight: FontWeight.w200,fontFamily: "Myanmar"),)
+            ):const SizedBox(),
+            
             Padding(
               padding: const EdgeInsets.only(top: 14.0),
               child: TextFormField(
@@ -116,12 +117,15 @@ class CreateNatebanzayView extends GetView<CreateNatebanzayController> {
             Padding(
               padding: const EdgeInsets.only(top: 14.0),
               child: TextFormField(
+                keyboardType: TextInputType.number,
                  validator: (value){
                   if(value==null||value.isEmpty){
                     return "ဖုန်းနံပတ်လိုအပ်ပါသည်";
                   }
                   return null;
                 },
+                
+
               controller: _phoneController,
                 decoration: InputDecoration(
                     hintText: "ဖုန်းနံပတ်",
@@ -146,7 +150,7 @@ class CreateNatebanzayView extends GetView<CreateNatebanzayController> {
                         fontWeight: FontWeight.w500, fontFamily: "Myanmar")),
               ),
             ),
-               Padding(
+           Padding(
               padding: const EdgeInsets.only(top: 14.0),
               child: InkWell(
                 onTap: (){
@@ -164,8 +168,9 @@ class CreateNatebanzayView extends GetView<CreateNatebanzayController> {
             ),
             Padding(
                padding: const EdgeInsets.only(top: 14.0,left: 10),
-              child: controller.pickedPhotos==null?const Text("ပုံလိုအပ်ပါသည်",style: TextStyle(color: ColorApp.lipstick,fontSize: 12,fontWeight: FontWeight.w200,fontFamily: "Myanmar"),):const SizedBox(),
-            )
+              child: controller.pickedPhotos.isEmpty?const Text("ပုံလိုအပ်ပါသည်",style: TextStyle(color: ColorApp.lipstick,fontSize: 12,fontWeight: FontWeight.w200,fontFamily: "Myanmar"),):const SizedBox(),
+            ),
+            const SizedBox(height: 60,),
           ],
         ),
       ),
@@ -205,8 +210,10 @@ class CreateNatebanzayView extends GetView<CreateNatebanzayController> {
                       shape: const RoundedRectangleBorder(
                           borderRadius: BorderRadius.all(Radius.circular(15)))),
                   onPressed: () {
-                    if(_formKey.currentState!.validate()&&_homeController.selectedItem.name!='အမျိုးအစားရွေးပါ'&&controller.pickedPhotos!=null){
-                      controller.createNatebanzay(_nameController.text, _quantityController.text, _addressController.text, MySharedPref.getUserId()??11,_homeController.selectedItem.id, _phoneController.text, "pending",_noteController.text,context);
+                    if(_formKey.currentState!.validate()&&controller.selectedItem.name!='အမျိုးအစားရွေးပါ'){
+                      controller.createNatebanzay(_nameController.text, _quantityController.text, _addressController.text, MySharedPref.getUserId()??11,controller.selectedItem.id, _phoneController.text, "pending",_noteController.text,context);
+                    }else{
+                      ToastHelper.showErrorToast(context, "လိုအပ်များရှိနေပါသည်");
                     }
                   },
                   child: controller.apiCallStatus==ApiCallStatus.loading?const ButtonLoaderWidget():Text(

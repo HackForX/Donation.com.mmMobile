@@ -1,7 +1,9 @@
 import 'package:donation_com_mm_v2/controllers/auth_controller.dart';
+import 'package:donation_com_mm_v2/core/api_call_status.dart';
 import 'package:donation_com_mm_v2/routes/app_pages.dart';
 import 'package:donation_com_mm_v2/util/app_color.dart';
 import 'package:donation_com_mm_v2/util/assets_path.dart';
+import 'package:donation_com_mm_v2/util/button_loader_widget.dart';
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
@@ -22,7 +24,7 @@ class LoginView extends StatelessWidget {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       // Use Scaffold for proper layout and scrolling behavior
-      body: Stack(
+      body: Obx(()=>Stack(
         fit: StackFit.expand,
         children: [
           Container(
@@ -166,7 +168,7 @@ class LoginView extends StatelessWidget {
                                     _passwordController.text,context);
                               }
                             },
-                            child:  Text(
+                            child:  _authController.apiCallStatus==ApiCallStatus.loading?const ButtonLoaderWidget():Text(
                               "Login",
                               style: TextStyle(
                                   color: ColorApp.mainColor,
@@ -296,7 +298,7 @@ class LoginView extends StatelessWidget {
             ),
           ),
         ],
-      ),
+      ),)
     );
   }
 }

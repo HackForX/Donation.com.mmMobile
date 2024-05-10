@@ -1,3 +1,4 @@
+import 'package:donation_com_mm_v2/routes/app_pages.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -18,9 +19,9 @@ class AllSaduditarCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () => Get.to(() =>  SaduditharDetailsView(
-        sadudithar:  sadudithar,
-      )),
+       onTap: () => Get.toNamed(Routes.saduditharDetails,arguments: {
+        'sadudithar':sadudithar
+      }),
       child: Container(
         margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
         decoration: BoxDecoration(
@@ -96,7 +97,7 @@ class AllSaduditarCard extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.only(top: 8.0, left: 10),
             child: Text(
-              "12.2.2024",
+             sadudithar.eventDate,
               style: Theme.of(context)
                   .textTheme
                   .labelSmall!
@@ -126,7 +127,7 @@ class AllSaduditarCard extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.only(left: 10.0, top: 4, bottom: 8),
             child: Text(
-              "လူ${sadudithar.estimatedQuantity}စာ",
+              "${sadudithar.estimatedQuantity}ဦး",
               style: Theme.of(context).textTheme.labelMedium!.copyWith(
                   color:  ColorApp.dark,
                   fontFamily: "Myanmar",

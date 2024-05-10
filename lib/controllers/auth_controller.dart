@@ -15,7 +15,8 @@ import '../routes/app_pages.dart';
 class AuthController extends GetxController {
   List<dynamic>? data;
 
-  ApiCallStatus apiCallStatus = ApiCallStatus.holding;
+  final Rx<ApiCallStatus> _apiCallStatus = ApiCallStatus.holding.obs;
+  ApiCallStatus  get apiCallStatus => _apiCallStatus.value;
   final BaseClient _baseClient = BaseClient();
 
   login(
@@ -26,8 +27,8 @@ class AuthController extends GetxController {
       queryParameters: {"password":password,"phone":phone},
       onLoading: () {
 
-        apiCallStatus = ApiCallStatus.loading;
-        update();
+        _apiCallStatus.value = ApiCallStatus.loading;
+     
       },
       onSuccess: (response) {
         LoginResponse loginResponse = LoginResponse.fromJson(response.data);
@@ -36,47 +37,15 @@ class AuthController extends GetxController {
         MySharedPref.setUserId(loginResponse.user.id);
         ToastHelper.showSuccessToast(context, "Successfully logined as ${loginResponse.user.name}");
         Get.offAllNamed(Routes.main);
-        apiCallStatus = ApiCallStatus.success;
-        update();
+        _apiCallStatus.value= ApiCallStatus.success;
+      
       },
 
       onError: (error) {
-        apiCallStatus = ApiCallStatus.error;
-        update();
-        // show error message to user
-        if (error.response!.statusCode == 422) {
-          // Handle 422 Unprocessable Entity error
-          Map<String, dynamic>? errorDetails =
-              error.response!.data as Map<String, dynamic>?;
-
-          if (errorDetails != null) {
-            // Extract and handle email error if present
-            List<dynamic>? emailErrors =
-                errorDetails['email'] as List<dynamic>?;
-
-            if (emailErrors != null && emailErrors.isNotEmpty) {
-              String emailErrorMessage = emailErrors.first;
-              // Show the error message to the user
-              apiCallStatus = ApiCallStatus.error;
-              ToastHelper.showErrorToast(context, emailErrorMessage);
-              return; // Return to avoid showing the generic error message below
-            }
-          }
-          apiCallStatus = ApiCallStatus.holding;
-          // Show a generic error message in case the email error is not present
-          ToastHelper.showErrorToast(
-              context, "An error occurred during sign up.");
-        } else {
-          // Handle other types of errors
-          // Show a generic error message for other status codes
-          apiCallStatus = ApiCallStatus.holding;
-          ToastHelper.showErrorToast(
-              context, "An unexpected error occurred during sign up.");
-        }
-        // *) indicate error status
-        apiCallStatus = ApiCallStatus.holding;
-        update();
-      },
+        _apiCallStatus.value = ApiCallStatus.error;
+        
+      ToastHelper.showErrorToast(context,error.response!.data["message"]);
+      }
     );
   }
 
@@ -89,8 +58,8 @@ class AuthController extends GetxController {
       queryParameters: {"name": name, "phone": phone, "password": password},
       onLoading: () {
 
-        apiCallStatus = ApiCallStatus.loading;
-        update();
+       _apiCallStatus.value = ApiCallStatus.loading;
+  
       },
       onSuccess: (response) {
         RegisterResponse registerResponse = RegisterResponse.fromJson(response.data);
@@ -100,15 +69,15 @@ class AuthController extends GetxController {
         MySharedPref.setUserId(registerResponse.user.id);
         ToastHelper.showSuccessToast(context, "Successfully created an account");
         Get.offAllNamed(Routes.main);
-        apiCallStatus = ApiCallStatus.success;
-        update();
+        _apiCallStatus.value = ApiCallStatus.success;
+  
       },
 
       onError: (error) {
-        apiCallStatus = ApiCallStatus.error;
-        print(error.response!.data["message"]);
+        _apiCallStatus.value = ApiCallStatus.error;
+  
       ToastHelper.showErrorToast(context,error.response!.data["message"]);
-        update();
+  
       },
     );
   }
@@ -126,8 +95,8 @@ class AuthController extends GetxController {
       onLoading: () {
         // *) indicate loading state
 
-        apiCallStatus = ApiCallStatus.loading;
-        update();
+        _apiCallStatus.value = ApiCallStatus.loading;
+       
       },
       onSuccess: (response) {
         // api done successfully
@@ -139,9 +108,9 @@ class AuthController extends GetxController {
 
         // Get.offNamed(Routes.LOGIN);
         // *) indicate success state
-        apiCallStatus = ApiCallStatus.success;
+        _apiCallStatus.value = ApiCallStatus.success;
 
-        update();
+        
       },
       // if you don't pass this method base client
       // will automaticly handle error and show message to user
@@ -150,8 +119,8 @@ class AuthController extends GetxController {
         BaseClient.handleApiError(apiException: error);
 
         // *) indicate error status
-        apiCallStatus = ApiCallStatus.error;
-        update();
+        _apiCallStatus.value = ApiCallStatus.error;
+     
       },
     );
   }

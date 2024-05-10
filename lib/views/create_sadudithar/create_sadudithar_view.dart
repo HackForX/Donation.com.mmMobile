@@ -33,6 +33,7 @@ class CreateSaduditharView extends GetView<CreateSaduditharController> {
    WidgetsBinding.instance.addPostFrameCallback((_){
       controller.getCategories();
       controller.getCities();
+ 
     });
   return Obx( ()=>Scaffold(
       drawer:  DrawerView(),
@@ -132,9 +133,9 @@ class CreateSaduditharView extends GetView<CreateSaduditharController> {
                   if(value==null||value.isEmpty){
                     return "အရေအတွက်လိုအပ်ပါသည်";
                   }
-                     if(!isBurmeseDigits(value)){
-                  return "ဥပမာ-၁၀၀,၂၀၀,၃၀၀(ကွက်လပ်မပါရ)";
-                  }
+                  //    if(!isBurmeseDigits(value)){
+                  // return "ဥပမာ-၁၀၀,၂၀၀,၃၀၀(ကွက်လပ်မပါရ)";
+                  // }
                   return null;
                 },
                 controller: _estimatedQuantityController,
@@ -322,7 +323,7 @@ initialTime: TimeOfDay.now()
               padding: const EdgeInsets.only(top: 20.0),
               child: InkWell(
                 onTap: (){
-                  // Get.to(()=>const CreateSaduditharMapView());
+                  Get.to(()=>const MapView());
                 },
                 child: Container(
                   padding: const EdgeInsets.all(16),
@@ -331,7 +332,7 @@ initialTime: TimeOfDay.now()
                 
                     borderRadius: BorderRadius.all(Radius.circular(15))
                   ),
-                  child: const Text("မြေပုံ"),),
+                  child:  Text(controller.pickedAddress),),
               )
             ),
             const SizedBox(height: 25,),
@@ -375,9 +376,10 @@ initialTime: TimeOfDay.now()
                           borderRadius: BorderRadius.all(Radius.circular(15)))),
                   onPressed: () {
                     if(_formKey.currentState!.validate()){
-                         controller.createSadudithar(CreateSaduditharModel(title: _titleController.text, description: _descriptionController.text, categoryId: controller.selectedCategory.id, cityId: controller.selectedCity.id, townshipId: controller.selectedTownship.id, subCategoryId: controller.selectedSubCategory.id, estimatedAmount:int.parse( _estimatedAmountController.text), estimatedTime: _estimatedTimeController.text, estimatedQuantity: _estimatedQuantityController.text, actualStartTime: controller.selectedStartTime, actualEndTime: controller.selectedEndTime, address: _addressController.text, phone: _phoneController.text, status: "pending", eventDate: controller.eventDate, latitude: 0.0, longitude: 0.0), context);
+                         controller.createSadudithar(CreateSaduditharModel(title: _titleController.text, description: _descriptionController.text, categoryId: controller.selectedCategory.id, cityId: controller.selectedCity.id, townshipId: controller.selectedTownship.id, subCategoryId: controller.selectedSubCategory.id, estimatedAmount:int.parse( _estimatedAmountController.text), estimatedTime: _estimatedTimeController.text, estimatedQuantity: _estimatedQuantityController.text, actualStartTime: controller.selectedStartTime, actualEndTime: controller.selectedEndTime, address: _addressController.text, phone: _phoneController.text, status: "pending", eventDate: controller.eventDate, latitude:controller.pickedLat, longitude: controller.pickedLong), context);
                     }
                   },
+                  
                   child: controller.apiCallStatus==ApiCallStatus.loading?const ButtonLoaderWidget():Text(
                     "Save",
                     style: Theme.of(context).textTheme.bodyMedium!.copyWith(
@@ -395,7 +397,6 @@ initialTime: TimeOfDay.now()
 
   bool isBurmeseDigits(String value) {
  final burmeseDigitRegex = RegExp(r'^[\u1040-\u1049]+$');
- print(burmeseDigitRegex.hasMatch(value));
   return  burmeseDigitRegex.hasMatch(value);
 }
 }

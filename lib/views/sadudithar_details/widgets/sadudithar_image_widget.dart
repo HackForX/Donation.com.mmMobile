@@ -24,7 +24,7 @@ class SaduditharImageWidget extends StatelessWidget {
       height: 200,
       child: ClipRRect(
         borderRadius: const BorderRadius.all(Radius.circular(10)),
-        child:Image.network("${AppConfig.baseUrl}/storage/${sadudithar.image}")
+        child:Image.network("${AppConfig.baseUrl}/storage/${sadudithar.image}",errorBuilder: (context, error, stackTrace) => const Icon(Icons.image,size: 30,),)
       ),
     );
   }

@@ -18,7 +18,11 @@ class SaduditharView extends GetView<HomeController> {
   Widget build(BuildContext context) {
     return RefreshIndicator(
       onRefresh: () async {
-        // controller.getCities();
+        controller.getCities();
+
+        controller.getSadudithars();
+
+
       },
       child: Scaffold(
         floatingActionButton: FloatingActionButton.extended(

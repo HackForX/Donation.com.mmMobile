@@ -10,8 +10,11 @@ import 'package:donation_com_mm_v2/util/app_config.dart';
 import 'package:donation_com_mm_v2/util/share_pref_helper.dart';
 import 'package:donation_com_mm_v2/util/toast_helper.dart';
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:get/get_rx/src/rx_types/rx_types.dart';
-
+import 'package:flutter/services.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:get/get_state_manager/src/simple/get_controllers.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -85,6 +88,14 @@ cityName: "",
   String get selectedStartTime=> _selectedStartTime.value;
    final RxString _eventDate=RxString("နေ့ရက်");
   String get eventDate=> _eventDate.value;
+   final Rx<Position?> _currentPosition = Rx<Position?>(null);
+   Position? get currentPositon => _currentPosition.value;
+   final RxDouble _pickedLat=RxDouble(0.0);
+   double get pickedLat => _pickedLat.value;
+   final RxDouble _pickedLong=RxDouble(0.0);
+   double get pickedLong => _pickedLong.value;
+      final RxString _pickedAddress=RxString("မြေပုံ");
+   String get pickedAddress => _pickedAddress.value;
   File? pickedImage;
 
   
@@ -117,8 +128,8 @@ cityName: "",
         "phone":createSaduditharModel.phone,
         "status":createSaduditharModel.status,
         "event_date":createSaduditharModel.eventDate,
-        "longitude":createSaduditharModel.longitude,
-        "latitude":createSaduditharModel.latitude,
+        "longitude":createSaduditharModel.longitude==0?null:createSaduditharModel.longitude,
+        "latitude":createSaduditharModel.latitude==0?null:createSaduditharModel.latitude,
                 "image": pickedImage==null?null:await MultipartFile.fromFile(pickedImage!.path),
                 "is_open":1,
                 "is_show":0
@@ -131,6 +142,7 @@ cityName: "",
       onSuccess: (response) {
         _apiCallStatus.value=ApiCallStatus.success;
         ToastHelper.showSuccessToast(context,"အောင်မြင်ပါသည်");
+      
         
       },
 
@@ -281,7 +293,72 @@ cityName: "",
     _eventDate.value=eventDate;
   }
 
+      void setLatitude(double latitude){
+    _pickedLat.value=latitude;
+  }
+     void setLongitude(double longitude){
+    _pickedLong.value=longitude;
+  }
 
+      void setAddress(String address){
+    _pickedAddress.value=address;
+  }
+
+  Future<void> getCurrentLocation() async {
+  try {
+  print("called");
+    Position position = await _determinePosition();
+    print("Postition $position");
+    _currentPosition.value = position; // Update Rx variable
+    print("Current ${_currentPosition.value!.latitude}");
+  } catch (e) {
+    print(e); // Handle errors
+  }
+}
+
+
+Future<Position> _determinePosition() async {
+  bool serviceEnabled;
+  LocationPermission permission;
+
+
+  serviceEnabled = await Geolocator.isLocationServiceEnabled();
+  if (!serviceEnabled) {
+ 
+    return Future.error('Location services are disabled.');
+  }
+
+  permission = await Geolocator.checkPermission();
+  if (permission == LocationPermission.denied) {
+    permission = await Geolocator.requestPermission();
+    if (permission == LocationPermission.denied) {
+      // Permissions are denied, next time you could try
+      // requesting permissions again (this is also where
+      // Android's shouldShowRequestPermissionRationale 
+      // returned true. According to Android guidelines
+      // your App should show an explanatory UI now.
+      return Future.error('Location permissions are denied');
+    }
+  }
+  
+  if (permission == LocationPermission.deniedForever) {
+    // Permissions are denied forever, handle appropriately. 
+    return Future.error(
+      'Location permissions are permanently denied, we cannot request permissions.');
+  } 
+
+  // When we reach here, permissions are granted and we can
+  // continue accessing the position of the device.
+  return await Geolocator.getCurrentPosition();
+}
+
+
+
+@override
+  void onInit() async{
+    await getCurrentLocation();
+    super.onInit();
+  }
 
 
 
