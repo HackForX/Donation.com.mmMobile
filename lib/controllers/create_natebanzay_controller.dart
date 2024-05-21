@@ -86,12 +86,16 @@ List<File> get pickedPhotos=> _pickedPhotos.toList();
 
         _homeController.getNatebanzays();
 
-        ToastHelper.showSuccessToast(context,"အလှူကိုအောင်မြင်စွာတင်ပီးပါပီ");
+        ToastHelper.showSuccessToast(context,"အလှုကိုအောင်မြင်စွာတင်ပီးပါပီ");
 
       },
 
       onError: (error) {
         _apiCallStatus.value = ApiCallStatus.error;
+            if(error.statusCode==422){
+        ToastHelper.showErrorToast(context,error.response!.data["message"]);
+          
+        }
   
     
       },

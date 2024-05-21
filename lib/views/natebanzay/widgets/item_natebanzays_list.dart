@@ -1,4 +1,5 @@
 import 'package:donation_com_mm_v2/controllers/home_controller.dart';
+import 'package:donation_com_mm_v2/controllers/natebanzay_details_controller.dart';
 import 'package:donation_com_mm_v2/controllers/request_natebanzay_controller.dart';
 import 'package:donation_com_mm_v2/util/empty_widget.dart';
 import 'package:donation_com_mm_v2/views/natebanzay/%20natebanzay_view.dart';
@@ -8,7 +9,8 @@ import 'package:get/get.dart';
 class ItemNatebanzaysList extends StatelessWidget {
   final HomeController homeController;
   final RequestNatebanzayController requestNatebanzayController;
-  const ItemNatebanzaysList({super.key, required this.homeController, required this.requestNatebanzayController});
+  final NatebanzayDetailsController detailsController;
+  const ItemNatebanzaysList({super.key, required this.homeController, required this.requestNatebanzayController,required this.detailsController});
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +22,7 @@ class ItemNatebanzaysList extends StatelessWidget {
       return filteredNataebanzays.isEmpty?const EmptyWidget():SingleChildScrollView(
           scrollDirection: Axis.horizontal,
           child: Row(
-               children:homeController.natebanzays.map((natebanzay) =>    NatebanzayCard(natebanzay: natebanzay,requestNatebanzayController: requestNatebanzayController,), ).toList()
+               children:homeController.natebanzays.map((natebanzay) =>    NatebanzayCard(natebanzay: natebanzay,requestNatebanzayController: requestNatebanzayController,detailsController: detailsController,), ).toList()
           ),
         );
     });

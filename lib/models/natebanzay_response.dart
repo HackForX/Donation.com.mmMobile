@@ -1,4 +1,5 @@
 import 'package:donation_com_mm_v2/models/item_response.dart';
+import 'package:donation_com_mm_v2/models/natebanzay_comment_response.dart';
 
 class NatebanzayResponse {
   final bool status;
@@ -32,6 +33,10 @@ class Natebanzay {
   final String status;
   final Item item;
   final int requestedCount;
+    final int commentCount;
+  final int likeCount;
+  final int viewCount;
+  final NatebanzayLike? like;
   final DateTime createdAt;
   final DateTime updatedAt;
 
@@ -45,6 +50,10 @@ class Natebanzay {
     this.note,
     this.photos,
      this.user,
+         required this.commentCount,
+    required this.likeCount,
+    required this.viewCount,
+    this.like,
     // this.photos,
     required this.status,
     required this.requestedCount,
@@ -64,6 +73,10 @@ class Natebanzay {
         photos: json['photos'],
         status: json['status'] as String,
         requestedCount:json['requested_count'],
+              commentCount: json['comment_count'],
+      likeCount: json['like_count'],
+      viewCount: json['view_count'],
+      like: json['like']==null?null:NatebanzayLike.fromJson(json['like']),
         createdAt: DateTime.parse(json['created_at'] as String),
         updatedAt: DateTime.parse(json['updated_at'] as String),
       );
@@ -72,7 +85,7 @@ class Natebanzay {
 class User {
   final int id;
   final String name;
-  final String phone;
+  final String? phone;
   final String? address; // Can be null
   final String? profile; // Can be null
   final String? document; // Can be null

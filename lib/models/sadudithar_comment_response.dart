@@ -39,7 +39,7 @@ required this.user,
 
   factory SaduditharComment.fromJson(Map<String, dynamic> json) => SaduditharComment(
         saduditharId: json['sadudithar_id'] as int,
-        userId: json['sadudithar_id'] as int,
+        userId: json['user_Id'] as int,
 
         user: User.fromJson(json['user']),
     comment: json['comment'],

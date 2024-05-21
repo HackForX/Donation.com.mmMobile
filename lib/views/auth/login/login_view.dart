@@ -5,11 +5,9 @@ import 'package:donation_com_mm_v2/util/app_color.dart';
 import 'package:donation_com_mm_v2/util/assets_path.dart';
 import 'package:donation_com_mm_v2/util/button_loader_widget.dart';
 import 'package:flutter/material.dart';
-
 import 'package:get/get.dart';
 
-
-import '../register/register_view.dart';
+import '../../forgot_password/forgot_phone_number_view.dart';
 
 class LoginView extends StatelessWidget {
   LoginView({super.key});
@@ -132,7 +130,7 @@ class LoginView extends StatelessWidget {
                     ),
                     InkWell(
                       onTap: () {
-                        // Get.to(() => ForgotPhoneNumberView());
+                        Get.to(() => ForgotPhoneNumberView());
                       },
                       child:  Align(
                         alignment: Alignment.centerRight,
@@ -197,7 +195,7 @@ class LoginView extends StatelessWidget {
                       children: [
                         InkWell(
                           onTap: () {
-                            // _authController.signInWithGoogle();
+                            _authController.signInWithGoogle();
                           },
                           child: CircleAvatar(
                             radius: 25,
@@ -210,7 +208,7 @@ class LoginView extends StatelessWidget {
                         ),
                         InkWell(
                           onTap: () {
-                            // _authController.signInWithFacebook();
+                            _authController.signInWithFacebook();
                           },
                           child: CircleAvatar(
                             radius: 25,

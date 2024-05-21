@@ -1,10 +1,6 @@
 import 'package:donation_com_mm_v2/controllers/create_sadudithar_controller.dart';
-import 'package:donation_com_mm_v2/controllers/home_controller.dart';
-import 'package:donation_com_mm_v2/models/category_response.dart';
-import 'package:donation_com_mm_v2/models/item_response.dart';
 import 'package:dropdown_overlay/dropdown_overlay.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 
 import '../../../util/app_color.dart';
 
@@ -17,16 +13,19 @@ final CreateSaduditharController controller;
   Widget build(BuildContext context) {
 
  
+          final itemsController = DropdownController<String>.single(
+    items: [
+       const DropdownItem(value:"food"),
+       const DropdownItem(value:"item"),
 
-    
-    return   Obx((){
-              final itemsController = DropdownController<SaduditharCategory>.single(
-    items: List.generate(
-      controller.categories.length,
-      (index) => DropdownItem(value: controller.categories[index]),
-    ),
+    ]
   );
-      return   SimpleDropdown<SaduditharCategory>.list(
+    
+  //   return   Obx((){
+    
+      
+  //   });
+  return    SimpleDropdown<String>.list(
             controller:itemsController,
       
             builder: (_) =>Container(
@@ -40,7 +39,7 @@ final CreateSaduditharController controller;
 
                   children: [
                     Text(
-                    controller.selectedCategory.name,
+                    controller.selectedCategory,
                       style: Theme.of(context).textTheme.labelMedium!.copyWith(
                           fontWeight: FontWeight.w500,
                           fontFamily: "Myanmar",
@@ -64,6 +63,7 @@ final CreateSaduditharController controller;
             itemBuilder: (_, item) => GestureDetector(
               onTap: () {
                 itemsController.select(item.value, dismiss: true);
+
                 controller.setCategory(item.value);
               },
               child: Card(
@@ -74,11 +74,10 @@ final CreateSaduditharController controller;
                 ),
                 child: Padding(
                   padding: const EdgeInsets.all(8),
-                   child: Text(item.value.name,style:  TextStyle(color: item.selected?ColorApp.secondaryColor:ColorApp.white),),
+                   child: Text(item.value,style:  TextStyle(color: item.selected?ColorApp.secondaryColor:ColorApp.white),),
                 ),
               ),
             ),
           );
-    });
   }
 }

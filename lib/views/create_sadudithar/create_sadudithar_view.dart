@@ -5,6 +5,7 @@ import 'package:donation_com_mm_v2/core/api_call_status.dart';
 import 'package:donation_com_mm_v2/util/app_color.dart';
 import 'package:donation_com_mm_v2/util/button_loader_widget.dart';
 import 'package:donation_com_mm_v2/util/share_pref_helper.dart';
+import 'package:donation_com_mm_v2/util/toast_helper.dart';
 import 'package:donation_com_mm_v2/views/create_natebanzay/widgets/item_dropdown.dart';
 import 'package:donation_com_mm_v2/views/create_sadudithar/widgets/category_dropdown.dart';
 import 'package:donation_com_mm_v2/views/create_sadudithar/widgets/city_dropdown.dart';
@@ -63,14 +64,14 @@ class CreateSaduditharView extends GetView<CreateSaduditharController> {
               controller: _titleController,
                 validator: (value){
                   if(value==null||value.isEmpty){
-                    return "အလှူအမည်လိုအပ်ပါသည်";
+                    return "အလှုအမည်လိုအပ်ပါသည်";
                   }
                   return null;
                 },
             
                 decoration: InputDecoration(
                   
-                    hintText: "အလှူအမည်",
+                    hintText: "အလှုအမည်",
                 
                     hintStyle: Theme.of(context).textTheme.bodyLarge!.copyWith(
                         fontWeight: FontWeight.w500, fontFamily: "Myanmar")),
@@ -114,7 +115,7 @@ class CreateSaduditharView extends GetView<CreateSaduditharController> {
               padding: const EdgeInsets.only(top:20.0),
               child: CategoryDropDown(controller: controller),
             ),
-           controller.selectedCategory.name=='အမျိုးအစားရွေးပါ'?   const Padding(
+           controller.selectedCategory=='အမျိုးအစားရွေးပါ'?   const Padding(
                padding: EdgeInsets.only(top: 20.0,left: 10),
               child:   Text("အမျိုးအစားလိုအပ်ပါသည်",style: TextStyle(color: ColorApp.lipstick,fontSize: 12,fontWeight: FontWeight.w200,fontFamily: "Myanmar"),)
              ):const SizedBox(),
@@ -168,14 +169,14 @@ class CreateSaduditharView extends GetView<CreateSaduditharController> {
               child: TextFormField(
                  validator: (value){
                   if(value==null||value.isEmpty){
-                    return "အလှူအချိန်လိုအပ်ပါသည်";
+                    return "အလှုအချိန်လိုအပ်ပါသည်";
                   }
                     
                   return null;
                 },
                 controller: _estimatedTimeController,
                 decoration: InputDecoration(
-                    hintText: "အလှူအချိန်",
+                    hintText: "အလှုအချိန်",
                     hintStyle: Theme.of(context).textTheme.bodyLarge!.copyWith(
                         fontWeight: FontWeight.w500, fontFamily: "Myanmar")),
               ),
@@ -222,9 +223,9 @@ class CreateSaduditharView extends GetView<CreateSaduditharController> {
   firstDate: DateTime(2024),
   lastDate: DateTime(2025),
 );
- String formattedDate = DateFormat('MMM d, y').format(date!);
- controller.setEventDate(formattedDate);
-print(formattedDate);
+//  String formattedDate = DateFormat('MMM d, y').format(date!);
+ controller.setEventDate(date!);
+// print(formattedDate);
                 },
                 child: Container(
                   padding: const EdgeInsets.all(16),
@@ -233,10 +234,10 @@ print(formattedDate);
                 
                     borderRadius: BorderRadius.all(Radius.circular(15))
                   ),
-                  child:  Text(controller.eventDate),),
+                  child:  Text(controller.eventDate==null?"နေ့ရက်":DateFormat('MMM d,y').format(controller.eventDate!)),),
               )
             ),
-                controller.eventDate=='နေ့ရက်'?   const Padding(
+                controller.eventDate==null?   const Padding(
                padding: EdgeInsets.only(top: 20.0,left: 10),
               child:   Text("နေ့ရက်လိုအပ်ပါသည်",style: TextStyle(color: ColorApp.lipstick,fontSize: 12,fontWeight: FontWeight.w200,fontFamily: "Myanmar"),)
              ):const SizedBox(),
@@ -245,14 +246,17 @@ print(formattedDate);
               child: InkWell(
                 onTap: ()async{
      
-         var time=     await showTimePicker(
+                  if(controller.eventDate==null){
+ToastHelper.showErrorToast(context, "နေ့ရက်အရင်ရွေးရမည်");
+                  }{
+     var time=     await showTimePicker(
   context: context,
 initialTime: TimeOfDay.now()
 );
- DateTime tempDate = DateFormat("hh:mm").parse(
-        "${time!.hour}:${time.minute}");
-    var dateFormat = DateFormat("h:mm a").format(tempDate); 
-    controller.setSelectedStartTime(dateFormat);
+ DateTime tempDate =  DateTime(controller.eventDate!.year, controller.eventDate!.month,controller.eventDate!.day, time!.hour, time.minute);
+    // var dateFormat = ; 
+    controller.setSelectedStartTime(tempDate);
+                  }
 
                 },
                 child: Container(
@@ -262,10 +266,10 @@ initialTime: TimeOfDay.now()
                 
                     borderRadius: BorderRadius.all(Radius.circular(15))
                   ),
-                  child:  Text(controller.selectedStartTime),),
+                  child:  Text(controller.selectedStartTime==null?"စတင်မည့်အချိန်":DateFormat("h:mm a").format(controller.selectedStartTime!)),),
               )
             ),
-                controller.selectedStartTime=='စတင်မည့်အချိန်'?   const Padding(
+                controller.selectedStartTime==null?   const Padding(
                padding: EdgeInsets.only(top: 20.0,left: 10),
               child:   Text("စတင်မည့်အချိန်လိုအပ်ပါသည်",style: TextStyle(color: ColorApp.lipstick,fontSize: 12,fontWeight: FontWeight.w200,fontFamily: "Myanmar"),)
              ):const SizedBox(),
@@ -273,14 +277,21 @@ initialTime: TimeOfDay.now()
               padding: const EdgeInsets.only(top: 20.0),
               child: InkWell(
                 onTap: ()async{
-          var time=     await showTimePicker(
+
+
+                  if(controller.eventDate==null){
+ToastHelper.showErrorToast(context, "နေ့ရက်အရင်ရွေးရမည်");
+                  }{
+     var time=     await showTimePicker(
   context: context,
 initialTime: TimeOfDay.now()
 );
- DateTime tempDate = DateFormat("hh:mm").parse(
-        "${time!.hour}:${time.minute}");
-    var dateFormat = DateFormat("h:mm a").format(tempDate); 
-    controller.setSelectedEndTime(dateFormat);
+ DateTime tempDate =  DateTime(controller.eventDate!.year, controller.eventDate!.month,controller.eventDate!.day, time!.hour, time.minute);
+    // var dateFormat = ; 
+    controller.setSelectedEndTime(tempDate);
+
+                  }
+
 
 
 
@@ -292,10 +303,10 @@ initialTime: TimeOfDay.now()
                 
                     borderRadius: BorderRadius.all(Radius.circular(15))
                   ),
-                  child:  Text(controller.selectedEndTime),),
+                  child:  Text(controller.selectedEndTime==null?"ပြီးဆုံးမည့်အချိန်":DateFormat("h:mm a").format(controller.selectedEndTime!)),),
               )
             ),
-                controller.selectedEndTime=='ပြီးဆုံးမည့်အချိန်'?   const Padding(
+                controller.selectedEndTime==null?   const Padding(
                padding: EdgeInsets.only(top: 20.0,left: 10),
               child:   Text("ပြီးဆုံးမည့်အချိန်လိုအပ်ပါသည်",style: TextStyle(color: ColorApp.lipstick,fontSize: 12,fontWeight: FontWeight.w200,fontFamily: "Myanmar"),)
              ):const SizedBox(),
@@ -375,8 +386,8 @@ initialTime: TimeOfDay.now()
                       shape: const RoundedRectangleBorder(
                           borderRadius: BorderRadius.all(Radius.circular(15)))),
                   onPressed: () {
-                    if(_formKey.currentState!.validate()){
-                         controller.createSadudithar(CreateSaduditharModel(title: _titleController.text, description: _descriptionController.text, categoryId: controller.selectedCategory.id, cityId: controller.selectedCity.id, townshipId: controller.selectedTownship.id, subCategoryId: controller.selectedSubCategory.id, estimatedAmount:int.parse( _estimatedAmountController.text), estimatedTime: _estimatedTimeController.text, estimatedQuantity: _estimatedQuantityController.text, actualStartTime: controller.selectedStartTime, actualEndTime: controller.selectedEndTime, address: _addressController.text, phone: _phoneController.text, status: "pending", eventDate: controller.eventDate, latitude:controller.pickedLat, longitude: controller.pickedLong), context);
+                    if(_formKey.currentState!.validate()&&controller.eventDate!=null&&controller.selectedStartTime!=null&&controller.selectedEndTime!=null){
+                         controller.createSadudithar(CreateSaduditharModel(title: _titleController.text, description: _descriptionController.text, categoryId: controller.selectedSubCategory.id, cityId: controller.selectedCity.id, townshipId: controller.selectedTownship.id, type: controller.selectedCategory, estimatedAmount:int.parse( _estimatedAmountController.text), estimatedTime: _estimatedTimeController.text, estimatedQuantity: _estimatedQuantityController.text, actualStartTime: controller.selectedStartTime!, actualEndTime: controller.selectedEndTime!, address: _addressController.text, phone: _phoneController.text, status: "pending", eventDate: controller.eventDate!, latitude:controller.pickedLat, longitude: controller.pickedLong), context);
                     }
                   },
                   

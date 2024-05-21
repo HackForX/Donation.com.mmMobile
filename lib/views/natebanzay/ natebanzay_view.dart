@@ -1,22 +1,25 @@
-import 'dart:convert';
-
 import 'package:donation_com_mm_v2/controllers/home_controller.dart';
+import 'package:donation_com_mm_v2/controllers/natebanzay_details_controller.dart';
 import 'package:donation_com_mm_v2/controllers/request_natebanzay_controller.dart';
+import 'package:donation_com_mm_v2/core/api_call_status.dart';
 import 'package:donation_com_mm_v2/models/natebanzay_response.dart';
 import 'package:donation_com_mm_v2/routes/app_pages.dart';
 import 'package:donation_com_mm_v2/util/app_color.dart';
 import 'package:donation_com_mm_v2/util/app_config.dart';
 import 'package:donation_com_mm_v2/util/assets_path.dart';
+import 'package:donation_com_mm_v2/views/natebanzay/see_more_natebanzay_list_widget.dart';
 import 'package:donation_com_mm_v2/views/natebanzay/widgets/item_natebanzays_list.dart';
 import 'package:donation_com_mm_v2/views/natebanzay/widgets/item_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-
 import '../drawer/drawer_view.dart';
+import '../share_natebanzay/share_natebanzay_view.dart';
 
 class NateBanZayView extends GetView<HomeController> {
     final RequestNatebanzayController _requestNatebanzayController=Get.put(RequestNatebanzayController()) ;
+    final NatebanzayDetailsController _natebanzayDetailsController=Get.put(NatebanzayDetailsController()) ;
+
    NateBanZayView({super.key});
 
 
@@ -34,7 +37,7 @@ class NateBanZayView extends GetView<HomeController> {
             onPressed: () {
               Get.toNamed(Routes.createNatebanzay);
             },
-            label: Text("ပစ္စည်းလှူမည်",
+            label: Text("ပစ္စည်းလှုမည်",
                 style: Theme.of(context).textTheme.titleMedium!.copyWith(
                     color: ColorApp.white,
                     fontWeight: FontWeight.w500,
@@ -52,31 +55,31 @@ class NateBanZayView extends GetView<HomeController> {
           title: const Text("နိဗ္ဗာန်စျေး"),
         ),
         body: Obx(()=>ListView(children: [
-          Padding(
-            padding: const EdgeInsets.only(left: 16.0, top: 20, right: 16),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text("အနီးအနားတွင်ရှိသော",
-                    style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                        fontWeight: FontWeight.w600, fontFamily: "Myanmar")),
-                Text("အားလုံးကြည့်မည်",
-                    style: Theme.of(context).textTheme.labelMedium!.copyWith(
-                        color: ColorApp.dark,
-                        fontWeight: FontWeight.w500,
-                        fontFamily: "Myanmar")),
-              ],
-            ),
-          ),
-          const SizedBox(
-            height: 10,
-          ),
-           SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: Row(
-              children:controller.natebanzays.map((natebanzay) =>    NatebanzayCard(natebanzay: natebanzay,requestNatebanzayController: _requestNatebanzayController,), ).toList()
-            ),
-          ),
+          // Padding(
+          //   padding: const EdgeInsets.only(left: 16.0, top: 20, right: 16),
+          //   child: Row(
+          //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          //     children: [
+          //       Text("အနီးအနားတွင်ရှိသော",
+          //           style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+          //               fontWeight: FontWeight.w600, fontFamily: "Myanmar")),
+          //       Text("အားလုံးကြည့်မည်",
+          //           style: Theme.of(context).textTheme.labelMedium!.copyWith(
+          //               color: ColorApp.dark,
+          //               fontWeight: FontWeight.w500,
+          //               fontFamily: "Myanmar")),
+          //     ],
+          //   ),
+          // ),
+          // const SizedBox(
+          //   height: 10,
+          // ),
+          //  SingleChildScrollView(
+          //   scrollDirection: Axis.horizontal,
+          //   child: Row(
+          //     children:controller.natebanzays.map((natebanzay) =>    NatebanzayCard(natebanzay: natebanzay,requestNatebanzayController: _requestNatebanzayController,detailsController: _natebanzayDetailsController,), ).toList()
+          //   ),
+          // ),
           Padding(
             padding: const EdgeInsets.only(left: 16.0, top: 20, right: 16),
             child: Row(
@@ -85,11 +88,19 @@ class NateBanZayView extends GetView<HomeController> {
                 Text("အမျိုးအစားအလိုက်",
                     style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                         fontWeight: FontWeight.w600, fontFamily: "Myanmar")),
-                Text("အားလုံးကြည့်မည်",
-                    style: Theme.of(context).textTheme.labelMedium!.copyWith(
-                        color: ColorApp.dark,
-                        fontWeight: FontWeight.w500,
-                        fontFamily: "Myanmar")),
+                InkWell(
+                  onTap: () {
+                       final filteredNataebanzays = controller.natebanzays
+      .where((natebanzay) => natebanzay.item.name == controller.selectedItem.name)
+      .toList();
+                    Get.to(()=>SeeMoreNatebanzayList(title: "အမျိုးအစားအလိုက်", natebanzays: filteredNataebanzays, requestNatebanzayController: _requestNatebanzayController, detailsController: _natebanzayDetailsController));
+                  },
+                  child: Text("အားလုံးကြည့်မည်",
+                      style: Theme.of(context).textTheme.labelMedium!.copyWith(
+                          color: ColorApp.dark,
+                          fontWeight: FontWeight.w500,
+                          fontFamily: "Myanmar")),
+                ),
               ],
             ),
           ),
@@ -118,7 +129,7 @@ class NateBanZayView extends GetView<HomeController> {
           const SizedBox(
             height: 10,
           ),
-          ItemNatebanzaysList(homeController:controller, requestNatebanzayController: _requestNatebanzayController),
+          ItemNatebanzaysList(homeController:controller, requestNatebanzayController: _requestNatebanzayController,detailsController: _natebanzayDetailsController,),
           Padding(
             padding: const EdgeInsets.only(left: 16.0, top: 20, right: 16),
             child: Row(
@@ -127,11 +138,14 @@ class NateBanZayView extends GetView<HomeController> {
                 Text("နေရာအလိုက်",
                     style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                         fontWeight: FontWeight.w600, fontFamily: "Myanmar")),
-                Text("အားလုံးကြည့်မည်",
-                    style: Theme.of(context).textTheme.labelMedium!.copyWith(
-                        color: ColorApp.dark,
-                        fontWeight: FontWeight.w500,
-                        fontFamily: "Myanmar")),
+                GestureDetector(
+                  onTap: ()=>Get.to(()=>SeeMoreNatebanzayList(title: 'နေရာအလိုက်', natebanzays: controller.natebanzays, requestNatebanzayController: _requestNatebanzayController, detailsController: _natebanzayDetailsController)),
+                  child: Text("အားလုံးကြည့်မည်",
+                      style: Theme.of(context).textTheme.labelMedium!.copyWith(
+                          color: ColorApp.dark,
+                          fontWeight: FontWeight.w500,
+                          fontFamily: "Myanmar")),
+                ),
               ],
             ),
           ),
@@ -141,7 +155,7 @@ class NateBanZayView extends GetView<HomeController> {
            SingleChildScrollView(
             scrollDirection: Axis.horizontal,
             child: Row(
-                   children:controller.natebanzays.map((natebanzay) =>    NatebanzayCard(natebanzay: natebanzay,requestNatebanzayController: _requestNatebanzayController,), ).toList()
+                   children:controller.natebanzays.map((natebanzay) =>    NatebanzayCard(natebanzay: natebanzay,requestNatebanzayController: _requestNatebanzayController,detailsController: _natebanzayDetailsController,), ).toList()
             ),
           ),
           const SizedBox(height: 20,),
@@ -154,18 +168,26 @@ class NateBanZayView extends GetView<HomeController> {
 class NatebanzayCard extends StatelessWidget {
   final Natebanzay natebanzay;
   final RequestNatebanzayController requestNatebanzayController;
+  final NatebanzayDetailsController detailsController;
+
   const NatebanzayCard({
-    super.key, required this.natebanzay, required this.requestNatebanzayController,
+    super.key, required this.natebanzay, required this.requestNatebanzayController,required this.detailsController
   });
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () => showItemDetailsDialog(context,natebanzay,requestNatebanzayController),
+      onTap: () {
+        detailsController.getDetails(natebanzay.id);
+        detailsController.view(natebanzay.id);
+
+        showItemDetailsDialog(context,detailsController,requestNatebanzayController);
+      },
       child: Container(
         margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
         decoration: BoxDecoration(
           color: ColorApp.white,
+          borderRadius: const BorderRadius.all(Radius.circular(9)),
           boxShadow: [
             BoxShadow(
               color: const Color.fromARGB(255, 255, 180, 193).withOpacity(0.2),
@@ -176,82 +198,45 @@ class NatebanzayCard extends StatelessWidget {
           ],
         ),
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          Stack(
-            children: [
-           natebanzay.photos==null?const SizedBox(
-                      height: 150,
-                width: 200,
-           ): SingleChildScrollView(scrollDirection: Axis.horizontal,child: Container(
-                height: 150,
-                width: 200,
-                padding: const EdgeInsets.all(15),
-                decoration: const BoxDecoration(
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(
-                      10,
-                    ),
-                    topRight: Radius.circular(
-                      10,
-                    ),
-                  ),
-                
-                ),
-              child: SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: extractPhotos(natebanzay.photos!).map((e) {
-                    print("Image $e");
-                    return Padding(
-                      padding: const EdgeInsets.only(left:8.0),
-                      child: Image.network("${AppConfig.baseUrl}/storage/images/natebanzay_photos/$e",height: 100,width: 100,fit: BoxFit.cover ,errorBuilder: (context,object,stack) {
-                        print(stack);
-                        print(object);
-                      
-                        return const Icon(Icons.error);
-                      },),
-                    );
-                  }, ).toList(),),
-              ),
-              ),),
-              Positioned(
-                right: 20,
-                top: 10,
-                child: Container(
-                  padding: const EdgeInsets.all(5),
-                  alignment: Alignment.center,
-                  decoration:  BoxDecoration(
-                    borderRadius: const BorderRadius.all(Radius.circular(10)),
-                    color: ColorApp.mainColor,
-                  ),
-                  child: Center(
-                    child: Row(
-                      children: [
-                        Image.asset(
-                    IconPath.pinIcon,
-                          height: 13,
-                          color: ColorApp.white,
-                        ),
-                        const SizedBox(
-                          width: 4,
-                        ),
-                        Text(
-                          "13km",
-                          style: Theme.of(context)
-                              .textTheme
-                              .labelSmall!
-                              .copyWith(
-                                  fontFamily: "Myanmar",
-                                  color: ColorApp.white,
-                                  fontWeight: FontWeight.w600),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
+          natebanzay.photos==null?const SizedBox(
+                     height: 150,
+               width: 200,
+          ): SingleChildScrollView(scrollDirection: Axis.horizontal,child: Container(
+               height: 150,
+               width: 200,
+               padding: const EdgeInsets.all(15),
+               decoration: const BoxDecoration(
+                 borderRadius: BorderRadius.only(
+                   topLeft: Radius.circular(
+                     10,
+                   ),
+                   topRight: Radius.circular(
+                     10,
+                   ),
+                 ),
+               
+               ),
+             child: SingleChildScrollView(
+               scrollDirection: Axis.horizontal,
+               child: Row(
+                 crossAxisAlignment: CrossAxisAlignment.center,
+                 children: extractPhotos(natebanzay.photos!).map((e) {
+                   print("Image $e");
+                   return Padding(
+                     padding: const EdgeInsets.only(left:8.0),
+                     child: ClipRRect(
+                      borderRadius: const BorderRadius.all(Radius.circular(8)),
+                       child: Image.network("${AppConfig.baseUrl}/storage/images/natebanzay_photos/$e",height: 160,width: 140,fit: BoxFit.cover ,errorBuilder: (context,object,stack) {
+                         print(stack);
+                         print(object);
+                       
+                         return const Icon(Icons.error);
+                       },),
+                     ),
+                   );
+                 }, ).toList(),),
+             ),
+             ),),
           Padding(
             padding: const EdgeInsets.only(top: 8.0, left: 10),
             child: Text(
@@ -273,9 +258,9 @@ class NatebanzayCard extends StatelessWidget {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.only(left: 10.0, top: 4),
+            padding: const EdgeInsets.only(left: 10.0, top: 4,bottom: 15),
             child: Text(
-              "100views    1.3klikes",
+              "${natebanzay.viewCount}views    ${natebanzay.likeCount}likes",
               style: Theme.of(context)
                   .textTheme
                   .labelLarge!
@@ -287,7 +272,24 @@ class NatebanzayCard extends StatelessWidget {
     );
   }
 
-  void showItemDetailsDialog(BuildContext context,Natebanzay natebanzay,RequestNatebanzayController requestNatebanzayController) {
+List<String> extractPhotos(String jsonString) {
+
+  final photosWithoutEscape = jsonString.replaceAll('\\', '');
+
+  final photosWithoutBrackets = photosWithoutEscape.substring(2, photosWithoutEscape.length - 2);
+
+  final imageUrls = photosWithoutBrackets.split('","');
+
+  return imageUrls;
+}
+
+
+
+
+}
+
+
+  void showItemDetailsDialog(BuildContext context,NatebanzayDetailsController detailsController,RequestNatebanzayController requestNatebanzayController) {
     showModalBottomSheet(
         isScrollControlled: true,
         shape: const RoundedRectangleBorder(
@@ -295,7 +297,16 @@ class NatebanzayCard extends StatelessWidget {
                 topLeft: Radius.circular(15), topRight: Radius.circular(15))),
         context: context,
         builder: (context) {
-          return FractionallySizedBox(
+          return Obx(() {
+            // print("Like ${detailsController.natebanzay!.like!.userId}");
+            return detailsController.apiCallStatus==ApiCallStatus.loading||detailsController.natebanzay==null?FractionallySizedBox(
+              heightFactor: 0.9,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Center(child: CircularProgressIndicator()),
+                ],
+              )):FractionallySizedBox(
             heightFactor: 0.9,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
@@ -318,7 +329,7 @@ class NatebanzayCard extends StatelessWidget {
                               backgroundColor: ColorApp.mainColor,
                             ),
                             Text(
-                              natebanzay.user!.name,
+                              detailsController.natebanzay!.user!.name,
                               style: Theme.of(context)
                                   .textTheme
                                   .bodyMedium
@@ -332,113 +343,129 @@ class NatebanzayCard extends StatelessWidget {
                       const SizedBox(
                         width: 20,
                       ),
-                      Padding(
-                        padding: const EdgeInsets.only(
-                          top: 8.0,
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              children: [
-                                Text("${natebanzay.name} (${natebanzay.quantity.toString()}ခု)",
+                      Expanded(
+                        child: Padding(
+                          padding:  const EdgeInsets.only(
+                            top: 8.0,
+                          ),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: Text("${  detailsController.natebanzay!.name} (${  detailsController.natebanzay!.quantity.toString()}ခု)",
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .titleLarge
+                                            ?.copyWith(
+                                                fontWeight: FontWeight.w700,
+                                                color: ColorApp.dark,
+                                                fontFamily: "Myanmar")),
+                                  ),
+                                  const SizedBox(
+                                    width: 5,
+                                  ),
+                              Padding(
+                                padding: const EdgeInsets.only(right:15),
+                                child: GestureDetector(
+                                                  child: Icon(
+                                                detailsController.natebanzay!.like!=null?Icons.favorite:Icons.favorite_outline,
+                                                    color:ColorApp.mainColor,
+                                                    size: 23,
+                                                  ),
+                                                  onTap: () {
+                                                      detailsController.like(detailsController.natebanzay!.id,);
+                                                  },
+                                                ),
+                              )
+                                ],
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(
+                                  top: 2.0,
+                                ),
+                                child: Text(  detailsController.natebanzay!.item.name,
                                     style: Theme.of(context)
                                         .textTheme
-                                        .titleLarge
+                                        .bodySmall
                                         ?.copyWith(
-                                            fontWeight: FontWeight.w700,
+                                            fontWeight: FontWeight.w400,
                                             color: ColorApp.dark,
                                             fontFamily: "Myanmar")),
-                                const SizedBox(
-                                  width: 5,
-                                ),
-                        
-                              ],
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(
-                                top: 2.0,
                               ),
-                              child: Text(natebanzay.item.name,
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .bodySmall
-                                      ?.copyWith(
-                                          fontWeight: FontWeight.w400,
-                                          color: ColorApp.dark,
-                                          fontFamily: "Myanmar")),
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(
-                                top: 4.0,
+                              Padding(
+                                padding: const EdgeInsets.only(
+                                  top: 4.0,
+                                ),
+                                child: Text(  detailsController.natebanzay!.address,
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .labelSmall
+                                        ?.copyWith(
+                                            fontWeight: FontWeight.w400,
+                                            color: ColorApp.dark,
+                                            fontFamily: "Myanmar")),
                               ),
-                              child: Text(natebanzay.address,
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .labelSmall
-                                      ?.copyWith(
-                                          fontWeight: FontWeight.w400,
-                                          color: ColorApp.dark,
-                                          fontFamily: "Myanmar")),
-                            ),
-                            const SizedBox(height: 10,),
-                            Row(children: [
-                                    Image.asset(
-                                  IconPath.viewIcon,
-                                      color: ColorApp.mainColor,
-                                      height: 15,
-                                    ),
-                                    const SizedBox(
-                                      width: 5,
-                                    ),
-                                    Text("1K",
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .bodySmall!
-                                            .copyWith(
-                                              color: ColorApp.mainColor,
-                                              fontFamily: "English",
-                                            )),
-                                const SizedBox(
-                                  width: 5,
-                                ),
-                            Image.asset(
-                                    IconPath.likeIcon,
-                                      color: ColorApp.mainColor,
-                                      height: 15,
-                                    ),
-                                    const SizedBox(
-                                      width: 5,
-                                    ),
-                                    Text("10K",
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .bodySmall!
-                                            .copyWith(
-                                              color: ColorApp.mainColor,
-                                              fontFamily: "English",
-                                            )),
-                                const SizedBox(
-                                  width: 5,
-                                ),
-                               Image.asset(
-                                    IconPath.commentIcon,
-                                      color: ColorApp.mainColor,
-                                      height: 15,
-                                    ),
-                                    const SizedBox(
-                                      width: 5,
-                                    ),
-                                    Text("10K",
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .bodySmall!
-                                            .copyWith(
-                                              color: ColorApp.mainColor,
-                                              fontFamily: "English",
-                                            ))
-                            ],)
-                          ],
+                              const SizedBox(height: 10,),
+                              Row(children: [
+                                      Image.asset(
+                                    IconPath.viewIcon,
+                                        color: ColorApp.mainColor,
+                                        height: 15,
+                                      ),
+                                      const SizedBox(
+                                        width: 5,
+                                      ),
+                                      Text(detailsController.natebanzay!.viewCount.toString(),
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .bodySmall!
+                                              .copyWith(
+                                                color: ColorApp.mainColor,
+                                                fontFamily: "English",
+                                              )),
+                                  const SizedBox(
+                                    width: 5,
+                                  ),
+                              Image.asset(
+                                      IconPath.likeIcon,
+                                        color: ColorApp.mainColor,
+                                        height: 15,
+                                      ),
+                                      const SizedBox(
+                                        width: 5,
+                                      ),
+                                      Text(detailsController.natebanzay!.likeCount.toString(),
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .bodySmall!
+                                              .copyWith(
+                                                color: ColorApp.mainColor,
+                                                fontFamily: "English",
+                                              )),
+                                  const SizedBox(
+                                    width: 5,
+                                  ),
+                                 Image.asset(
+                                      IconPath.commentIcon,
+                                        color: ColorApp.mainColor,
+                                        height: 15,
+                                      ),
+                                      const SizedBox(
+                                        width: 5,
+                                      ),
+                                      Text(detailsController.natebanzay!.commentCount.toString(),
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .bodySmall!
+                                              .copyWith(
+                                                color: ColorApp.mainColor,
+                                                fontFamily: "English",
+                                              ))
+                              ],)
+                            ],
+                          ),
                         ),
                       ),
                     ],
@@ -447,7 +474,7 @@ class NatebanzayCard extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.only(left: 12.0, top: 10),
                   child: Text(
-                     natebanzay.note??"",
+                       detailsController.natebanzay!.note??"",
                       style: Theme.of(context).textTheme.labelMedium?.copyWith(
                           fontWeight: FontWeight.w300,
                           color: ColorApp.dark,
@@ -466,7 +493,7 @@ class NatebanzayCard extends StatelessWidget {
                   child: SingleChildScrollView(
                       scrollDirection: Axis.horizontal,
                       child: Row(
-                        children: natebanzay.photos!=null?extractPhotos(natebanzay.photos??"").map((e) =>   Container(
+                        children:   detailsController.natebanzay!.photos!=null?extractPhotos(  detailsController.natebanzay!.photos??"").map((e) =>   Container(
                             height: 150,
                             width: 200,
                             margin: const EdgeInsets.all(10),
@@ -497,7 +524,11 @@ class NatebanzayCard extends StatelessWidget {
                                   shape: const RoundedRectangleBorder(
                                       borderRadius: BorderRadius.all(
                                           Radius.circular(30)))),
-                              onPressed: () {},
+                              onPressed: () {
+                                  Get.toNamed(Routes.natebanzayComments,arguments: {
+                'natebanzay_id':detailsController.natebanzay!.id,
+              });
+                              },
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
@@ -536,7 +567,7 @@ class NatebanzayCard extends StatelessWidget {
                                       borderRadius: BorderRadius.all(
                                           Radius.circular(30)))),
                               onPressed: () {
-                                requestNatebanzayController.request(natebanzay.id, context);
+                                requestNatebanzayController.request(  detailsController.natebanzay!.id, context);
                               },
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
@@ -569,20 +600,6 @@ class NatebanzayCard extends StatelessWidget {
               ],
             ),
           );
+          });
         });
   }
-List<String> extractPhotos(String jsonString) {
-
-  final photosWithoutEscape = jsonString.replaceAll('\\', '');
-
-  final photosWithoutBrackets = photosWithoutEscape.substring(2, photosWithoutEscape.length - 2);
-
-  final imageUrls = photosWithoutBrackets.split('","');
-
-  return imageUrls;
-}
-
-
-
-
-}

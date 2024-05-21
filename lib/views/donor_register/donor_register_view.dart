@@ -137,7 +137,7 @@ class DonorRegisterView extends GetView<DonorRegisterController> {
                           fontFamily: "English"),
                     ),
                     onPressed: () {
-                      controller.register(_nameController.text, _addressController.text, _phoneController.text, int.parse(_documentNumberController.text), context);
+                      controller.register(_nameController.text, _addressController.text, _phoneController.text,_companyNameController.text,_positionController.text, int.parse(_documentNumberController.text), context);
                     },
                   ),
                 )),

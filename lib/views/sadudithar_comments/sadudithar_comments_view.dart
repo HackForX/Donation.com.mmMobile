@@ -121,6 +121,7 @@ class SaduditharCommentsView extends GetView<SaduditharDetailsController> {
                 Expanded(child: GestureDetector(onTap: (){
                if(_formKey.currentState!.validate()){
                  controller.comment(saduditharId, MySharedPref.getUserId()!, _commentController.text, context);
+                 _commentController.clear() ;
                }
                 },child: Image.asset(IconPath.sendIcon,height: 30,),))
               ],

@@ -194,6 +194,7 @@ class SplashController extends GetxController {
         update();
       },
       onSuccess: (response) {
+        print("Response ${response.data}");
         apiCallStatus=ApiCallStatus.success;
   
         update();

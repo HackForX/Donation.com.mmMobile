@@ -1,3 +1,5 @@
+import 'package:bottom_picker/bottom_picker.dart';
+import 'package:bottom_picker/resources/arrays.dart';
 import 'package:donation_com_mm_v2/controllers/auth_controller.dart';
 import 'package:donation_com_mm_v2/core/api_call_status.dart';
 import 'package:donation_com_mm_v2/routes/app_pages.dart';
@@ -5,11 +7,7 @@ import 'package:donation_com_mm_v2/util/app_color.dart';
 import 'package:donation_com_mm_v2/util/assets_path.dart';
 import 'package:donation_com_mm_v2/util/button_loader_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_easyloading/flutter_easyloading.dart';
-
 import 'package:get/get.dart';
-
-import '../login/login_view.dart';
 
 class RegisterView extends StatelessWidget {
   RegisterView({super.key});
@@ -182,108 +180,107 @@ class AuthFormWidget extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 15),
-                  // Padding(
-                  //   padding: const EdgeInsets.symmetric(horizontal: 22.0),
-                  //   child: Row(
-                  //     children: [
-                  //       Obx(
-                  //         () => Expanded(
-                  //           flex: 2,
-                  //           child: ElevatedButton(
-                  //               style: ElevatedButton.styleFrom(
-                  //                   backgroundColor: ColorApp.mainColor,
-                  //                   side: const BorderSide(
-                  //                     color: Colors.white,
-                  //                   ),
-                  //                   shape: const RoundedRectangleBorder(
-                  //                       borderRadius: BorderRadius.all(
-                  //                           Radius.circular(4)))),
-                  //               onPressed: () {
-                  //                 BottomPicker.date(
-                  //                         pickerTitle:
-                  //                             const Text("Set Your Birthday"),
-                  //                         maxDateTime: DateTime.now(),
-                  //                         pickerTextStyle: const TextStyle(
-                  //                             fontWeight: FontWeight.bold,
-                  //                             fontSize: 15,
-                  //                             color: Colors.blue),
-                  //                         onChange: (index) {
-                  //                           print(calculatedAge(index));
-                  //                           _authController.setSelectedAge(
-                  //                               calculatedAge(index));
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 22.0),
+                    child: Row(
+                      children: [
+                         Obx(
+                          () => Expanded(
+                            flex: 2,
+                            child: ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                    backgroundColor: ColorApp.mainColor,
+                                    side: const BorderSide(
+                                      color: Colors.white,
+                                    ),
+                                    shape: const RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(4)))),
+                                onPressed: () {
+                                  BottomPicker.date(
+                                          pickerTitle: const Text("Set Your Birthday"),
+                                          maxDateTime: DateTime.now(),
+                                        pickerTextStyle: const TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 15,
+                                              color: Colors.blue),
+                                          onChange: (index) {
+                                            print(calculatedAge(index));
+                                            _authController.setSelectedAge(
+                                                calculatedAge(index).toString());
 
-                  //                           print(index);
-                  //                         },
-                  //                         onSubmit: (index) {
-                  //                           print(calculatedAge(index));
-                  //                           _authController.setSelectedAge(
-                  //                               calculatedAge(index));
-                  //                         },
-                  //                         bottomPickerTheme:
-                  //                             BottomPickerTheme.plumPlate)
-                  //                     .show(context);
-                  //               },
-                  //               child: Text(
-                  //                 _authController.selectedAge == 0
-                  //                     ? "Birthday"
-                  //                     : "${_authController.selectedAge.toString()}years",
-                  //                 style: const TextStyle(
-                  //                     color: AppColors.secondaryColor,
-                  //                     fontSize: 16),
-                  //               )),
-                  //         ),
-                  //       ),
-                  //       const SizedBox(
-                  //         width: 10,
-                  //       ),
-                  //       // Obx(
-                  //       //   () => Expanded(
-                  //       //     flex: 2,
-                  //       //     child: ElevatedButton(
-                  //       //         style: ElevatedButton.styleFrom(
-                  //       //             backgroundColor:  ColorApp.mainColor,
-                  //       //             side: const BorderSide(color: Colors.white),
-                  //       //             shape: const RoundedRectangleBorder(
-                  //       //                 borderRadius: BorderRadius.all(
-                  //       //                     Radius.circular(4)))),
-                  //       //         onPressed: () {
-                  //       //           BottomPicker(
-                  //       //             items: const [
-                  //       //               Text('Male'),
-                  //       //               Text('Female'),
-                  //       //             ],
-                  //       //             pickerTitle: const Text("Select Gender"),
-                  //       //             onChange: (index) {
-                  //       //               print(index);
-                  //       //               _authController.setSelectedGender(
-                  //       //                   index == 0 ? "Male" : "Female");
-                  //       //             },
-                  //       //             onSubmit: (index) {
-                  //       //               print(index);
-                  //       //               _authController.setSelectedGender(
-                  //       //                   index == 0 ? "Male" : "Female");
-                  //       //             },
-                  //       //             pickerTextStyle: const TextStyle(
-                  //       //               color: Colors.blue,
-                  //       //               fontSize: 20,
-                  //       //               fontWeight: FontWeight.bold,
-                  //       //             ),
-                  //       //           ).show(context);
-                  //       //         },
-                  //       //         child: Text(
-                  //       //           _authController.selectedGender.isEmpty
-                  //       //               ? "Gender"
-                  //       //               : _authController.selectedGender,
-                  //       //           style: const TextStyle(
-                  //       //               color: AppColors.secondaryColor,
-                  //       //               fontSize: 16),
-                  //       //         )),
-                  //       //   ),
-                  //       // )
-                  //     ],
-                  //   ),
-                  // ),
-                  // const SizedBox(height: 20),
+                                            print(index);
+                                          },
+                                          onSubmit: (index) {
+                                            print(calculatedAge(index));
+                                            _authController.setSelectedAge(
+                                                calculatedAge(index).toString());
+                                          },
+                                          bottomPickerTheme:
+                                              BottomPickerTheme.plumPlate)
+                                      .show(context);
+                                },
+                                child: Text(
+                                  _authController.selectedAge .isEmpty
+                                      ? "Birthday"
+                                      : "${_authController.selectedAge.toString()}years",
+                                  style:  TextStyle(
+                                      color: ColorApp.secondaryColor,
+                                      fontSize: 16),
+                                )),
+                          ),
+                        ),
+                        const SizedBox(
+                          width: 10,
+                        ),
+                        Obx(
+                          () => Expanded(
+                            flex: 2,
+                            child: ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                    backgroundColor: ColorApp.mainColor,
+                                    side: const BorderSide(color: Colors.white),
+                                    shape: const RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.all(
+                                            Radius.circular(4)))),
+                                onPressed: () {
+                                  BottomPicker(
+                                    items: const [
+                                      Text('Male'),
+                                      Text('Female'),
+                                    ],
+                                    pickerTitle: const Text("Select Gender"),
+                                    onChange: (index) {
+                                      print(index);
+                                      _authController.setSelectedGender(
+                                          index == 0 ? "Male" : "Female");
+                                    },
+                                    onSubmit: (index) {
+                                      print(index);
+                                      _authController.setSelectedGender(
+                                          index == 0 ? "Male" : "Female");
+                                    },
+                                    pickerTextStyle: const TextStyle(
+                                      color: Colors.blue,
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ).show(context);
+                                },
+                                child: Text(
+                                  _authController.selectedGender.isEmpty
+                                      ? "Gender"
+                                      : _authController.selectedGender,
+                                  style:  TextStyle(
+                                      color: ColorApp.secondaryColor,
+                                      fontSize: 16),
+                                )),
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 20),
                   const SizedBox(height: 15),
 
                   GetBuilder<AuthController>(builder: (controller)=>Padding(
@@ -299,27 +296,22 @@ class AuthFormWidget extends StatelessWidget {
                           backgroundColor: ColorApp.secondaryColor,
                         ),
                         onPressed: () async {
-                          if (_formKey.currentState!.validate()) {
-                            _authController.register(
-                                _nameController.text,
-                                _phoneController.text,
-                                _passwordController.text,
-                                context);
-                          }
+                        
                           // if (_formKey.currentState!.validate() &&
-                          //     _authController.selectedAge != 0 &&
+                          //     _authController.selectedAge.isEmpty &&
                           //     _authController.selectedGender.isNotEmpty) {
-                          //   // _authController.checkUserExists(
-                          //   //     _nameController.text,
-                          //   //     _phoneController.text,
-                          //   //     _passwordController.text,
-                          //   //     _authController.selectedAge,
-                          //   //     _authController.selectedGender);
-                          // } else if (_authController.selectedAge == 0) {
+                          //     print("dddfdsfsdf");
+                  
+                          // } else if (_authController.selectedAge .isEmpty) {
+                          //   print("Called");
                           //   EasyLoading.showError("Please Select Birthday");
                           // } else if (_authController.selectedGender.isEmpty) {
-                          //   EasyLoading.showError("Please Select Gender");
+                          //   print("ddd");
+
+                          //   EasyLoading.showError("Pleas e Select Gender");
                           // }
+                          print("Calllfsdf");
+                                _authController.checkExist(_nameController.text, _phoneController.text, _passwordController.text, _authController.selectedAge, _authController.selectedGender);
                         },
                         child: _authController.apiCallStatus==ApiCallStatus.loading?const ButtonLoaderWidget():Text(
                           "Sign up",
@@ -349,7 +341,7 @@ class AuthFormWidget extends StatelessWidget {
                     children: [
                       InkWell(
                         onTap: () {
-                          // _authController.signInWithGoogle();
+                          _authController.signInWithGoogle();
                         },
                         child: CircleAvatar(
                           radius: 25,
@@ -360,7 +352,7 @@ class AuthFormWidget extends StatelessWidget {
                       const SizedBox(width: 20),
                       InkWell(
                         onTap: () {
-                          // _authController.signInWithFacebook();
+                          _authController.signInWithFacebook();
                         },
                         child: CircleAvatar(
                           radius: 25,

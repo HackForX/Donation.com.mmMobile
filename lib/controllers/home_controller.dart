@@ -6,6 +6,7 @@ import 'package:donation_com_mm_v2/models/donor_response.dart';
 import 'package:donation_com_mm_v2/models/item_response.dart';
 import 'package:donation_com_mm_v2/models/natebanay_request_response.dart';
 import 'package:donation_com_mm_v2/models/natebanzay_response.dart';
+import 'package:donation_com_mm_v2/models/profile_response.dart';
 import 'package:donation_com_mm_v2/models/sadudithar_response.dart';
 import 'package:donation_com_mm_v2/models/township_response.dart';
 import 'package:donation_com_mm_v2/util/app_config.dart';
@@ -31,6 +32,8 @@ class  HomeController extends GetxController{
   List<NatebanzayRequest> get natebanzaysRequests => _natebanzaysRequests.toList();
     final RxList<Donor> _donors = RxList.empty();
   List<Donor> get donors => _donors.toList();
+     final Rxn<Profile> _profile = Rxn<Profile>();
+  Profile? get profile => _profile.value;
       final RxList<Item> _items = RxList.empty();
   List<Item> get items => _items.toList();
         final RxList<SaduditharCategory> _categories = RxList.empty();
@@ -72,20 +75,27 @@ class  HomeController extends GetxController{
         update();
       },
       onSuccess: (response) {
+        print("Response ${response.data}");
         apiCallStatus = ApiCallStatus.success;
 
         SaduditharResponse saduditharResponse = SaduditharResponse.fromJson(response.data);
         _sadudithars.value = saduditharResponse.data;
-        
-for (var sadudithar in saduditharResponse.data) {
+          print("Sadudithar ${_sadudithars.length}");
+        _nearbySadudithars.clear();
+for (var sadudithar in _sadudithars) {
   print("Sadudithar: $sadudithar");
   if (currentPositon != null && sadudithar.latitude != null && sadudithar.longitude != null) {
     double distance = Geolocator.distanceBetween(
         currentPositon!.latitude, currentPositon!.longitude, sadudithar.latitude!, sadudithar.longitude!);
     print("Distance: $distance");
-    if (distance < 1000) {
-      _nearbySadudithars.add(sadudithar);
-    }
+  
+            if (!_nearbySadudithars.contains(sadudithar)) {
+               if (distance < 1000) {
+              _nearbySadudithars.add(sadudithar);
+              print("Near by ${_nearbySadudithars.length}");
+            }
+            }
+          
   } else {
     print("Error: Missing location data");
   }
@@ -132,6 +142,38 @@ for (var sadudithar in saduditharResponse.data) {
       },
     );
   }
+
+
+  Future<void> getProfile() async {
+    await _baseClient.safeApiCall(
+      AppConfig.profileUrl, // url
+      RequestType.get,
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Authorization': "Bearer ${MySharedPref.getToken()}",
+      },
+
+      onLoading: () {
+        apiCallStatus = ApiCallStatus.loading;
+        update();
+      },
+      onSuccess: (response) {
+        apiCallStatus = ApiCallStatus.success;
+
+        ProfileResponse profileResponse = ProfileResponse.fromJson(response.data);
+        _profile.value = profileResponse.data;
+        update();
+      },
+
+      onError: (error) {
+        apiCallStatus = ApiCallStatus.error;
+        BaseClient.handleApiError(apiException: error);
+        update();
+      },
+    );
+  }
+
 
 
 
@@ -376,7 +418,7 @@ for (var sadudithar in saduditharResponse.data) {
         apiCallStatus=ApiCallStatus.success;
         getNatebanzaysRequested();
         getNatebanzays();
-        ToastHelper.showSuccessToast(context,"အလှူကိုအောင်မြင်စွာဖျက်ပီးပါပီ");
+        ToastHelper.showSuccessToast(context,"အလှုကိုအောင်မြင်စွာဖျက်ပီးပါပီ");
         update();
       },
 
@@ -466,6 +508,8 @@ Future<Position> _determinePosition() async {
   void onInit() async{
       await getCurrentLocation();
     getSadudithars();
+    getProfile();
+
     getDonors();
     getNatebanzays();
     getNatebanzaysRequested();

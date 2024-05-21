@@ -1,4 +1,5 @@
 import 'package:donation_com_mm_v2/routes/app_pages.dart';
+import 'package:donation_com_mm_v2/views/sadudithar/widgets/distance_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -6,7 +7,6 @@ import '../../../models/sadudithar_response.dart';
 import '../../../util/app_color.dart';
 import '../../../util/app_config.dart';
 import '../../../util/assets_path.dart';
-import '../../sadudithar_details/sadudithar_details_view.dart';
 
 
 class AllSaduditarCard extends StatelessWidget {
@@ -56,7 +56,7 @@ class AllSaduditarCard extends StatelessWidget {
                       fit: BoxFit.cover),
                 ),
               ),
-              Positioned(
+              sadudithar.latitude!=null&&sadudithar.latitude!=0.0&&sadudithar.longitude!=null&&sadudithar.longitude!=0.0?Positioned(
                 right: 20,
                 top: 10,
                 child: Container(
@@ -77,21 +77,12 @@ class AllSaduditarCard extends StatelessWidget {
                         const SizedBox(
                           width: 4,
                         ),
-                        Text(
-                          "13km",
-                          style: Theme.of(context)
-                              .textTheme
-                              .labelSmall!
-                              .copyWith(
-                                  fontFamily: "Myanmar",
-                                  color:  ColorApp.white,
-                                  fontWeight: FontWeight.w600),
-                        ),
+                        DistanceWidget(latitude: sadudithar.latitude!, longitude: sadudithar.longitude!)
                       ],
                     ),
                   ),
                 ),
-              ),
+              ):const SizedBox(),
             ],
           ),
           Padding(
@@ -148,4 +139,6 @@ class AllSaduditarCard extends StatelessWidget {
       ),
     );
   }
+
+
 }

@@ -2,24 +2,25 @@
 import 'dart:io';
 
 import 'package:dio/dio.dart';
+import 'package:donation_com_mm_v2/controllers/home_controller.dart';
 import 'package:donation_com_mm_v2/core/api_call_status.dart';
 import 'package:donation_com_mm_v2/core/base_client.dart';
 import 'package:donation_com_mm_v2/models/category_response.dart';
 import 'package:donation_com_mm_v2/models/sadudithar_response.dart';
 import 'package:donation_com_mm_v2/util/app_config.dart';
 import 'package:donation_com_mm_v2/util/share_pref_helper.dart';
-import 'package:donation_com_mm_v2/util/toast_helper.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:get/get_instance/get_instance.dart';
 import 'package:get/get_rx/src/rx_types/rx_types.dart';
-import 'package:flutter/services.dart';
-import 'package:geolocator/geolocator.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:get/get_state_manager/src/simple/get_controllers.dart';
+import 'package:get/route_manager.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../models/city_response.dart';
 import '../models/township_response.dart';
+import '../util/toast_helper.dart';
 
 
 class CreateSaduditharController extends GetxController{
@@ -35,27 +36,20 @@ ApiCallStatus get apiCallStatus => _apiCallStatus.value;
        final RxList<Township> _townships = RxList.empty();
   List<Township> get townships => _townships.toList();
 
-    final Rx<SaduditharCategory> _selectedCategory=SaduditharCategory(
-    id: 0,
-    name: "အမျိုးအစားရွေးပါ",
-    type: "",
-    subCategories: [],
-    createdAt: DateTime.now(),
-    updatedAt: DateTime.now()
-  ).obs;
+    final Rx<String> _selectedCategory=RxString("အမျိုးအစားရွေးပါ");
 
-  SaduditharCategory get selectedCategory => _selectedCategory.value;
+  String get selectedCategory => _selectedCategory.value;
 
-    final Rx<SubCategory> _selectedSubCategory=SubCategory(
+    final Rx<SaduditharCategory> _selectedSubCategory=SaduditharCategory(
     id: 0,
     name: "အမျိုးအစားခွဲရွေးပါ",
     type: "",
-    categoryId: 1,
+ 
     createdAt: DateTime.now(),
     updatedAt: DateTime.now()
   ).obs;
 
-  SubCategory get selectedSubCategory => _selectedSubCategory.value;
+  SaduditharCategory get selectedSubCategory => _selectedSubCategory.value;
 
     final Rx<SaduditharCity> _selectedCity=SaduditharCity(
     id: 0,
@@ -82,12 +76,12 @@ cityName: "",
     updatedAt:""
   ).obs;
   Township get selectedTownship=>_selectedTownship.value;
-  final RxString _selectedEndTime=RxString("ပြီးဆုံးမည့်အချိန်");
-  String get selectedEndTime=> _selectedEndTime.value;
-  final RxString _selectedStartTime=RxString("စတင်မည့်အချိန်");
-  String get selectedStartTime=> _selectedStartTime.value;
-   final RxString _eventDate=RxString("နေ့ရက်");
-  String get eventDate=> _eventDate.value;
+  final  Rxn<DateTime> _selectedEndTime=Rxn<DateTime>();
+  DateTime? get selectedEndTime=> _selectedEndTime.value;
+  final Rxn<DateTime> _selectedStartTime=Rxn<DateTime>();
+  DateTime? get selectedStartTime=> _selectedStartTime.value;
+   final Rxn<DateTime> _eventDate=Rxn<DateTime>();
+  DateTime? get eventDate=> _eventDate.value;
    final Rx<Position?> _currentPosition = Rx<Position?>(null);
    Position? get currentPositon => _currentPosition.value;
    final RxDouble _pickedLat=RxDouble(0.0);
@@ -107,7 +101,7 @@ cityName: "",
       RequestType.post,
       headers: {
         'Accept': 'application/json',
-        'Content-Type': 'application/json',
+        'Content-Type': 'multipart/form-data',
         'Authorization': "Bearer ${MySharedPref.getToken()}",
       },
 
@@ -117,7 +111,7 @@ cityName: "",
         "category_id":createSaduditharModel.categoryId,
         "city_id":createSaduditharModel.cityId,
         "township_id":createSaduditharModel.townshipId,
-        "subCategory_id":createSaduditharModel.subCategoryId,
+        "type":createSaduditharModel.type,
         "user_id":MySharedPref.getUserId(),
         "estimated_amount":createSaduditharModel.estimatedAmount,
         "estimated_time":createSaduditharModel.estimatedTime,
@@ -130,7 +124,7 @@ cityName: "",
         "event_date":createSaduditharModel.eventDate,
         "longitude":createSaduditharModel.longitude==0?null:createSaduditharModel.longitude,
         "latitude":createSaduditharModel.latitude==0?null:createSaduditharModel.latitude,
-                "image": pickedImage==null?null:await MultipartFile.fromFile(pickedImage!.path),
+                "image": pickedImage==null?null:await MultipartFile.fromFile(pickedImage!.path,filename:pickedImage!.path.split("/").last ),
                 "is_open":1,
                 "is_show":0
       }),
@@ -141,13 +135,19 @@ cityName: "",
       },
       onSuccess: (response) {
         _apiCallStatus.value=ApiCallStatus.success;
-        ToastHelper.showSuccessToast(context,"အောင်မြင်ပါသည်");
+        Get.find<HomeController>().getSadudithars() ;
+        EasyLoading.showSuccess("အလှုကိုအောင်မြင်စွာတင်ပီးပါပီ");
+        Get.back();
       
         
       },
 
       onError: (error) {
         _apiCallStatus.value = ApiCallStatus.error;
+            if(error.statusCode==422){
+        ToastHelper.showErrorToast(context,error.response!.data["message"]);
+          
+        }
   
         update();
       },
@@ -263,7 +263,7 @@ cityName: "",
   }
 
 
-  void setCategory(SaduditharCategory category){
+  void setCategory(String category){
     _selectedCategory.value=category;
   }
 
@@ -276,20 +276,20 @@ cityName: "",
     _selectedTownship.value=township;
   }
 
-    void setSubCategory(SubCategory subCategory){
+    void setSubCategory(SaduditharCategory subCategory){
     _selectedSubCategory.value=subCategory;
   }
 
-  void setSelectedStartTime(String startTime){
+  void setSelectedStartTime(DateTime startTime){
     _selectedStartTime.value=startTime;
   }
 
 
-   void setSelectedEndTime(String endTime){
+   void setSelectedEndTime(DateTime endTime){
     _selectedEndTime.value=endTime;
   }
 
-     void setEventDate(String eventDate){
+     void setEventDate(DateTime eventDate){
     _eventDate.value=eventDate;
   }
 
@@ -374,20 +374,20 @@ class CreateSaduditharModel{
   final int categoryId;
   final int cityId;
   final int townshipId;
-  final int subCategoryId;
+  final String type;
 
   final int estimatedAmount;
   final String estimatedTime;
   final String estimatedQuantity;
-  final String actualStartTime;
-  final String actualEndTime;
+  final DateTime actualStartTime;
+  final DateTime actualEndTime;
   final String address;
   final String phone;
   final String status;
-  final String eventDate;
-  final double latitude;
-  final double longitude;
+  final DateTime eventDate;
+  final double? latitude;
+  final double? longitude;
   
 
-  CreateSaduditharModel({required this.title, required this.description,required this.categoryId, required this.cityId, required this.townshipId, required this.subCategoryId, required this.estimatedAmount, required this.estimatedTime, required this.estimatedQuantity, required this.actualStartTime, required this.actualEndTime, required this.address, required this.phone, required this.status, required this.eventDate,required this.latitude,required this.longitude});
+  CreateSaduditharModel({required this.title, required this.description,required this.categoryId, required this.cityId, required this.townshipId, required this.type, required this.estimatedAmount, required this.estimatedTime, required this.estimatedQuantity, required this.actualStartTime, required this.actualEndTime, required this.address, required this.phone, required this.status, required this.eventDate,required this.latitude,required this.longitude});
 }

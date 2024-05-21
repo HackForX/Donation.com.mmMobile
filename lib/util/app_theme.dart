@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 import 'app_color.dart';
 
@@ -28,7 +27,7 @@ class AppTheme {
         ),
         inputDecorationTheme: const InputDecorationTheme(
            fillColor: ColorApp.bgColorGrey,
-                    filled: true,
+                    // filled: true,
                       border:OutlineInputBorder(
                       borderSide: BorderSide(color: ColorApp.bgColorGrey),
                       borderRadius: BorderRadius.all(Radius.circular(10))

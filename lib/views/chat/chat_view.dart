@@ -6,7 +6,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class ChatView extends GetView<NatebanzayChatController> {
-  ChatView({super.key});
+  ChatView({super.key}){
+    controller.getChat(requesterId, uploaderId) ;
+  }
 final requesterId=Get.arguments['requester_id'];
 final uploaderId=Get.arguments['uploader_id'];
 final isRequester=Get.arguments['isRequester'];
@@ -15,7 +17,7 @@ final isRequester=Get.arguments['isRequester'];
 
   @override
   Widget build(BuildContext context) {
-controller.getChat(requesterId, uploaderId) ;
+
     return Obx(() {
       print("isRequester $isRequester",);
 
@@ -25,7 +27,7 @@ controller.getChat(requesterId, uploaderId) ;
 
       return RefreshIndicator(
         onRefresh: () async{
-          // controller.getChat(requesterId, uploaderId) ;
+          controller.getChat(requesterId, uploaderId) ;
         },
         child: Scaffold(
           drawer:  DrawerView(),
@@ -60,6 +62,7 @@ controller.getChat(requesterId, uploaderId) ;
                     IconButton(
                         onPressed: () {
                        controller.sendMessage(context,controller.chatId, MySharedPref.getUserId()??1,isRequester?uploaderId:requesterId , _messageController.text);
+                       _messageController.clear() ;
               //          WidgetsBinding.instance.addPostFrameCallback((_){
               //       controller.getChat(requesterId, uploaderId) ;
               //  });

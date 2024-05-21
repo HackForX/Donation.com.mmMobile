@@ -1,13 +1,9 @@
 import 'package:donation_com_mm_v2/controllers/create_sadudithar_controller.dart';
-import 'package:donation_com_mm_v2/controllers/home_controller.dart';
 import 'package:donation_com_mm_v2/models/category_response.dart';
-import 'package:donation_com_mm_v2/models/item_response.dart';
-import 'package:donation_com_mm_v2/models/sadudithar_response.dart';
 import 'package:dropdown_overlay/dropdown_overlay.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../../../models/city_response.dart';
 import '../../../util/app_color.dart';
 
 class SubCategoryDropDown extends StatelessWidget {
@@ -22,13 +18,19 @@ final CreateSaduditharController controller;
 
     
     return   Obx((){
-              final subCategoriesController = DropdownController<SubCategory>.single(
-    items: List.generate(
-      controller.selectedCategory.subCategories.length,
-      (index) => DropdownItem(value:controller.selectedCategory.subCategories[index]),
-    ),
-  );
-      return   SimpleDropdown<SubCategory>.list(
+       final subCategoriesController = DropdownController<SaduditharCategory>.single(
+        items: controller.categories
+            .where((category) => category.type == controller.selectedCategory)
+            .toList()
+            .map(
+              (category) => DropdownItem(
+                value: category,
+              ),
+            )
+            .toList(),
+      );
+
+      return   SimpleDropdown<SaduditharCategory>.list(
             controller:subCategoriesController,
       
             builder: (_) =>Container(

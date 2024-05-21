@@ -37,8 +37,8 @@ class Sadudithar {
   final String phone;
   final String image;
   final String status;
-  final double? latitude;
-  final double? longitude;
+  final dynamic latitude;
+  final dynamic longitude;
   final int commentCount;
   final int likeCount;
   final int viewCount;

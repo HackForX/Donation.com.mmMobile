@@ -1,7 +1,6 @@
 import 'package:donation_com_mm_v2/models/sadudithar_response.dart';
 import 'package:donation_com_mm_v2/util/app_color.dart';
 import 'package:donation_com_mm_v2/util/app_config.dart';
-import 'package:donation_com_mm_v2/util/assets_path.dart';
 import 'package:flutter/material.dart';
 
 
@@ -24,7 +23,7 @@ class SaduditharImageWidget extends StatelessWidget {
       height: 200,
       child: ClipRRect(
         borderRadius: const BorderRadius.all(Radius.circular(10)),
-        child:Image.network("${AppConfig.baseUrl}/storage/${sadudithar.image}",errorBuilder: (context, error, stackTrace) => const Icon(Icons.image,size: 30,),)
+        child:Image.network("${AppConfig.baseUrl}/storage/${sadudithar.image}",fit: BoxFit.cover,errorBuilder: (context, error, stackTrace) => const Icon(Icons.image,size: 30,),)
       ),
     );
   }

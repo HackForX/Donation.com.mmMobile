@@ -1,18 +1,17 @@
 import 'package:donation_com_mm_v2/controllers/auth_controller.dart';
+import 'package:donation_com_mm_v2/controllers/home_controller.dart';
 import 'package:donation_com_mm_v2/routes/app_pages.dart';
 import 'package:donation_com_mm_v2/util/app_color.dart';
 import 'package:donation_com_mm_v2/util/assets_path.dart';
-
 import 'package:flutter/material.dart';
-
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 // import 'package:google_sign_in/google_sign_in.dart';
 import 'package:share_plus/share_plus.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 // import 'package:share_plus/share_plus.dart';
 
-class DrawerView extends StatelessWidget {
+class DrawerView extends GetView<HomeController> {
    DrawerView({super.key});
   final AuthController _authController=Get.put(AuthController())  ;
 
@@ -22,43 +21,67 @@ class DrawerView extends StatelessWidget {
       child: ListView(
         children: [
           Container(
-            height: 100,
+            height: 180,
             decoration:  BoxDecoration(color: ColorApp.mainColor),
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.start,
               children: [
+                SizedBox(height: 15,),
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     Container(
                       height: 40,
                       width: 50,
-                      decoration: const BoxDecoration(
+                      decoration:  BoxDecoration(
+
                           image: DecorationImage(
-                              image: AssetImage(ImagePath.logo),
+                            
+                              image: AssetImage("assets/images/logoGoldStroke.png"),
                               fit: BoxFit.cover)),
                     ),
                     const SizedBox(
                       width: 15,
                     ),
-                    const Text(
+                     Text(
                       "Donation.com.mm",
                       style: TextStyle(
-                          color: ColorApp.white,
+                          color: ColorApp.secondaryColor,
                           fontSize: 18,
                           fontFamily: "English",
                           fontWeight: FontWeight.bold),
                     ),
                   ],
                 ),
-                const Text(
-                  "v1.1",
-                  style: TextStyle(
-                      color: ColorApp.white,
-                      fontSize: 13,
-                      fontFamily: "English",
-                      fontWeight: FontWeight.bold),
-                ),
+                SizedBox(height: 30,),
+       Obx(() =>   controller.profile==null?const SizedBox():Padding(
+         padding: const EdgeInsets.only(left:13.0),
+         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(controller.profile!.name,style:  TextStyle(
+                            color: ColorApp.secondaryColor,
+                            fontSize: 14,
+                            fontFamily: "English",
+                            fontWeight: FontWeight.w400),),
+                            SizedBox(height: 5,),
+            Text(controller.profile!.role.toUpperCase(),style:  TextStyle(
+                            color: ColorApp.secondaryColor,
+                            fontSize: 14,
+                            fontFamily: "English",
+                            fontWeight: FontWeight.w400),),
+                                 SizedBox(height: 5,),
+            Text(controller.profile!.phone,style:  TextStyle(
+                            color: ColorApp.secondaryColor,
+                            fontSize: 14,
+                            fontFamily: "English",
+                        
+                            fontWeight: FontWeight.w400),),
+         
+         
+           ],),
+       ))
               ],
             ),
           ),
@@ -96,7 +119,8 @@ class DrawerView extends StatelessWidget {
           ),
           ListTile(
             onTap: () {
-              // Get.offAll(() => const HistoryView());
+                 Get.offAllNamed(Routes.history);
+
             },
             leading: Image.asset(
               IconPath.historyIcon,
@@ -104,7 +128,7 @@ class DrawerView extends StatelessWidget {
               height: 26,
             ),
             title:  Text(
-              "လှူဒါန်းမှုမှတ်တမ်း",
+              "လှုဒါန်းမှုမှတ်တမ်း",
               style: TextStyle(
                   color: ColorApp.mainColor,
                   fontSize: 18,
@@ -113,7 +137,7 @@ class DrawerView extends StatelessWidget {
           ),
           ListTile(
             onTap: () {
-              Get.offAllNamed(Routes.contactInfo);
+              Get.offAllNamed(Routes.contact);
             },
             leading: Image.asset(
            IconPath.contactIcon,
@@ -174,7 +198,7 @@ class DrawerView extends StatelessWidget {
               height: 24,
             ),
             title:  Text(
-              "အလှူရှင်စာရင်းသွင်းမည်",
+              "အလှုရှင်စာရင်းသွင်းမည်",
               style: TextStyle(
                   color: ColorApp.mainColor,
                   fontSize: 18,

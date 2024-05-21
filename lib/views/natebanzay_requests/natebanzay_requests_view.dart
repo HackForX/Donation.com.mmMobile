@@ -42,7 +42,7 @@ controller.getRequests(natebanzayId);
                      const SizedBox(height: 10,),
                 Text(controller.natebanzaysRequests[index].requester.name,style: const TextStyle(color: ColorApp.white,fontWeight: FontWeight.w600,fontSize: 15),),
                 const SizedBox(height: 10,),
-                 Text(controller.natebanzaysRequests[index].requester.phone,style: const TextStyle(color: ColorApp.white,fontWeight: FontWeight.w600,fontSize: 12),),
+                 Text(controller.natebanzaysRequests[index].requester.phone??"",style: const TextStyle(color: ColorApp.white,fontWeight: FontWeight.w600,fontSize: 12),),
 
               ],
             ),

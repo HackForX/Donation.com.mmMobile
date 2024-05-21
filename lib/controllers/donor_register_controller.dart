@@ -22,7 +22,7 @@ class DonorRegisterController extends GetxController{
   File? pickedDocumentImage;
 
   register(
-      String name,String address, String phone,int documentNumber,BuildContext context) async {
+      String name,String address, String phone,String business,String position,int documentNumber,BuildContext context) async {
     await _baseClient.safeApiCall(
       AppConfig.registerDonorUrl, // url
       RequestType.post,
@@ -36,6 +36,8 @@ class DonorRegisterController extends GetxController{
         "name": name,
         "address":address,
         "phone":phone,
+        "position":position,
+        "business":business,
         "document_number":documentNumber,
         "document": pickedDocumentImage==null?null:await MultipartFile.fromFile(pickedDocumentImage!.path)
 
@@ -53,6 +55,10 @@ class DonorRegisterController extends GetxController{
       },
 
       onError: (error) {
+         if(error.statusCode==422){
+        ToastHelper.showErrorToast(context,error.response!.data["message"]);
+          
+        }
         apiCallStatus = ApiCallStatus.error;
   
         update();
@@ -63,7 +69,7 @@ class DonorRegisterController extends GetxController{
 
   void pickDiscussionImage() async {
     final XFile? pickedFile = await ImagePicker().pickImage(
-      source: ImageSource.gallery,
+      source: ImageSource.camera,
     );
     if (pickedFile != null) {
       pickedDocumentImage = File(pickedFile.path);

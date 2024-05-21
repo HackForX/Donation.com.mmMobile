@@ -1,6 +1,5 @@
 import 'package:donation_com_mm_v2/controllers/create_sadudithar_controller.dart';
 import 'package:donation_com_mm_v2/util/assets_path.dart';
-import 'package:donation_com_mm_v2/util/loading_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:location_picker_flutter_map/location_picker_flutter_map.dart';
@@ -26,7 +25,7 @@ class MapView extends GetView<CreateSaduditharController> {
         minZoomLevel: 5,
         maxZoomLevel: 16,
         trackMyPosition: true,
-        // countryFilter: 'MM',
+        countryFilter: 'MM',
         onError: (e) => print(e),
         onPicked: (pickedData) {
           controller.setLatitude(pickedData.latLong.latitude);

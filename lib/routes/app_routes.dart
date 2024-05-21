@@ -17,6 +17,12 @@ abstract class Routes {
   static const viewNatebanzayRequests = _Paths.viewNatebanzayRequests;
   static const saduditharDetails=_Paths.saduditharDetails;
   static const saduditharComments=_Paths.saduditharComments;
+  static const natebanzayComments=_Paths.natebanzayComments;
+  static const history=_Paths.history;
+  static const contact=_Paths.contact;
+
+
+
 
 
 
@@ -50,6 +56,12 @@ static const viewNatebanzayRequests="/viewNatebanzayRequests";
 
 static const saduditharDetails="/saduditharDetails";
 static const saduditharComments="/saduditharComments";
+static const natebanzayComments="/natebanzayComments";
+static const history="/history";
+static const contact="/contact";
+
+
+
 
 
 

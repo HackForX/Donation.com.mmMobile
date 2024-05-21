@@ -1,6 +1,4 @@
 import 'package:donation_com_mm_v2/controllers/sadudithar_details_controller.dart';
-import 'package:donation_com_mm_v2/core/api_call_status.dart';
-import 'package:donation_com_mm_v2/models/sadudithar_response.dart';
 import 'package:donation_com_mm_v2/routes/app_pages.dart';
 import 'package:donation_com_mm_v2/util/app_color.dart';
 import 'package:donation_com_mm_v2/util/assets_path.dart';
@@ -8,7 +6,6 @@ import 'package:donation_com_mm_v2/views/drawer/drawer_view.dart';
 import 'package:donation_com_mm_v2/views/sadudithar_details/widgets/sadudithar_image_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
-
 import 'package:get/get.dart';
 import 'package:html/parser.dart' show parse;
 import 'package:intl/intl.dart';
@@ -69,7 +66,7 @@ class SaduditharDetailsView extends GetView<SaduditharDetailsController> {
                 child: Padding(
                   padding: const EdgeInsets.only(left: 15.0),
                   child: Text(
-                    "${controller.sadudithar!.user.name} မှ လှူဒါန်းသည်",
+                    "${controller.sadudithar!.user.name} မှ လှုဒါန်းသည်",
                     style: Theme.of(context).textTheme.labelLarge!.copyWith(
                         fontFamily: "Myanmar",
                         fontWeight: FontWeight.w600,
@@ -182,7 +179,7 @@ class SaduditharDetailsView extends GetView<SaduditharDetailsController> {
           ),
    Obx(()=>         controller.sadudithar!.latitude!=null||controller.sadudithar!.longitude!=null?  InkWell(
     onTap:() {
-      Get.to(()=>SaduditharMapView(latitude: controller.sadudithar!.latitude??0.0, longitude: controller.sadudithar!.longitude??0.0));
+      Get.to(()=>SaduditharMapView(latitude: controller.sadudithar!.latitude, longitude:controller.sadudithar!.longitude));
     },
      child: Container(
                 margin: const EdgeInsets.symmetric(horizontal: 10),
@@ -219,7 +216,7 @@ class SaduditharDetailsView extends GetView<SaduditharDetailsController> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        "လှူဖွယ်",
+                        "လှုဖွယ်",
                         style: Theme.of(context).textTheme.labelSmall!.copyWith(
                             fontSize: 8,
                             fontFamily: "Myanmar",

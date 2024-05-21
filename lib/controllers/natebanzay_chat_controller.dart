@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'dart:developer';
+
 import 'package:dio/dio.dart';
 import 'package:donation_com_mm_v2/models/chat_message_response.dart';
 import 'package:donation_com_mm_v2/models/notification_response.dart';
@@ -5,6 +8,7 @@ import 'package:donation_com_mm_v2/util/toast_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:get/get_state_manager/src/simple/get_controllers.dart';
+// import 'package:pusher_channels_flutter/pusher_channels_flutter.dart';
 
 
 
@@ -125,5 +129,83 @@ class NatebanzayChatController extends GetxController{
     );
   }
 
+//   initPusher()async{
+//     PusherChannelsFlutter pusher = PusherChannelsFlutter.getInstance();
+// try {
+//   await pusher.init(
+//     apiKey: "c086f9e951e5e4555449",
+//     cluster: "ap1",
+//     // onConnectionStateChange: onConnectionStateChange,
+//     // onError: onError,
+//     onSubscriptionSucceeded: onSubscriptionSucceeded,
+//     onEvent: onEvent,
+//     onSubscriptionError: onSubscriptionError,
+//     onDecryptionFailure: onDecryptionFailure,
+//     // onMemberAdded: onMemberAdded,
+//     // onMemberRemoved: onMemberRemoved,
+//     // authEndpoint: "<Your Authendpoint>",
+//     // onAuthorizer: onAuthorizer
+//   );
+//   await pusher.subscribe(channelName: 'chat');
+//   await pusher.connect();
+// } catch (e) {
+//   print("ERROR: $e");
+// }
+//   }
+
+  //   void onConnectionStateChange(ConnectionStateChange state) {
+  //   log("Connection state changed: ${state.currentState}");
+  // }
+
+  // void onError(String message, int code, Exception e) {
+  //   log("Connection error: $message");
+  // }
+
+  //   void onSubscriptionSucceeded(String channelName, dynamic data) {
+  //     print("Data ${data}");
+  //   log("Subscription succeeded: $channelName");
+  // }
+
+  // void onEvent(PusherEvent event) {
+  //   log("Received event: ${event.eventName}");
+  //   try {
+  //     if (event.eventName == 'pusher:subscription_succeeded') {
+  //       print("Datadsfd ${event.data}");
+  //       final data = json.decode(event.data);
+  //       print("Event ${data}");
+  //       final chatMessage = ChatMessage.fromJson(data);
+  //       _messages.add(chatMessage);
+  //     }
+  //   } catch (e) {
+  //     log("Error processing event data: $e");
+  //   }
+  // }
+
+
+  // void onSubscriptionError(String message, dynamic e) {
+  //   log("Subscription error: $message");
+  // }
+
+  // void onDecryptionFailure(String event, String reason) {
+  //   log("Decryption failure: $event, $reason");
+  // }
+
+  // void onMemberAdded(PusherMember member) {
+  //   log("Member added: ${member.userId}");
+  // }
+
+  // void onMemberRemoved(PusherMember member) {
+  //   log("Member removed: ${member.userId}");
+  // }
+
+  // void onSubscriptionCount(int count) {
+  //   log("Subscription count: $count");
+  // }
+
+@override
+  void onInit() {
+  //  initPusher();
+    super.onInit();
+  }
 
 }

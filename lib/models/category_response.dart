@@ -21,8 +21,8 @@ class CategoryResponse {
 class SaduditharCategory {
   final int id;
   final String name;
-  final String type;
-  final List<SubCategory> subCategories;
+  final String? type;
+
   final DateTime createdAt;
   final DateTime updatedAt;
 
@@ -30,7 +30,7 @@ class SaduditharCategory {
     required this.id,
     required this.name,
     required this.type,
-    required this.subCategories,
+
     required this.createdAt,
     required this.updatedAt,
   });
@@ -39,9 +39,7 @@ class SaduditharCategory {
         id: json['id'] as int,
         name: json['name'] as String,
     type: json['type'] as String,
-    subCategories: List<SubCategory>.from(
-          json['sub_categories'].map((dynamic item) => SubCategory.fromJson(item as Map<String, dynamic>)),
-        ),
+
         createdAt: DateTime.parse(json['created_at'] as String),
         updatedAt: DateTime.parse(json['updated_at'] as String),
       );
@@ -53,8 +51,8 @@ class SubCategory {
   final String name;
   final String type;
   final int categoryId;
-  final DateTime createdAt;
-  final DateTime updatedAt;
+  // final DateTime createdAt;
+  // final DateTime updatedAt;
 
   const SubCategory({
     required this.id,
@@ -62,8 +60,8 @@ class SubCategory {
     required this.type,
     required this.categoryId,
 
-    required this.createdAt,
-    required this.updatedAt,
+    // required this.createdAt,
+    // required this.updatedAt,
   });
 
   factory SubCategory.fromJson(Map<String, dynamic> json) => SubCategory(
@@ -72,8 +70,8 @@ class SubCategory {
         type:json['type'] as String,
         categoryId: json['category_id'] as int,
 
-        createdAt: DateTime.parse(json['created_at'] as String),
-        updatedAt: DateTime.parse(json['updated_at'] as String),
+        // createdAt: DateTime.parse(json['created_at'] as String),
+        // updatedAt: DateTime.parse(json['updated_at'] as String),
       );
 }
 
