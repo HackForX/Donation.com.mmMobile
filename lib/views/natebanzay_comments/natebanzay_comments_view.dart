@@ -92,9 +92,9 @@ class NatebanzayCommentsView extends GetView<NatebanzayDetailsController> {
         child: Padding(
           padding:  EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom ),
           child: Container(
-                 height: 80,
+                 height: 70,
             alignment: Alignment.center,
-            margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+            margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
             child:  Row(
               children: [
                 Expanded(
@@ -111,7 +111,7 @@ class NatebanzayCommentsView extends GetView<NatebanzayDetailsController> {
                     },
                     decoration: const InputDecoration(
                       
-                      contentPadding: EdgeInsets.all(5),
+                      contentPadding: EdgeInsets.all(10),
                       hintStyle: TextStyle(fontWeight: FontWeight.w500,fontSize: 15),
                       hintText: "မှတ်ချက်ရေးရန်"
                     ),
@@ -122,7 +122,7 @@ class NatebanzayCommentsView extends GetView<NatebanzayDetailsController> {
                  controller.comment(natebanzayId, MySharedPref.getUserId()!, _commentController.text, context);
                  _commentController.clear() ;
                }
-                },child: Image.asset(IconPath.sendIcon,height: 30,),))
+                },child: Image.asset(IconPath.sendIcon,height: 25,color: ColorApp.kDarkGray,),))
               ],
             )
           ),

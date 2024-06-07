@@ -1,14 +1,17 @@
-import 'package:bottom_picker/bottom_picker.dart';
-import 'package:bottom_picker/resources/arrays.dart';
+import 'dart:convert';
+import 'dart:io';
+
+import 'package:crypto/crypto.dart';
 import 'package:donation_com_mm_v2/controllers/auth_controller.dart';
 import 'package:donation_com_mm_v2/core/api_call_status.dart';
 import 'package:donation_com_mm_v2/routes/app_pages.dart';
 import 'package:donation_com_mm_v2/util/app_color.dart';
 import 'package:donation_com_mm_v2/util/assets_path.dart';
 import 'package:donation_com_mm_v2/util/button_loader_widget.dart';
+import 'package:donation_com_mm_v2/views/auth/register/age_gender_view.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
+import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 class RegisterView extends StatelessWidget {
   RegisterView({super.key});
 
@@ -72,7 +75,7 @@ class AuthFormWidget extends StatelessWidget {
                   ),
                   Image.asset(
                     ImagePath.logo,
-                    height: 80,
+
                     width: 100,
                     fit: BoxFit.cover,
                   ),
@@ -179,109 +182,9 @@ class AuthFormWidget extends StatelessWidget {
                       ),
                     ),
                   ),
-                  const SizedBox(height: 15),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 22.0),
-                    child: Row(
-                      children: [
-                         Obx(
-                          () => Expanded(
-                            flex: 2,
-                            child: ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                    backgroundColor: ColorApp.mainColor,
-                                    side: const BorderSide(
-                                      color: Colors.white,
-                                    ),
-                                    shape: const RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.all(
-                                            Radius.circular(4)))),
-                                onPressed: () {
-                                  BottomPicker.date(
-                                          pickerTitle: const Text("Set Your Birthday"),
-                                          maxDateTime: DateTime.now(),
-                                        pickerTextStyle: const TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 15,
-                                              color: Colors.blue),
-                                          onChange: (index) {
-                                            print(calculatedAge(index));
-                                            _authController.setSelectedAge(
-                                                calculatedAge(index).toString());
-
-                                            print(index);
-                                          },
-                                          onSubmit: (index) {
-                                            print(calculatedAge(index));
-                                            _authController.setSelectedAge(
-                                                calculatedAge(index).toString());
-                                          },
-                                          bottomPickerTheme:
-                                              BottomPickerTheme.plumPlate)
-                                      .show(context);
-                                },
-                                child: Text(
-                                  _authController.selectedAge .isEmpty
-                                      ? "Birthday"
-                                      : "${_authController.selectedAge.toString()}years",
-                                  style:  TextStyle(
-                                      color: ColorApp.secondaryColor,
-                                      fontSize: 16),
-                                )),
-                          ),
-                        ),
-                        const SizedBox(
-                          width: 10,
-                        ),
-                        Obx(
-                          () => Expanded(
-                            flex: 2,
-                            child: ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                    backgroundColor: ColorApp.mainColor,
-                                    side: const BorderSide(color: Colors.white),
-                                    shape: const RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.all(
-                                            Radius.circular(4)))),
-                                onPressed: () {
-                                  BottomPicker(
-                                    items: const [
-                                      Text('Male'),
-                                      Text('Female'),
-                                    ],
-                                    pickerTitle: const Text("Select Gender"),
-                                    onChange: (index) {
-                                      print(index);
-                                      _authController.setSelectedGender(
-                                          index == 0 ? "Male" : "Female");
-                                    },
-                                    onSubmit: (index) {
-                                      print(index);
-                                      _authController.setSelectedGender(
-                                          index == 0 ? "Male" : "Female");
-                                    },
-                                    pickerTextStyle: const TextStyle(
-                                      color: Colors.blue,
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ).show(context);
-                                },
-                                child: Text(
-                                  _authController.selectedGender.isEmpty
-                                      ? "Gender"
-                                      : _authController.selectedGender,
-                                  style:  TextStyle(
-                                      color: ColorApp.secondaryColor,
-                                      fontSize: 16),
-                                )),
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-                  const SizedBox(height: 15),
+             
+                    const SizedBox(height: 35),
+                  // const SizedBox(height: 15),
 
                   GetBuilder<AuthController>(builder: (controller)=>Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -296,22 +199,11 @@ class AuthFormWidget extends StatelessWidget {
                           backgroundColor: ColorApp.secondaryColor,
                         ),
                         onPressed: () async {
-                        
-                          // if (_formKey.currentState!.validate() &&
-                          //     _authController.selectedAge.isEmpty &&
-                          //     _authController.selectedGender.isNotEmpty) {
-                          //     print("dddfdsfsdf");
-                  
-                          // } else if (_authController.selectedAge .isEmpty) {
-                          //   print("Called");
-                          //   EasyLoading.showError("Please Select Birthday");
-                          // } else if (_authController.selectedGender.isEmpty) {
-                          //   print("ddd");
-
-                          //   EasyLoading.showError("Pleas e Select Gender");
-                          // }
+                          if(_formKey.currentState!.validate()){
+                            Get.to(()=>AgeGenderView(phone: _phoneController.text, name: _nameController.text,password: _passwordController.text,));
+                          }
                           print("Calllfsdf");
-                                _authController.checkExist(_nameController.text, _phoneController.text, _passwordController.text, _authController.selectedAge, _authController.selectedGender);
+
                         },
                         child: _authController.apiCallStatus==ApiCallStatus.loading?const ButtonLoaderWidget():Text(
                           "Sign up",
@@ -336,17 +228,40 @@ class AuthFormWidget extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 20),
+                          
+     
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      InkWell(
-                        onTap: () {
-                          _authController.signInWithGoogle();
+                    
+                               Platform.isAndroid? InkWell(
+                          onTap: () {
+                            _authController.signInWithGoogle();
+                          },
+                          child: CircleAvatar(
+                            radius: 25,
+                            backgroundColor: Colors.white,
+                            child: Image.asset(IconPath.googleIcon),
+                          ),
+                        ):   InkWell(
+                        onTap: () async{
+final rawNonce = generateNonce();
+final nonce = sha256ofString(rawNonce);
+final appleCredential = await SignInWithApple.getAppleIDCredential(
+  scopes: [
+    AppleIDAuthorizationScopes.email,
+    AppleIDAuthorizationScopes.fullName,
+  ],
+  nonce: nonce,
+);
+
+await _authController.appleSignInWithCode(appleCredential.authorizationCode);
+
                         },
                         child: CircleAvatar(
                           radius: 25,
                           backgroundColor: Colors.white,
-                          child: Image.asset('assets/icons/google.png'),
+                          child: Image.asset('assets/icons/apple.png',height: 35,),
                         ),
                       ),
                       const SizedBox(width: 20),
@@ -404,46 +319,46 @@ class AuthFormWidget extends StatelessWidget {
             ),
           ),
         ),
-        Positioned(
-          bottom: 0,
-          left: 0,
-          child: Image.asset(
-            "assets/images/bottom-left.png",
-            height: 100,
-            width: 100,
-            fit: BoxFit.cover,
+   Positioned(
+            bottom: 10,
+            left: 0,
+            child: Image.asset(
+             ImagePath.bottomLeft,
+       
+              width: 100,
+              fit: BoxFit.cover,
+            ),
           ),
-        ),
-        Positioned(
-          top: 0,
-          left: 0,
-          child: Image.asset(
-            "assets/images/top-left.png",
-            height: 100,
-            width: 100,
-            fit: BoxFit.cover,
+          Positioned(
+            top: 20,
+            left: 0,
+            child: Image.asset(
+              ImagePath.topLeft,
+    height: 120,
+              width: 100,
+              fit: BoxFit.cover,
+            ),
           ),
-        ),
-        Positioned(
-          bottom: 0,
-          right: 0,
-          child: Image.asset(
-            "assets/images/bottom-right.png",
-            height: 100,
-            width: 100,
-            fit: BoxFit.cover,
+          Positioned(
+            bottom: 10,
+            right: 0,
+            child: Image.asset(
+                ImagePath.bottomRight,
+              
+              width: 100,
+              fit: BoxFit.cover,
+            ),
           ),
-        ),
-        Positioned(
-          top: 0,
-          right: 0,
-          child: Image.asset(
-            "assets/images/top-right.png",
-            height: 100,
-            width: 100,
-            fit: BoxFit.cover,
+          Positioned(
+            top: 20,
+            right: 0,
+            child: Image.asset(
+               ImagePath.topRight,
+          
+              width: 100,
+              fit: BoxFit.cover,
+            ),
           ),
-        ),
       ],
     );
   }
@@ -473,4 +388,10 @@ class AuthFormWidget extends StatelessWidget {
 
     return false; // Valid phone number
   }
+
+  String sha256ofString(String input) {
+  final bytes = utf8.encode(input);
+  final digest = sha256.convert(bytes);
+  return digest.toString();
+}
 }

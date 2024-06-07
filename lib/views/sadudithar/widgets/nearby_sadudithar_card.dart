@@ -1,13 +1,11 @@
 import 'package:donation_com_mm_v2/routes/app_pages.dart';
 import 'package:flutter/material.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
 import '../../../models/sadudithar_response.dart';
 import '../../../util/app_color.dart';
 import '../../../util/app_config.dart';
-import '../../sadudithar_details/sadudithar_details_view.dart';
 
 
 class NearbySaduditarCard extends StatelessWidget {
@@ -81,7 +79,7 @@ class NearbySaduditarCard extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.only(top: 8.0, left: 10),
             child: Text(
-             sadudithar.eventDate,
+             DateFormat('MMMM d, yyyy').format(DateTime.parse(sadudithar.eventDate)),
               style: Theme.of(context)
                   .textTheme
                   .labelSmall!

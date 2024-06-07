@@ -1,8 +1,4 @@
 import 'package:donation_com_mm_v2/controllers/create_sadudithar_controller.dart';
-import 'package:donation_com_mm_v2/controllers/home_controller.dart';
-import 'package:donation_com_mm_v2/models/category_response.dart';
-import 'package:donation_com_mm_v2/models/item_response.dart';
-import 'package:donation_com_mm_v2/models/sadudithar_response.dart';
 import 'package:dropdown_overlay/dropdown_overlay.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -30,12 +26,23 @@ final CreateSaduditharController controller;
   );
       return   SimpleDropdown<SaduditharCity>.list(
             controller:citiesController,
-      
+      menuDecoration: BoxDecoration(
+        color: ColorApp.bgColorGrey,
+        borderRadius: const BorderRadius.all(Radius.circular(10)),
+           boxShadow: [
+                    BoxShadow(
+                        color: ColorApp.mainColor.withOpacity(0.3),
+                        blurRadius: 7,
+                        offset: const Offset(0, 2),
+                        spreadRadius: 0),
+                  ],
+      ),
             builder: (_) =>Container(
                 padding:
                     const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
                 decoration: BoxDecoration(
                   color: ColorApp.bgColorGrey,
+                 
                     borderRadius: const BorderRadius.all(Radius.circular(10)),
                     border: Border.all(color:  ColorApp.bgColorGrey)),
                 child: Row(
@@ -68,11 +75,15 @@ final CreateSaduditharController controller;
                 citiesController.select(item.value, dismiss: true);
                 controller.setCity(item.value);
               },
-              child: Card(
-                elevation: 0,
-                color: ColorApp.mainColor,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(4),
+              child: Container(
+                padding: const EdgeInsets.all(5),
+             margin: const EdgeInsets.symmetric(vertical: 5,horizontal: 10),
+              
+                decoration: BoxDecoration
+              (
+                  color: ColorApp.mainColor.withOpacity(0.8),
+             
+                  borderRadius: BorderRadius.circular(10),
                 ),
                 child: Padding(
                   padding: const EdgeInsets.all(8),

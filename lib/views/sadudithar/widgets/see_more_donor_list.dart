@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
 import '../../../models/donor_response.dart';
@@ -11,12 +12,9 @@ class SeeMoreDonorListWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Donors"),),
-      body: ListView.builder(
-        itemCount: donors.length,
-        itemBuilder: (BuildContext context, int index) {
-          return  GridView.builder(
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2,childAspectRatio: 0.5 ),
+      appBar: AppBar(title: const Text("donors").tr(),),
+      body:     GridView.builder(
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2,childAspectRatio: 0.9 ),
             itemCount: donors.length,
             itemBuilder: (BuildContext context, int index) {
               return Padding(
@@ -37,7 +35,7 @@ class SeeMoreDonorListWidget extends StatelessWidget {
                 shape: BoxShape.circle,
                 image: const DecorationImage(
                     fit: BoxFit.cover,
-                    image: AssetImage(ImagePath.profile))),
+                    image: AssetImage(ImagePath.donor))),
           ),
           const SizedBox(
             height: 10,
@@ -48,16 +46,14 @@ class SeeMoreDonorListWidget extends StatelessWidget {
           const SizedBox(
             height: 5,
           ),
-          Text("1ကြိမ်",
+          Text(donors[index].phone,
               style: Theme.of(context).textTheme.labelLarge!.copyWith(
                   fontWeight: FontWeight.w800, fontFamily: "Myanmar")),
         ],
       ),
     ) ;
             },
-          );
-        },
-      ),
+          )
     );
   }
 }

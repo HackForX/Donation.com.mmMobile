@@ -5,7 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:easy_localization/easy_localization.dart';
 class AppView extends StatelessWidget {
   const AppView({super.key});
 
@@ -22,6 +23,9 @@ class AppView extends StatelessWidget {
             debugShowCheckedModeBanner: false,
             theme: AppTheme().themeLight,
             initialRoute: AppPages.INITIAL,
+              localizationsDelegates: context.localizationDelegates,
+      supportedLocales: context.supportedLocales,
+      locale: context.locale,
             getPages: AppPages.routes,
             initialBinding: InitBinding(),
             builder: (context, child) {

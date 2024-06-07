@@ -1,4 +1,5 @@
 import 'package:donation_com_mm_v2/models/notification_response.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 
 import 'package:get/get.dart';
 
@@ -26,10 +27,13 @@ class NotificationController extends GetxController{
       },
 
       onLoading: () {
+            EasyLoading.show(status: "ခေတ္တစောင့်ဆိုင်းပေးပါ") ;
+        
         _apiCallStatus.value = ApiCallStatus.loading;
    
       },
       onSuccess: (response) {
+        EasyLoading.dismiss();
         _apiCallStatus.value = ApiCallStatus.success;
 
         NotificationResponse notificationResponse = NotificationResponse.fromJson(response.data);
@@ -38,6 +42,7 @@ class NotificationController extends GetxController{
       },
 
       onError: (error) {
+        EasyLoading.dismiss();
         _apiCallStatus.value = ApiCallStatus.error;
         BaseClient.handleApiError(apiException: error);
 

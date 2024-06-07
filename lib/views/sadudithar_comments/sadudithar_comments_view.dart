@@ -3,7 +3,6 @@ import 'package:donation_com_mm_v2/util/app_color.dart';
 import 'package:donation_com_mm_v2/util/assets_path.dart';
 import 'package:donation_com_mm_v2/util/share_pref_helper.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
@@ -93,7 +92,7 @@ class SaduditharCommentsView extends GetView<SaduditharDetailsController> {
         child: Padding(
           padding:  EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom ),
           child: Container(
-                 height: 80,
+                 height: 70,
             alignment: Alignment.center,
             margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
             child:  Row(
@@ -112,7 +111,7 @@ class SaduditharCommentsView extends GetView<SaduditharDetailsController> {
                     },
                     decoration: const InputDecoration(
                       
-                      contentPadding: EdgeInsets.all(5),
+                      contentPadding: EdgeInsets.all(10),
                       hintStyle: TextStyle(fontWeight: FontWeight.w500,fontSize: 15),
                       hintText: "မှတ်ချက်ရေးရန်"
                     ),
@@ -123,7 +122,7 @@ class SaduditharCommentsView extends GetView<SaduditharDetailsController> {
                  controller.comment(saduditharId, MySharedPref.getUserId()!, _commentController.text, context);
                  _commentController.clear() ;
                }
-                },child: Image.asset(IconPath.sendIcon,height: 30,),))
+                },child: Image.asset(IconPath.sendIcon,height: 25,color: ColorApp.kDarkGray,),))
               ],
             )
           ),

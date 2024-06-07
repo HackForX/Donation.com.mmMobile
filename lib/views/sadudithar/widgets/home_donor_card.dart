@@ -20,7 +20,7 @@ class HomeDonorCard extends StatelessWidget {
       child: Column(
         children: [
           Container(
-            height: 120,
+height: 100,
             width: 120,
             decoration: BoxDecoration(
                 border: Border.all(
@@ -30,7 +30,7 @@ class HomeDonorCard extends StatelessWidget {
                 shape: BoxShape.circle,
                 image: const DecorationImage(
                     fit: BoxFit.cover,
-                    image: AssetImage(ImagePath.profile))),
+                    image: AssetImage(ImagePath.donor))),
           ),
           const SizedBox(
             height: 10,
@@ -41,9 +41,12 @@ class HomeDonorCard extends StatelessWidget {
           const SizedBox(
             height: 5,
           ),
-          Text("1ကြိမ်",
-              style: Theme.of(context).textTheme.labelLarge!.copyWith(
-                  fontWeight: FontWeight.w800, fontFamily: "Myanmar")),
+          //  Text(donor.,
+          //     style: Theme.of(context).textTheme.bodySmall!.copyWith(
+          //         fontWeight: FontWeight.w800, fontFamily: "Myanmar")),
+          // Text("1ကြိမ်",
+          //     style: Theme.of(context).textTheme.labelLarge!.copyWith(
+          //         fontWeight: FontWeight.w800, fontFamily: "Myanmar")),
         ],
       ),
     );

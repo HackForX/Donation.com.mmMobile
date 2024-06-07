@@ -5,15 +5,37 @@ import 'package:donation_com_mm_v2/views/drawer/drawer_view.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class ChatView extends GetView<NatebanzayChatController> {
-  ChatView({super.key}){
-    controller.getChat(requesterId, uploaderId) ;
-  }
+class ChatView extends StatefulWidget {
+  const ChatView({super.key});
+
+  @override
+  State<ChatView> createState() => _ChatViewState();
+}
+
+class _ChatViewState extends State<ChatView> {
+  final NatebanzayChatController controller=Get.put(NatebanzayChatController());
 final requesterId=Get.arguments['requester_id'];
+
 final uploaderId=Get.arguments['uploader_id'];
+
 final isRequester=Get.arguments['isRequester'];
 
+ final ScrollController _scrollController = ScrollController();
+
   final TextEditingController _messageController = TextEditingController();
+
+  @override
+  void initState() {
+  controller.getChat(requesterId, uploaderId);
+    super.initState();
+  }
+
+
+  @override
+  void dispose() {
+    controller.scrollController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -33,6 +55,8 @@ final isRequester=Get.arguments['isRequester'];
           drawer:  DrawerView(),
           appBar: AppBar(title: const Text("Chat")),
           body:  SingleChildScrollView(
+            reverse: true,
+            controller: controller.scrollController,
               child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
             child: Column(children: controller.messages.map((message) =>       ChatMessage(text: message.message, isSender:message.senderId==MySharedPref.getUserId()?true:false),).toList()),
@@ -63,6 +87,9 @@ final isRequester=Get.arguments['isRequester'];
                         onPressed: () {
                        controller.sendMessage(context,controller.chatId, MySharedPref.getUserId()??1,isRequester?uploaderId:requesterId , _messageController.text);
                        _messageController.clear() ;
+                WidgetsBinding.instance.addPostFrameCallback((_) {
+      controller.scrollToBottom();
+    });
               //          WidgetsBinding.instance.addPostFrameCallback((_){
               //       controller.getChat(requesterId, uploaderId) ;
               //  });

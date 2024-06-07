@@ -214,7 +214,9 @@ class _PinCodeVerificationScreenState extends State<PinCodeVerificationScreen> {
                           } 
                         },
                         child: Text(
-                          "RESEND ${_authController.secondsRemaining.value}s",
+                       _authController.secondsRemaining.value == 0
+    ? "Resend"
+    : "RESEND ${_authController.secondsRemaining.value}s",
                           style:  TextStyle(
                             color: ColorApp.secondaryColor,
                             fontWeight: FontWeight.bold,

@@ -9,6 +9,7 @@ import 'package:donation_com_mm_v2/util/app_config.dart';
 import 'package:donation_com_mm_v2/util/share_pref_helper.dart';
 import 'package:donation_com_mm_v2/util/toast_helper.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:get/get_state_manager/src/simple/get_controllers.dart';
 import 'package:get/instance_manager.dart';
@@ -79,20 +80,23 @@ List<File> get pickedPhotos=> _pickedPhotos.toList();
       onLoading: () {
 
         _apiCallStatus.value = ApiCallStatus.loading;
+            EasyLoading.show(status: "ခေတ္တစောင့်ဆိုင်းပေးပါ") ;
      
       },
       
       onSuccess: (response) {
+        EasyLoading.dismiss();
         _apiCallStatus.value=ApiCallStatus.success;
 
         _homeController.getNatebanzays();
         _homeController.getNatebanzaysRequested();
 
-        ToastHelper.showSuccessToast(context,"အလှုကိုအောင်မြင်စွာပြင်ဆင်ပီးပါပီ");
+        ToastHelper.showSuccessToast(context,"အလှူကိုအောင်မြင်စွာပြင်ဆင်ပီးပါပီ");
 
       },
 
       onError: (error) {
+        EasyLoading.dismiss();
         _apiCallStatus.value = ApiCallStatus.error;
   
     

@@ -15,7 +15,16 @@ class DistanceWidget extends StatelessWidget {
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           // While data is loading, display a loading indicator or placeholder
-          return const SizedBox();
+          return  Text(
+           "--- km",
+                          style: Theme.of(context)
+                              .textTheme
+                              .labelSmall!
+                              .copyWith(
+                                  fontFamily: "Myanmar",
+                                  color:  ColorApp.white,
+                                  fontWeight: FontWeight.w600),
+                        );
         } else if (snapshot.hasError) {
           // If there's an error fetching the user, display an error message
           return const Text('--');

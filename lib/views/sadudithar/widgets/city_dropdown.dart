@@ -1,5 +1,6 @@
 import 'package:donation_com_mm_v2/controllers/home_controller.dart';
 import 'package:dropdown_overlay/dropdown_overlay.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -38,7 +39,7 @@ class CityDropdown extends StatelessWidget {
                           fontWeight: FontWeight.w500,
                           fontFamily: "Myanmar",
                           color:  ColorApp.dark),
-                    ),
+                    ).tr(),
                     const Icon(
                       Icons.arrow_drop_down_rounded,
                       size: 20,

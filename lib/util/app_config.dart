@@ -1,9 +1,16 @@
 /// Environments of WebSite
 class AppConfig {
   // static const String baseUrl = 'http://10.0.2.2:8000'; 
+  // static const String baseUrl = 'http://127.0.0.1:8000'; 
+
+
+
   static const String baseUrl = 'https://backend.donation.com.mm';
   static const String endPoint = '$baseUrl/api/user';
   static const String signInUrl = '$endPoint/login';
+  static const String appleSignInUrl = '$endPoint/apple-login';
+
+
   static const String signUpUrl = '$endPoint/register';
   static const String checkUserExistenceUrl = '$endPoint/checkExist';
   static const String forgotPasswordUrl = '$endPoint/forgot-password';
@@ -41,7 +48,7 @@ class AppConfig {
   static const String sendMessageUrl = '$endPoint/send-message';
 
 
-  static const String messagesUrl = '$endPoint/get-messages';
+  static const String   messagesUrl = '$endPoint/get-messages';
 
   static const String saveTokenUrl = '$endPoint/save-token';
   static const String natebanzayRequestsUrl = '$endPoint/natebanzay-requests';

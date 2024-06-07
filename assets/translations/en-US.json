@@ -1,0 +1,26 @@
+
+{
+    "home":"Home",
+    "notification":"Notification",
+    "history":"History",
+    "contact":"Contact us",
+    "guide":"User guide",
+    "share":"Share",
+    "donorRegister":"Register a donor account",
+    "language":"Change to burmese",
+    "logout":"Log out",
+    "sadudithar":"Sadudithar",
+    "natebanzay":"Natebanzay",
+    "requested":"Requested",
+    "requests":"Requests ",
+    "nearby":"Near by",
+    "bycity":"By City",
+    "donors":"Donors",
+    "allSadudithars":"All Sadudithars",
+    "seeall":"See all",
+    "chooseCity":"Choose city",
+    "byCategory":"By Category",
+    "byPlace":"By Place",
+    "createSadudithar":"Create Sadudithar",
+    "createNatebanzay":"Create Natebanzay"
+}

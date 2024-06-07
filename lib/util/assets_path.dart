@@ -18,6 +18,8 @@ class ImagePath {
   static const test = '$_folderPath/test.png';
   static const test1 = '$_folderPath/test1.png';
   static const profile = '$_folderPath/profile.png';
+  static const donor = '$_folderPath/donor.png';
+
   static const empty = '$_folderPath/empty.jpg';
 
 

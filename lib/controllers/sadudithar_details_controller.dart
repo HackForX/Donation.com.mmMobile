@@ -7,6 +7,7 @@ import 'package:donation_com_mm_v2/util/app_config.dart';
 import 'package:donation_com_mm_v2/util/share_pref_helper.dart';
 import 'package:donation_com_mm_v2/util/toast_helper.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:get/get_state_manager/src/simple/get_controllers.dart';
 
@@ -24,6 +25,7 @@ class SaduditharDetailsController extends GetxController{
   bool get isLike=>_isLike.value;
 
   Future<void>getDetails(int id) async{
+
     await _baseClient.safeApiCall(
       "${AppConfig.saduditharsUrl}/$id", // url
       RequestType.get,
@@ -34,10 +36,13 @@ class SaduditharDetailsController extends GetxController{
       },
 
       onLoading: () {
+            EasyLoading.show(status: "ခေတ္တစောင့်ဆိုင်းပေးပါ") ;
+
         _apiCallStatus.value = ApiCallStatus.loading;
 
       },
       onSuccess: (response) {
+        EasyLoading.dismiss();
         _apiCallStatus.value = ApiCallStatus.success;
 
         Sadudithar sadudithar = Sadudithar.fromJson(response.data['data']);
@@ -47,7 +52,8 @@ class SaduditharDetailsController extends GetxController{
       },
 
       onError: (error) {
-        _apiCallStatus.value = ApiCallStatus.error;
+        EasyLoading.dismiss()
+;        _apiCallStatus.value = ApiCallStatus.error;
         BaseClient.handleApiError(apiException: error);
        
       },
@@ -64,10 +70,13 @@ class SaduditharDetailsController extends GetxController{
       },
 
       onLoading: () {
+            EasyLoading.show(status: "ခေတ္တစောင့်ဆိုင်းပေးပါ") ;
+
         _apiCallStatus.value = ApiCallStatus.loading;
 
       },
       onSuccess: (response) {
+        EasyLoading.dismiss();
         _apiCallStatus.value = ApiCallStatus.success;
 
         SaduditharCommentResponse commentResponse = SaduditharCommentResponse.fromJson(response.data);
@@ -76,6 +85,7 @@ class SaduditharDetailsController extends GetxController{
       },
 
       onError: (error) {
+        EasyLoading.dismiss();
         _apiCallStatus.value = ApiCallStatus.error;
         BaseClient.handleApiError(apiException: error);
        
@@ -104,11 +114,13 @@ class SaduditharDetailsController extends GetxController{
 
       }),
       onLoading: () {
+            EasyLoading.show(status: "ခေတ္တစောင့်ဆိုင်းပေးပါ") ;
 
         _apiCallStatus.value = ApiCallStatus.loading;
      
       },
       onSuccess: (response) {
+        EasyLoading.dismiss();
         _apiCallStatus.value=ApiCallStatus.success;
         getComments(saduditharId);
         ToastHelper.showSuccessToast(context,"Commented");
@@ -116,6 +128,7 @@ class SaduditharDetailsController extends GetxController{
       },
 
       onError: (error) {
+        EasyLoading.dismiss();
         if(error.statusCode==422){
         ToastHelper.showErrorToast(context,error.response!.data["message"]);
           

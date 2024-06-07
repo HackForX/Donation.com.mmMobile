@@ -8,6 +8,8 @@ class MySharedPref {
   static late SharedPreferences _sharedPreferences;
 
   static const String _token = 'token';
+  static const String _isFirstRun='isFirstRun';
+
   static const String _userName = 'userName';
   static const String _email = 'email';
 
@@ -21,8 +23,12 @@ class MySharedPref {
 
   static Future<void> setToken(String token) =>
       _sharedPreferences.setString(_token, token);
+        static Future<void> setFirstRun(bool isFirstRun) =>
+      _sharedPreferences.setBool(_isFirstRun, isFirstRun);
 
   static String? getToken() => _sharedPreferences.getString(_token);
+  static bool? getIsFirstRun() => _sharedPreferences.getBool(_isFirstRun)??true;
+
 
   static Future<void> setUserName(String name) =>
       _sharedPreferences.setString(_userName, name);

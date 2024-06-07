@@ -66,7 +66,7 @@ class SaduditharDetailsView extends GetView<SaduditharDetailsController> {
                 child: Padding(
                   padding: const EdgeInsets.only(left: 15.0),
                   child: Text(
-                    "${controller.sadudithar!.user.name} မှ လှုဒါန်းသည်",
+                    "${controller.sadudithar!.user.name} မှ လှူဒါန်းသည်",
                     style: Theme.of(context).textTheme.labelLarge!.copyWith(
                         fontFamily: "Myanmar",
                         fontWeight: FontWeight.w600,
@@ -92,7 +92,7 @@ class SaduditharDetailsView extends GetView<SaduditharDetailsController> {
           Padding(
             padding: const EdgeInsets.only(left: 15.0, top: 12),
             child: Text(
-              "Dec 12,2023 ${controller.sadudithar!.estimatedTime}",
+              "${ DateFormat('MMMM d, yyyy').format(DateTime.parse(sadudithar.eventDate))} ${controller.sadudithar!.estimatedTime}",
               style: Theme.of(context).textTheme.labelLarge!.copyWith(
                   fontFamily: "Myanmar",
                   fontWeight: FontWeight.w200,
@@ -184,14 +184,14 @@ class SaduditharDetailsView extends GetView<SaduditharDetailsController> {
      child: Container(
                 margin: const EdgeInsets.symmetric(horizontal: 10),
                 padding: const EdgeInsets.symmetric(horizontal: 10),
-                height: 40,
+                height: 60,
                 decoration: BoxDecoration(
                   color: ColorApp.mainColor,
                   borderRadius: const BorderRadius.all(Radius.circular(10))
                 ),
                 child: Row(
                 children: [
-                   Text("မြေပုံတွင်ကြည့်မည်",style: TextStyle(color: ColorApp.secondaryColor,fontWeight: FontWeight.w400,fontSize: 12),),
+                   Text("မြေပုံကြည့်မည်",style: TextStyle(color: ColorApp.secondaryColor,fontWeight: FontWeight.w700,fontSize: 14),),
                    const Spacer()
      ,             Icon(Icons.map,color:ColorApp.secondaryColor)
                 ],
@@ -216,7 +216,7 @@ class SaduditharDetailsView extends GetView<SaduditharDetailsController> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        "လှုဖွယ်",
+                        "လှူဖွယ်",
                         style: Theme.of(context).textTheme.labelSmall!.copyWith(
                             fontSize: 8,
                             fontFamily: "Myanmar",
@@ -433,6 +433,16 @@ class SaduditharDetailsView extends GetView<SaduditharDetailsController> {
             )),
       ),
     );
+  }
+
+  Future<void> launchGoogleMaps(double latitude, double longitude) async {
+    final String googleMapsUrl = 'https://www.google.com/maps/search/?api=1&query=$latitude,$longitude';
+
+    if (await canLaunchUrl(Uri.parse(googleMapsUrl))) {
+      await launchUrl(Uri.parse(googleMapsUrl));
+    } else {
+      throw 'Could not launch $googleMapsUrl';
+    }
   }
 
   launchMap(String url) async {

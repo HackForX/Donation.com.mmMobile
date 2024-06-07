@@ -130,7 +130,7 @@ packages:
     source: hosted
     version: "0.3.4+1"
   crypto:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: crypto
       sha256: ff625774173754681d66daaf4a448684fb04b78f902da9cb3d308c19cc5e8bab
@@ -193,6 +193,22 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.1.0"
+  easy_localization:
+    dependency: "direct main"
+    description:
+      name: easy_localization
+      sha256: fa59bcdbbb911a764aa6acf96bbb6fa7a5cf8234354fc45ec1a43a0349ef0201
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.0.7"
+  easy_logger:
+    dependency: transitive
+    description:
+      name: easy_logger
+      sha256: c764a6e024846f33405a2342caf91c62e357c24b02c04dbc712ef232bf30ffb7
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.0.2"
   facebook_auth_desktop:
     dependency: transitive
     description:
@@ -430,6 +446,11 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "7.1.0"
+  flutter_localizations:
+    dependency: transitive
+    description: flutter
+    source: sdk
+    version: "0.0.0"
   flutter_map:
     dependency: transitive
     description:
@@ -442,10 +463,18 @@ packages:
     dependency: transitive
     description:
       name: flutter_map_cancellable_tile_provider
-      sha256: ae18dd59faf74f3eca1d28f83e59b47741bbff962e123bbebe9335c04d432f44
+      sha256: "69b019b9fec5c1c93afddea0ddc9d3538fafe5c103262f4ec4af6103f92b8458"
       url: "https://pub.dev"
     source: hosted
-    version: "2.0.0"
+    version: "1.0.0"
+  flutter_map_geojson:
+    dependency: "direct main"
+    description:
+      name: flutter_map_geojson
+      sha256: "0d23f7be720b6d1fdbcd137ee16f597a412dd2d3306d31c10ff59c213af174c2"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.8"
   flutter_map_location_marker:
     dependency: transitive
     description:
@@ -764,10 +793,10 @@ packages:
     dependency: "direct main"
     description:
       name: intl
-      sha256: d6f56758b7d3014a48af9701c085700aac781a92a87a62b1333b46d8879661cf
+      sha256: "3bc132a9dbce73a7e4a21a17d06e1878839ffbf975568bc875c60537824b0c4d"
       url: "https://pub.dev"
     source: hosted
-    version: "0.19.0"
+    version: "0.18.1"
   js:
     dependency: transitive
     description:
@@ -785,7 +814,7 @@ packages:
     source: hosted
     version: "4.9.0"
   latlong2:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: latlong2
       sha256: "98227922caf49e6056f91b6c56945ea1c7b166f28ffcd5fb8e72fc0b453cc8fe"
@@ -836,10 +865,10 @@ packages:
     dependency: "direct main"
     description:
       name: location_picker_flutter_map
-      sha256: f120dff8807f4b4b1c47934ea08ed56b8b88a174c5124efffeaa0b5703674bd6
+      sha256: feb3d31e702f6b5a8bb2a1b01544914679a418678896b86fc25139aa8f8120df
       url: "https://pub.dev"
     source: hosted
-    version: "3.0.1"
+    version: "2.1.0"
   logger:
     dependency: "direct main"
     description:
@@ -913,7 +942,7 @@ packages:
     source: hosted
     version: "2.0.1"
   package_info_plus:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: package_info_plus
       sha256: b93d8b4d624b4ea19b0a5a208b2d6eff06004bc3ce74c06040b120eeadd00ce0
@@ -1096,6 +1125,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.0"
+  pusher_channels_flutter:
+    dependency: "direct main"
+    description:
+      name: pusher_channels_flutter
+      sha256: a678f20dfcd3b023a6ba37f4a77e2f7b0a0bb88bf0623593b2c5837dfa8ac36e
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.2.1"
   rxdart:
     dependency: transitive
     description:
@@ -1184,6 +1221,30 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.0.0"
+  sign_in_with_apple:
+    dependency: "direct main"
+    description:
+      name: sign_in_with_apple
+      sha256: b0abd9c0d0407140829b12cd99a250f10b20352573ff08c7e0c5174c64b4973e
+      url: "https://pub.dev"
+    source: hosted
+    version: "6.1.0"
+  sign_in_with_apple_platform_interface:
+    dependency: transitive
+    description:
+      name: sign_in_with_apple_platform_interface
+      sha256: c2ef2ce6273fce0c61acd7e9ff5be7181e33d7aa2b66508b39418b786cca2119
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.1.0"
+  sign_in_with_apple_web:
+    dependency: transitive
+    description:
+      name: sign_in_with_apple_web
+      sha256: c009e9beeb6c376e86aaa154fcc8b4e075d4bad90c56286b9668a51cdb6129ea
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.1.0"
   sky_engine:
     dependency: transitive
     description: flutter

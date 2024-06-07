@@ -1,7 +1,7 @@
 import 'package:donation_com_mm_v2/controllers/home_controller.dart';
-import 'package:donation_com_mm_v2/views/sadudithar/widgets/sadudithar_list_view.dart';
 import 'package:donation_com_mm_v2/views/sadudithar/widgets/home_donor_card.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 
 class DonorList extends StatelessWidget {
@@ -15,12 +15,12 @@ class DonorList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    return controller.donors.isEmpty?const SizedBox(
+    return Obx(()=>controller.donors.isEmpty?const SizedBox(
        height: 120,
             width: 120,
-      child: Center(child: Text("No Donors Avaliable"),)):SingleChildScrollView(
+      child: Center(child: Text("အလှူရှင်များမရှိသေးပါ"),)):SingleChildScrollView(
      scrollDirection: Axis.horizontal,
      child: Row(children: controller.donors.map((donor) =>  HomeDonorCard(donor: donor,)).toList()),
-            );
+            ));
   }
 }

@@ -17,9 +17,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../core/api_call_status.dart';
 import '../core/base_client.dart';
 import '../routes/app_pages.dart';
+import '../views/auth/register/pin_code_view.dart';
 import '../views/forgot_password/forgot_password_view.dart';
 import '../views/forgot_password/forgot_pin_code_view.dart';
-import '../views/auth/register/pin_code_view.dart';
 
 class AuthController extends GetxController {
   List<dynamic>? data;
@@ -155,7 +155,9 @@ class AuthController extends GetxController {
 
 
   forgotPassword(
+    BuildContext context,
 String phone) async {
+_apiCallStatus.value=ApiCallStatus.loading;
     await _baseClient.safeApiCall(
       AppConfig.forgotPasswordUrl, // url
       RequestType.post,
@@ -166,6 +168,7 @@ String phone) async {
   
       },
       onSuccess: (response) async{
+        _apiCallStatus.value=ApiCallStatus.success;
         String token=response.data['token'];
           await  verifyForgotPhoneNumber(token,phone);
 
@@ -174,6 +177,10 @@ String phone) async {
       },
 
       onError: (error) {
+         if(error.statusCode==404){
+        ToastHelper.showErrorToast(context,"Phone number not found");
+          
+        }
         _apiCallStatus.value = ApiCallStatus.error;
   
    
@@ -225,7 +232,8 @@ String phone) async {
         "to": phone,
         "access-token":
             'hU9DDJ-3Vwcqcgekmvstr8Z_FtB5T-ZHZYZh9r06pHxWb1cQWjaH9yFO2U-u-1LZ',
-        "brand_name": 'Tecxplorer'
+        "brand_name": 'Donation MM',
+        // "sender_name":'Donation MM'
       },
       onLoading: () {
              _apiCallStatus.value  = ApiCallStatus.loading;
@@ -301,6 +309,56 @@ String phone) async {
     }
   }
 
+// Future<void> signInWithApple() async {
+//   try {
+//     // 1. Request Apple ID credential
+//     final appleCredential = await SignInWithApple.fromAuthResult(await SignInWithApple.getAuthResult());
+
+//     // 2. Check if cancelled
+//     if (appleCredential.credentialState == AuthorizationCredentialState.canceled) {
+//       EasyLoading.showToast("Cancelled");
+//       return;
+//     }
+
+//     // 3. Extract identity token
+//     final identityToken = String.fromCharCodes(appleCredential.identityToken);
+//     print("Identity Token: $identityToken");
+
+//     // 4. Exchange for your server-side token (if needed)
+//     // This step depends on your backend implementation
+//     // You might call your server to exchange the identityToken for your own token
+
+//     // 5. Sign in to Firebase with the token obtained from your server (or identityToken)
+//     // Replace "your_server_token" with the actual token
+//     final credential = await FirebaseAuth.instance.signInWithCredential(
+//       OAuthProvider.credential(
+//         providerId: 'apple.com',
+//         accessToken: "your_server_token", // or identityToken
+//       ),
+//     );
+
+//     // 6. Handle successful sign in
+//     print("Signed in with Apple UID: ${credential.user!.uid}");
+//     EasyLoading.dismiss();
+
+//   } on PlatformException catch (e) {
+//     print("Error: ${e.toString()}");
+//     if (e.code == 'sign_in_canceled') {
+//       EasyLoading.showToast("Cancelled");
+//     } else {
+//       EasyLoading.showToast("Sign in failed");
+//     }
+//   } catch (e) {
+//     print("Error: ${e.toString()}");
+//     EasyLoading.showToast("Something went wrong");
+//   } finally {
+//     EasyLoading.dismiss();
+//   }
+// }
+
+
+
+
 
   Future<void> signInWithFacebook() async {
     try {
@@ -324,6 +382,45 @@ String phone) async {
       }
     }
   }
+
+
+  appleSignInWithCode(
+
+      String token) async {
+        EasyLoading.show(status: "ခေတ္တစောင့်ဆိုင်းပေးပါ");
+    await _baseClient.safeApiCall(
+     AppConfig.appleSignInUrl, // url
+      RequestType.post,
+      queryParameters: {"token": token},
+      onLoading: () {
+
+       _apiCallStatus.value = ApiCallStatus.loading;
+  
+      },
+      onSuccess: (response) {
+        RegisterResponse registerResponse = RegisterResponse.fromJson(response.data);
+        MySharedPref.setUserName(registerResponse.user.name);
+               MySharedPref.setToken(registerResponse.token);
+      
+        MySharedPref.setUserId(registerResponse.user.id);
+        // ToastHelper.showSuccessToast(context, "Successfully created an account");
+        EasyLoading.showSuccess("Scuccess");
+        Get.offAllNamed(Routes.main);
+        _apiCallStatus.value = ApiCallStatus.success;
+        EasyLoading.dismiss();
+  
+      },
+
+      onError: (error) {
+        _apiCallStatus.value = ApiCallStatus.error;
+  
+        EasyLoading.dismiss();
+   
+  
+      },
+    );
+  }
+
 
 
   socialSignInWithToken(
@@ -368,10 +465,12 @@ String phone) async {
       RequestType.post,
 
       queryParameters: {
-        "to": phone,
+          "to": phone,
         "access-token":
             'hU9DDJ-3Vwcqcgekmvstr8Z_FtB5T-ZHZYZh9r06pHxWb1cQWjaH9yFO2U-u-1LZ',
-        "brand_name": 'Tecxplorer'
+        "brand_name": 'Donation MM',
+   
+
       },
       onLoading: () {
              _apiCallStatus.value  = ApiCallStatus.loading;
@@ -410,10 +509,10 @@ String phone) async {
       RequestType.post,
 
       queryParameters: {
-        "to": phone,
+          "to": phone,
         "access-token":
             'hU9DDJ-3Vwcqcgekmvstr8Z_FtB5T-ZHZYZh9r06pHxWb1cQWjaH9yFO2U-u-1LZ',
-        "brand_name": 'Donation.com.mm'
+        "brand_name": 'Donation MM',
       },
       onLoading: () {
              _apiCallStatus.value  = ApiCallStatus.loading;
@@ -433,6 +532,51 @@ String phone) async {
               password: password,
               age: age,
               gender: gender,
+            ));
+             _apiCallStatus.value  = ApiCallStatus.success;
+        EasyLoading.dismiss();
+
+      },
+
+      onError: (error) {
+        print(error.message);
+        EasyLoading.dismiss();
+
+             _apiCallStatus.value  = ApiCallStatus.error;
+
+      },
+    );
+  }
+
+    Future<void> resendForgotCode(String token,String phone ) async {
+    EasyLoading.show(status: "Loading..");
+    await _baseClient.safeApiCall(
+      'https://verify.smspoh.com/api/v2/request', // url
+      RequestType.post,
+
+      queryParameters: {
+    "to": phone,
+        "access-token":
+            'hU9DDJ-3Vwcqcgekmvstr8Z_FtB5T-ZHZYZh9r06pHxWb1cQWjaH9yFO2U-u-1LZ',
+        "brand_name": 'Donation MM',
+ 
+      },
+      onLoading: () {
+             _apiCallStatus.value  = ApiCallStatus.loading;
+
+      },
+      onSuccess: (response) {
+        print(response.data['request_id']);
+
+        setRequestId(response.data['request_id'].toString());
+
+        // _resendCode
+
+        Get.off(() => ForgotPinCodeView(
+              requestId: response.data['request_id'].toString(),
+              phoneNumber: phone,
+              token: token,
+            
             ));
              _apiCallStatus.value  = ApiCallStatus.success;
         EasyLoading.dismiss();

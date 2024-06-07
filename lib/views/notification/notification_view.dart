@@ -1,4 +1,5 @@
 import 'package:donation_com_mm_v2/controllers/notification_controller.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
 
@@ -18,7 +19,7 @@ class NotificationView extends GetView<NotificationController> {
     return Scaffold(
         drawer:  DrawerView(),
         appBar: AppBar(
-          title: const Text("အသိပေးချက်များ"),
+          title: const Text("notification").tr(),
         ),
         body:Obx(()=>Container(
                   decoration: const BoxDecoration(

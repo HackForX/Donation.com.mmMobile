@@ -131,18 +131,22 @@ cityName: "",
       onLoading: () {
 
        _apiCallStatus.value= ApiCallStatus.loading;
+            EasyLoading.show(status: "ခေတ္တစောင့်ဆိုင်းပေးပါ") ;
+
         
       },
       onSuccess: (response) {
+        EasyLoading.dismiss();
         _apiCallStatus.value=ApiCallStatus.success;
         Get.find<HomeController>().getSadudithars() ;
-        EasyLoading.showSuccess("အလှုကိုအောင်မြင်စွာတင်ပီးပါပီ");
+        EasyLoading.showSuccess("အလှူကိုအောင်မြင်စွာတင်ပီးပါပီ");
         Get.back();
       
         
       },
 
       onError: (error) {
+        EasyLoading.dismiss();
         _apiCallStatus.value = ApiCallStatus.error;
             if(error.statusCode==422){
         ToastHelper.showErrorToast(context,error.response!.data["message"]);

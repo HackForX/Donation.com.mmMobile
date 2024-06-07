@@ -1,3 +1,4 @@
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 
 import '../core/api_call_status.dart';
@@ -33,9 +34,12 @@ class HistoryController extends GetxController{
 
       onLoading: () {
         _apiCallStatus.value = ApiCallStatus.loading;
+            EasyLoading.show(status: "ခေတ္တစောင့်ဆိုင်းပေးပါ") ;
+
 
       },
       onSuccess: (response) {
+        EasyLoading.dismiss();
         _apiCallStatus.value = ApiCallStatus.success;
 
         SaduditharResponse saduditharResponse = SaduditharResponse.fromJson(response.data);
@@ -46,6 +50,7 @@ class HistoryController extends GetxController{
       },
 
       onError: (error) {
+        EasyLoading.dismiss();
     _apiCallStatus.value=ApiCallStatus.error;
         BaseClient.handleApiError(apiException: error);
 

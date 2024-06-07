@@ -13,8 +13,11 @@ import 'package:donation_com_mm_v2/util/app_config.dart';
 import 'package:donation_com_mm_v2/util/share_pref_helper.dart';
 import 'package:donation_com_mm_v2/util/toast_helper.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class  HomeController extends GetxController{
   ApiCallStatus apiCallStatus = ApiCallStatus.holding;
@@ -32,8 +35,8 @@ class  HomeController extends GetxController{
   List<NatebanzayRequest> get natebanzaysRequests => _natebanzaysRequests.toList();
     final RxList<Donor> _donors = RxList.empty();
   List<Donor> get donors => _donors.toList();
-     final Rxn<Profile> _profile = Rxn<Profile>();
-  Profile? get profile => _profile.value;
+     final Rx<Profile> _profile = Profile(id: 0,name: "--",phone: "--",role: "--",createdAt: DateTime.now(),updatedAt: DateTime.now()).obs;
+  Profile get profile => _profile.value;
       final RxList<Item> _items = RxList.empty();
   List<Item> get items => _items.toList();
         final RxList<SaduditharCategory> _categories = RxList.empty();
@@ -42,7 +45,7 @@ class  HomeController extends GetxController{
   List<SaduditharCity> get cities => _cities.toList();
        final RxList<Township> _townships = RxList.empty();
   List<Township> get townships => _townships.toList();
-  final RxString _selectedCity=RxString("Select City");
+  final RxString _selectedCity=RxString("chooseCity");
   String get selectedCity=> _selectedCity.value;
   final Rx<Item> _selectedItem=Item(
     id: 0,
@@ -72,10 +75,14 @@ class  HomeController extends GetxController{
 
       onLoading: () {
         apiCallStatus = ApiCallStatus.loading;
+            EasyLoading.show(status: "ခေတ္တစောင့်ဆိုင်းပေးပါ") ;
         update();
       },
       onSuccess: (response) {
+        EasyLoading.dismiss();
         print("Response ${response.data}");
+
+
         apiCallStatus = ApiCallStatus.success;
 
         SaduditharResponse saduditharResponse = SaduditharResponse.fromJson(response.data);
@@ -83,14 +90,16 @@ class  HomeController extends GetxController{
           print("Sadudithar ${_sadudithars.length}");
         _nearbySadudithars.clear();
 for (var sadudithar in _sadudithars) {
-  print("Sadudithar: $sadudithar");
+  print("Sadudithar: ${sadudithar.latitude}");
   if (currentPositon != null && sadudithar.latitude != null && sadudithar.longitude != null) {
     double distance = Geolocator.distanceBetween(
         currentPositon!.latitude, currentPositon!.longitude, sadudithar.latitude!, sadudithar.longitude!);
-    print("Distance: $distance");
+    print("fsdfdsf: $distance/1=");
   
             if (!_nearbySadudithars.contains(sadudithar)) {
-               if (distance < 1000) {
+              print(true);
+               if (distance/1000 < 15000) {
+                print(true) ;
               _nearbySadudithars.add(sadudithar);
               print("Near by ${_nearbySadudithars.length}");
             }
@@ -104,6 +113,8 @@ for (var sadudithar in _sadudithars) {
       },
 
       onError: (error) {
+        EasyLoading.dismiss();
+
         apiCallStatus = ApiCallStatus.error;
         BaseClient.handleApiError(apiException: error);
         update();
@@ -132,7 +143,7 @@ for (var sadudithar in _sadudithars) {
 
         DonorResponse donorResponse = DonorResponse.fromJson(response.data);
         _donors.value = donorResponse.data;
-        update();
+    
       },
 
       onError: (error) {
@@ -172,6 +183,22 @@ for (var sadudithar in _sadudithars) {
         update();
       },
     );
+  }
+
+
+  Future<void> requestLocationPermisson() async {
+    final status = await Permission.locationAlways.request();
+
+    if (status == PermissionStatus.denied) {
+      final result = await Permission.locationAlways.request();
+      if (result == PermissionStatus.granted) {
+        // Permission granted, do something...
+      } else {
+        // Permission denied, do something...
+      }
+    } else if (status == PermissionStatus.granted) {
+      // Permission granted, do something...
+    }
   }
 
 
@@ -315,10 +342,13 @@ for (var sadudithar in _sadudithars) {
       },
 
       onLoading: () {
+            EasyLoading.show(status: "ခေတ္တစောင့်ဆိုင်းပေးပါ") ;
+
         apiCallStatus = ApiCallStatus.loading;
         update();
       },
       onSuccess: (response) {
+        EasyLoading.dismiss();
         apiCallStatus = ApiCallStatus.success;
 
         NatebanzayResponse natebanzayResponse = NatebanzayResponse.fromJson(response.data);
@@ -327,6 +357,7 @@ for (var sadudithar in _sadudithars) {
       },
 
       onError: (error) {
+        EasyLoading.dismiss();
         apiCallStatus = ApiCallStatus.error;
         BaseClient.handleApiError(apiException: error);
         update();
@@ -347,10 +378,13 @@ for (var sadudithar in _sadudithars) {
       },
 
       onLoading: () {
+            EasyLoading.show(status: "ခေတ္တစောင့်ဆိုင်းပေးပါ") ;
+
         apiCallStatus = ApiCallStatus.loading;
         update();
       },
       onSuccess: (response) {
+        EasyLoading.dismiss();
         apiCallStatus = ApiCallStatus.success;
 
         NatebanzayResponse natebanzayResponse = NatebanzayResponse.fromJson(response.data);
@@ -359,6 +393,8 @@ for (var sadudithar in _sadudithars) {
       },
 
       onError: (error) {
+        EasyLoading.dismiss();
+
         apiCallStatus = ApiCallStatus.error;
         BaseClient.handleApiError(apiException: error);
         update();
@@ -378,10 +414,13 @@ for (var sadudithar in _sadudithars) {
       },
 
       onLoading: () {
+            EasyLoading.show(status: "ခေတ္တစောင့်ဆိုင်းပေးပါ") ;
+
         apiCallStatus = ApiCallStatus.loading;
         update();
       },
       onSuccess: (response) {
+        EasyLoading.dismiss();
         apiCallStatus = ApiCallStatus.success;
 
         NatebanzayRequestResponse natebanzayRequestResponse = NatebanzayRequestResponse.fromJson(response.data);
@@ -390,6 +429,7 @@ for (var sadudithar in _sadudithars) {
       },
 
       onError: (error) {
+        EasyLoading.dismiss();
         apiCallStatus = ApiCallStatus.error;
         BaseClient.handleApiError(apiException: error);
         update();
@@ -410,19 +450,23 @@ for (var sadudithar in _sadudithars) {
 
      
       onLoading: () {
+            EasyLoading.show(status: "ခေတ္တစောင့်ဆိုင်းပေးပါ") ;
+
 
         apiCallStatus = ApiCallStatus.loading;
         update();
       },
       onSuccess: (response) {
+        EasyLoading.dismiss();
         apiCallStatus=ApiCallStatus.success;
         getNatebanzaysRequested();
         getNatebanzays();
-        ToastHelper.showSuccessToast(context,"အလှုကိုအောင်မြင်စွာဖျက်ပီးပါပီ");
+        ToastHelper.showSuccessToast(context,"အလှူကိုအောင်မြင်စွာဖျက်ပီးပါပီ");
         update();
       },
 
       onError: (error) {
+        EasyLoading.dismiss();
         apiCallStatus = ApiCallStatus.error;
   
         update();
@@ -440,73 +484,103 @@ for (var sadudithar in _sadudithars) {
     _selectedItem.value=item;
   }
 
-
-  Future<void> getCurrentLocation() async {
-  try {
-  print("called");
-    Position position = await _determinePosition();
-    
-    print("Postition $position");
-    _currentPosition.value = position; // Update Rx variable
-    print("Current ${_currentPosition.value!.latitude}");
-  } catch (e) {
-    print("Error $e");
-    print(e); // Handle errors
+void showPermissionDialog() {
+    Get.defaultDialog(
+      title: "Permission Request",
+      content: Column(
+        children: [
+          const Text(
+            "Donation.com.mm collects location data to enable location tracking service for users to find posts by location nearby",
+            textAlign: TextAlign.center,
+          ),
+          const SizedBox(height: 20),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              TextButton(
+                onPressed: () {
+                 Get.back();
+                 EasyLoading.showError("Location permission is required to find nearby donations. Please enable location permissions ");
+                },
+                child: const Text("Cancel"),
+              ),
+              TextButton(
+                onPressed: () async {
+                  await requestLocationPermission();
+                  Get.back();
+                },
+                child: const Text("Allow"),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
   }
-}
 
-
-
-Future<Position> _determinePosition() async {
-  bool serviceEnabled;
-  LocationPermission permission;
-
-
-  serviceEnabled = await Geolocator.isLocationServiceEnabled();
-  if (!serviceEnabled) {
-    print("Service Not Enabled")  ;
-    return Future.error('Location services are disabled.');
-  }
-
-  permission = await Geolocator.checkPermission();
-  if (permission == LocationPermission.denied) {
-    print("Denied")  ;
-
-    permission = await Geolocator.requestPermission();
-    if (permission == LocationPermission.denied) {
-    print("Always Denied")  ;
-
-      // Permissions are denied, next time you could try
-      // requesting permissions again (this is also where
-      // Android's shouldShowRequestPermissionRationale 
-      // returned true. According to Android guidelines
-      // your App should show an explanatory UI now.
-      return Future.error('Location permissions are denied');
+  // Request location permission and get current location
+  Future<void> requestLocationPermission() async {
+    try {
+      print("Requesting location permission");
+      Position position = await _determinePosition();
+      print("Position: $position");
+      _currentPosition.value = position; // Update Rx variable
+      print("Current position latitude: ${_currentPosition.value?.latitude}");
+    } catch (e) {
+      print("Error: $e");
     }
   }
-  
-  if (permission == LocationPermission.deniedForever) {
-    print("Denied Forever")  ;
 
-    // Permissions are denied forever, handle appropriately. 
-    return Future.error(
-      'Location permissions are permanently denied, we cannot request permissions.');
-  } 
+  // Determine the position
+  Future<Position> _determinePosition() async {
+    bool serviceEnabled;
+    LocationPermission permission;
 
-  // When we reach here, permissions are granted and we can
-  // continue accessing the position of the device.
-  return await Geolocator.getCurrentPosition();
-}
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      print("Service not enabled");
+      return Future.error('Location services are disabled.');
+    }
 
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      print("Permission denied");
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        print("Permission denied again");
+        return Future.error('Location permissions are denied');
+      }
+    }
 
+    if (permission == LocationPermission.deniedForever) {
+      print("Permission denied forever");
+      return Future.error(
+        'Location permissions are permanently denied, we cannot request permissions.',
+      );
+    }
 
+    // Permissions are granted, continue accessing the position of the device.
+    return await Geolocator.getCurrentPosition();
+  }
 
 
 
 
   @override
   void onInit() async{
-      await getCurrentLocation();
+    // if (MySharedPref.getIsFirstRun()==true) {
+    //   WidgetsBinding.instance.addPostFrameCallback((_) => showDialog());
+    // }
+    //  await getCurrentLocation();
+    // Check location permission status
+    LocationPermission permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied ||
+        permission == LocationPermission.deniedForever) {
+      WidgetsBinding.instance.addPostFrameCallback((_) => showPermissionDialog());
+    } else {
+      await requestLocationPermission();
+    }
+
     getSadudithars();
     getProfile();
 

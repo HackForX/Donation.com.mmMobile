@@ -64,14 +64,14 @@ class CreateSaduditharView extends GetView<CreateSaduditharController> {
               controller: _titleController,
                 validator: (value){
                   if(value==null||value.isEmpty){
-                    return "အလှုအမည်လိုအပ်ပါသည်";
+                    return "အလှူအမည်လိုအပ်ပါသည်";
                   }
                   return null;
                 },
             
                 decoration: InputDecoration(
                   
-                    hintText: "အလှုအမည်",
+                    hintText: "အလှူအမည်",
                 
                     hintStyle: Theme.of(context).textTheme.bodyLarge!.copyWith(
                         fontWeight: FontWeight.w500, fontFamily: "Myanmar")),
@@ -169,14 +169,14 @@ class CreateSaduditharView extends GetView<CreateSaduditharController> {
               child: TextFormField(
                  validator: (value){
                   if(value==null||value.isEmpty){
-                    return "အလှုအချိန်လိုအပ်ပါသည်";
+                    return "အလှူအချိန်လိုအပ်ပါသည်";
                   }
                     
                   return null;
                 },
                 controller: _estimatedTimeController,
                 decoration: InputDecoration(
-                    hintText: "အလှုအချိန်",
+                    hintText: "အလှူအချိန်",
                     hintStyle: Theme.of(context).textTheme.bodyLarge!.copyWith(
                         fontWeight: FontWeight.w500, fontFamily: "Myanmar")),
               ),

@@ -10,9 +10,11 @@ import 'package:donation_com_mm_v2/util/assets_path.dart';
 import 'package:donation_com_mm_v2/views/natebanzay/see_more_natebanzay_list_widget.dart';
 import 'package:donation_com_mm_v2/views/natebanzay/widgets/item_natebanzays_list.dart';
 import 'package:donation_com_mm_v2/views/natebanzay/widgets/item_widget.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../../util/toast_helper.dart';
 import '../drawer/drawer_view.dart';
 import '../share_natebanzay/share_natebanzay_view.dart';
 
@@ -35,13 +37,19 @@ class NateBanZayView extends GetView<HomeController> {
             backgroundColor: ColorApp.mainColor,
             elevation: 1,
             onPressed: () {
-              Get.toNamed(Routes.createNatebanzay);
+                if(Get.find<HomeController>().profile.role=="user"){
+            ToastHelper.showErrorToast(context, "အလှူရှင်အကောင့်ဖြစ်မှသာ တင်လို့ရပါမည်");
+            Get.toNamed(Routes.donorRegister);
+            }else if (Get.find<HomeController>().profile.role=="donor"){
+                    Get.toNamed(Routes.createNatebanzay);
+            }
+         
             },
-            label: Text("ပစ္စည်းလှုမည်",
+            label: Text("createNatebanzay",
                 style: Theme.of(context).textTheme.titleMedium!.copyWith(
                     color: ColorApp.white,
                     fontWeight: FontWeight.w500,
-                    fontFamily: "Myanmar")),
+                    fontFamily: "Myanmar")).tr(),
             icon: Padding(
                 padding: const EdgeInsets.all(5.0),
                 child: Image.asset(
@@ -52,7 +60,7 @@ class NateBanZayView extends GetView<HomeController> {
         floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
         drawer:  DrawerView(),
         appBar: AppBar(
-          title: const Text("နိဗ္ဗာန်စျေး"),
+          title: const Text("natebanzay").tr(),
         ),
         body: Obx(()=>ListView(children: [
           // Padding(
@@ -85,21 +93,21 @@ class NateBanZayView extends GetView<HomeController> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text("အမျိုးအစားအလိုက်",
+                Text("byCategory",
                     style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                        fontWeight: FontWeight.w600, fontFamily: "Myanmar")),
+                        fontWeight: FontWeight.w600, fontFamily: "Myanmar")).tr(),
                 InkWell(
                   onTap: () {
                        final filteredNataebanzays = controller.natebanzays
       .where((natebanzay) => natebanzay.item.name == controller.selectedItem.name)
       .toList();
-                    Get.to(()=>SeeMoreNatebanzayList(title: "အမျိုးအစားအလိုက်", natebanzays: filteredNataebanzays, requestNatebanzayController: _requestNatebanzayController, detailsController: _natebanzayDetailsController));
+                    Get.to(()=>SeeMoreNatebanzayList(title: tr("byCategory"), natebanzays: filteredNataebanzays, requestNatebanzayController: _requestNatebanzayController, detailsController: _natebanzayDetailsController));
                   },
-                  child: Text("အားလုံးကြည့်မည်",
+                  child: Text("seeall",
                       style: Theme.of(context).textTheme.labelMedium!.copyWith(
                           color: ColorApp.dark,
                           fontWeight: FontWeight.w500,
-                          fontFamily: "Myanmar")),
+                          fontFamily: "Myanmar")).tr(),
                 ),
               ],
             ),
@@ -135,16 +143,16 @@ class NateBanZayView extends GetView<HomeController> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text("နေရာအလိုက်",
+                Text("byPlace",
                     style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                        fontWeight: FontWeight.w600, fontFamily: "Myanmar")),
+                        fontWeight: FontWeight.w600, fontFamily: "Myanmar")).tr(),
                 GestureDetector(
-                  onTap: ()=>Get.to(()=>SeeMoreNatebanzayList(title: 'နေရာအလိုက်', natebanzays: controller.natebanzays, requestNatebanzayController: _requestNatebanzayController, detailsController: _natebanzayDetailsController)),
-                  child: Text("အားလုံးကြည့်မည်",
+                  onTap: ()=>Get.to(()=>SeeMoreNatebanzayList(title: tr("byPlace"), natebanzays: controller.natebanzays, requestNatebanzayController: _requestNatebanzayController, detailsController: _natebanzayDetailsController)),
+                  child: Text("seeall",
                       style: Theme.of(context).textTheme.labelMedium!.copyWith(
                           color: ColorApp.dark,
                           fontWeight: FontWeight.w500,
-                          fontFamily: "Myanmar")),
+                          fontFamily: "Myanmar")).tr(),
                 ),
               ],
             ),
@@ -299,12 +307,12 @@ List<String> extractPhotos(String jsonString) {
         builder: (context) {
           return Obx(() {
             // print("Like ${detailsController.natebanzay!.like!.userId}");
-            return detailsController.apiCallStatus==ApiCallStatus.loading||detailsController.natebanzay==null?FractionallySizedBox(
+            return detailsController.apiCallStatus==ApiCallStatus.loading||detailsController.natebanzay==null?const FractionallySizedBox(
               heightFactor: 0.9,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Center(child: CircularProgressIndicator()),
+                  Center(child: CircularProgressIndicator()),
                 ],
               )):FractionallySizedBox(
             heightFactor: 0.9,
@@ -325,7 +333,7 @@ List<String> extractPhotos(String jsonString) {
                              CircleAvatar(
                               radius: 40,
                               backgroundImage:
-                                  const AssetImage(ImagePath.profile),
+                                  const AssetImage(ImagePath.donor),
                               backgroundColor: ColorApp.mainColor,
                             ),
                             Text(

@@ -3,10 +3,7 @@ import 'package:donation_com_mm_v2/util/app_color.dart';
 import 'package:donation_com_mm_v2/util/assets_path.dart';
 import 'package:donation_com_mm_v2/util/button_loader_widget.dart';
 import 'package:flutter/material.dart';
-
-
 import 'package:get/get.dart';
-
 
 import '../../controllers/auth_controller.dart';
 
@@ -84,20 +81,20 @@ class ForgotPhoneNumberView extends StatelessWidget {
                               color: ColorApp.secondaryColor,
                               fontSize: 16,
                               fontWeight: FontWeight.w500),
-                          border: OutlineInputBorder(
-                              borderRadius: const BorderRadius.all(
+                          border: const OutlineInputBorder(
+                              borderRadius: BorderRadius.all(
                                 Radius.circular(4),
                               ),
                               borderSide:
                                   BorderSide(color: ColorApp.bgColorGrey)),
-                          enabledBorder: OutlineInputBorder(
-                              borderRadius: const BorderRadius.all(
+                          enabledBorder: const OutlineInputBorder(
+                              borderRadius: BorderRadius.all(
                                 Radius.circular(4),
                               ),
                               borderSide:
                                   BorderSide(color: ColorApp.bgColorGrey)),
-                          focusedBorder: OutlineInputBorder(
-                              borderRadius: const BorderRadius.all(
+                          focusedBorder: const OutlineInputBorder(
+                              borderRadius: BorderRadius.all(
                                 Radius.circular(4),
                               ),
                               borderSide:
@@ -120,9 +117,10 @@ class ForgotPhoneNumberView extends StatelessWidget {
                                 backgroundColor: ColorApp.secondaryColor),
                             onPressed: () async {
                            await   _authController.forgotPassword(
+                            context,
                                   _phoneController.text);
                             },
-                            child:  _authController.apiCallStatus==ApiCallStatus.loading?ButtonLoaderWidget():Text(
+                            child:  _authController.apiCallStatus==ApiCallStatus.loading?const ButtonLoaderWidget():Text(
                               "Next",
                               style: TextStyle(
                                   color: ColorApp.mainColor,

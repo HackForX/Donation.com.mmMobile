@@ -3,8 +3,9 @@ import 'package:donation_com_mm_v2/controllers/home_controller.dart';
 import 'package:donation_com_mm_v2/routes/app_pages.dart';
 import 'package:donation_com_mm_v2/util/app_color.dart';
 import 'package:donation_com_mm_v2/util/assets_path.dart';
+import 'package:donation_com_mm_v2/views/drawer/version_widget.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 // import 'package:google_sign_in/google_sign_in.dart';
 import 'package:share_plus/share_plus.dart';
@@ -18,70 +19,67 @@ class DrawerView extends GetView<HomeController> {
   @override
   Widget build(BuildContext context) {
     return Drawer(
-      child: ListView(
+      child: Obx(()=>ListView(
         children: [
           Container(
-            height: 180,
+            height: 220,
             decoration:  BoxDecoration(color: ColorApp.mainColor),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                SizedBox(height: 15,),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Container(
-                      height: 40,
-                      width: 50,
-                      decoration:  BoxDecoration(
-
-                          image: DecorationImage(
-                            
-                              image: AssetImage("assets/images/logoGoldStroke.png"),
-                              fit: BoxFit.cover)),
-                    ),
-                    const SizedBox(
-                      width: 15,
-                    ),
-                     Text(
-                      "Donation.com.mm",
-                      style: TextStyle(
-                          color: ColorApp.secondaryColor,
-                          fontSize: 18,
-                          fontFamily: "English",
-                          fontWeight: FontWeight.bold),
-                    ),
-                  ],
+                const SizedBox(height: 6,),
+                Expanded(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Container(
+                        // height: 40,
+                        height: 80,
+                        width: 100,
+                        decoration:  const BoxDecoration(
+                  
+                            image: DecorationImage(
+                              
+                                image: AssetImage("assets/images/logo.png"),
+                                fit: BoxFit.fitHeight)),
+                      ),
+                      const SizedBox(
+                        width: 4,
+                      ),
+                       Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                         children: [ 
+                           Text(
+                            "Donation.com.mm",
+                            style: TextStyle(
+                                color: ColorApp.secondaryColor,
+                                fontSize: 18,
+                                fontFamily: "English",
+                                fontWeight: FontWeight.bold),
+                                                 ),
+                                                   const VersionWidget(),
+                         ],
+                       ),
+                    
+                    ],
+                  ),
                 ),
-                SizedBox(height: 30,),
-       Obx(() =>   controller.profile==null?const SizedBox():Padding(
-         padding: const EdgeInsets.only(left:13.0),
-         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(controller.profile!.name,style:  TextStyle(
-                            color: ColorApp.secondaryColor,
-                            fontSize: 14,
-                            fontFamily: "English",
-                            fontWeight: FontWeight.w400),),
-                            SizedBox(height: 5,),
-            Text(controller.profile!.role.toUpperCase(),style:  TextStyle(
-                            color: ColorApp.secondaryColor,
-                            fontSize: 14,
-                            fontFamily: "English",
-                            fontWeight: FontWeight.w400),),
-                                 SizedBox(height: 5,),
-            Text(controller.profile!.phone,style:  TextStyle(
-                            color: ColorApp.secondaryColor,
-                            fontSize: 14,
-                            fontFamily: "English",
-                        
-                            fontWeight: FontWeight.w400),),
-         
-         
-           ],),
-       ))
+  Padding(padding: const EdgeInsets.only(left: 13,bottom: 5,),child: Text(controller.profile.name,style:  TextStyle(
+                              color: ColorApp.secondaryColor,
+                              fontSize: 14,
+                              fontFamily: "English",
+                              fontWeight: FontWeight.w400),),
+                            ),
+                            Padding(padding: const EdgeInsets.only(left: 13,bottom: 5),child:   Text(controller.profile.role.toUpperCase(),style:  TextStyle(
+                              color: ColorApp.secondaryColor,
+                              fontSize: 14,
+                              fontFamily: "English",
+                          
+                              fontWeight: FontWeight.w400),),),
+     
+
               ],
             ),
           ),
@@ -95,12 +93,12 @@ class DrawerView extends GetView<HomeController> {
               height: 24,
             ),
             title:  Text(
-              "ပင်မစာမျက်နှာ",
+              "home",
               style: TextStyle(
                   color: ColorApp.mainColor,
                   fontSize: 18,
                   fontWeight: FontWeight.w400),
-            ),
+            ).tr(),
           ),
           ListTile(
             onTap: () => Get.offAllNamed(Routes.notification),
@@ -110,12 +108,12 @@ class DrawerView extends GetView<HomeController> {
               height: 25,
             ),
             title:  Text(
-              "အသိပေးချက်",
+              "notification",
               style: TextStyle(
                   color: ColorApp.mainColor,
                   fontSize: 18,
                   fontWeight: FontWeight.w400),
-            ),
+            ).tr(),
           ),
           ListTile(
             onTap: () {
@@ -128,12 +126,12 @@ class DrawerView extends GetView<HomeController> {
               height: 26,
             ),
             title:  Text(
-              "လှုဒါန်းမှုမှတ်တမ်း",
+              "history",
               style: TextStyle(
                   color: ColorApp.mainColor,
                   fontSize: 18,
                   fontWeight: FontWeight.w400),
-            ),
+            ).tr(),
           ),
           ListTile(
             onTap: () {
@@ -145,12 +143,12 @@ class DrawerView extends GetView<HomeController> {
               height: 24,
             ),
             title:  Text(
-              "ဆက်သွယ်ရန်",
+              "contact",
               style: TextStyle(
                   color: ColorApp.mainColor,
                   fontSize: 18,
                   fontWeight: FontWeight.w400),
-            ),
+            ).tr(),
           ),
           ListTile(
             onTap: () {
@@ -162,12 +160,12 @@ class DrawerView extends GetView<HomeController> {
               height: 24,
             ),
             title:  Text(
-              "အသုံးပြုပုံ",
+              "guide",
               style: TextStyle(
                   color: ColorApp.mainColor,
                   fontSize: 18,
                   fontWeight: FontWeight.w400),
-            ),
+            ).tr(),
           ),
           ListTile(
             onTap: () async {
@@ -180,12 +178,12 @@ class DrawerView extends GetView<HomeController> {
               height: 30,
             ),
             title:  Text(
-              "မျှဝေရန်",
+              "share",
               style: TextStyle(
                   color: ColorApp.mainColor,
                   fontSize: 18,
                   fontWeight: FontWeight.w400),
-            ),
+            ).tr()
           ),
           ListTile(
             onTap: () async {
@@ -198,12 +196,37 @@ class DrawerView extends GetView<HomeController> {
               height: 24,
             ),
             title:  Text(
-              "အလှုရှင်စာရင်းသွင်းမည်",
+             "donorRegister",
               style: TextStyle(
                   color: ColorApp.mainColor,
                   fontSize: 18,
                   fontWeight: FontWeight.w400),
-            ),
+            ).tr(),
+          ),
+           ListTile(
+            onTap: () async {
+                Locale currentLocale = context.locale;
+                if (currentLocale == const Locale('en','US')) {
+                  context.setLocale(const Locale('my', 'MM'));
+                   Get.updateLocale(const Locale('my','MM'));
+                } else {
+                      context.setLocale(const Locale('en', 'US'));
+                   Get.updateLocale(const Locale('en','US'));
+
+                }
+
+        
+        
+
+            },
+            leading:  Icon(Icons.translate,color: ColorApp.mainColor,),
+            title:  Text(
+             "language",
+              style: TextStyle(
+                  color: ColorApp.mainColor,
+                  fontSize: 18,
+                  fontWeight: FontWeight.w400),
+            ).tr(),
           ),
           ListTile(
             onTap: () async {
@@ -215,15 +238,15 @@ class DrawerView extends GetView<HomeController> {
               height: 24,
             ),
             title:  Text(
-              "ထွက်မည်",
+              "logout",
               style: TextStyle(
                   color: ColorApp.mainColor,
                   fontSize: 18,
                   fontWeight: FontWeight.w400),
-            ),
+            ).tr(),
           ),
         ],
-      ),
+      )),
     );
   }
 

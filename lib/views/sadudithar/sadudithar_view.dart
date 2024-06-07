@@ -1,7 +1,8 @@
 import 'package:donation_com_mm_v2/controllers/home_controller.dart';
+import 'package:donation_com_mm_v2/util/toast_helper.dart';
 import 'package:donation_com_mm_v2/views/sadudithar/widgets/sadudithar_list_view.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-
 import 'package:get/get.dart';
 import 'package:upgrader/upgrader.dart';
 
@@ -29,13 +30,18 @@ class SaduditharView extends GetView<HomeController> {
           backgroundColor: ColorApp.mainColor,
           elevation: 1,
           onPressed: () {
-            Get.toNamed(Routes.createSadudithar);
+            if(Get.find<HomeController>().profile.role=="user"){
+            ToastHelper.showErrorToast(context, "အလှူရှင်အကောင့်ဖြစ်မှသာ တင်လို့ရပါမည်");
+            Get.toNamed(Routes.donorRegister);
+            }else if (Get.find<HomeController>().profile.role=="donor"){
+                 Get.toNamed(Routes.createSadudithar);
+            }
           },
-          label: Text("စတုဒိတာကျွေးမည်",
+          label: Text("createSadudithar",
               style: Theme.of(context).textTheme.titleMedium!.copyWith(
                   color: ColorApp.white,
                   fontWeight: FontWeight.w500,
-                  fontFamily: "Myanmar")),
+                  fontFamily: "Myanmar")).tr(),
           icon: Padding(
               padding: const EdgeInsets.all(5.0),
               child: Image.asset(
@@ -47,7 +53,7 @@ class SaduditharView extends GetView<HomeController> {
       extendBody: true,
           drawer:  DrawerView(),
           appBar: AppBar(
-            title: const Text("စတုဒိသာ"),
+            title: const Text("sadudithar").tr(),
           ),
           body: WillPopScope(
               onWillPop: () => _onWillPop(context),

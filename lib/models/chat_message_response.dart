@@ -19,10 +19,10 @@ class ChatMessageResponse {
 }
 
 class ChatMessage {
-  final int id;
-  final int chatId;
-  final int receiverId;
-  final int senderId;
+  final dynamic id;
+  final dynamic chatId;
+  final dynamic receiverId;
+  final dynamic senderId;
   final String message;
 
   final DateTime createdAt;
@@ -38,11 +38,11 @@ class ChatMessage {
   });
 
   factory ChatMessage.fromJson(Map<String, dynamic> json) => ChatMessage(
-        id: json['id'] as int,
-        chatId: json['chat_id'] as int,
-        senderId: json['sender_id'] as int,
-        receiverId: json['receiver_id'] as int,
-        message: json['message'] as String,
+        id: json['id'] ,
+        chatId: json['chat_id'],
+        senderId: json['sender_id'] ,
+        receiverId: json['receiver_id'],
+        message: json['message'] ,
         createdAt: DateTime.parse(json['created_at'] as String),
 
       );

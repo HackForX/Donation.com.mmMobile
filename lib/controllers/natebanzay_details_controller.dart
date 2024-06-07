@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:donation_com_mm_v2/models/natebanzay_comment_response.dart';
 import 'package:donation_com_mm_v2/models/natebanzay_response.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:get/get_state_manager/src/simple/get_controllers.dart';
 
@@ -36,10 +37,13 @@ class NatebanzayDetailsController extends GetxController{
       },
 
       onLoading: () {
+            EasyLoading.show(status: "ခေတ္တစောင့်ဆိုင်းပေးပါ") ;
+
         // _apiCallStatus.value = ApiCallStatus.loading;
 
       },
       onSuccess: (response) {
+        EasyLoading.dismiss();
         print("Natebanzay ${response.data}");
         _apiCallStatus.value = ApiCallStatus.success;
 
@@ -50,7 +54,8 @@ class NatebanzayDetailsController extends GetxController{
       },
 
       onError: (error) {
-        print("Error ${error}");
+        EasyLoading.dismiss();
+        print("Error $error");
 
         _apiCallStatus.value = ApiCallStatus.error;
         BaseClient.handleApiError(apiException: error);
@@ -157,8 +162,7 @@ class NatebanzayDetailsController extends GetxController{
         _apiCallStatus.value=ApiCallStatus.success;
       
         getDetails(natebanzayId);
-
-        // ToastHelper.showSuccessToast(context,response.data['message']);
+EasyLoading.showSuccess("${response.data['message']} ပေးပီးပါပီ");
        
       },
 

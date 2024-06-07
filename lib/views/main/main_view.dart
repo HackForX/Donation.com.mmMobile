@@ -1,13 +1,11 @@
-import 'package:donation_com_mm_v2/routes/app_pages.dart';
 import 'package:donation_com_mm_v2/util/app_color.dart';
 import 'package:donation_com_mm_v2/util/assets_path.dart';
 import 'package:donation_com_mm_v2/views/natebanzay/%20natebanzay_view.dart';
-
-import 'package:donation_com_mm_v2/views/share_natebanzay/share_natebanzay_view.dart';
 import 'package:donation_com_mm_v2/views/sadudithar/sadudithar_view.dart';
+import 'package:donation_com_mm_v2/views/share_natebanzay/share_natebanzay_view.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-
 import 'package:get/get.dart';
 
 import '../../controllers/custom_menu_controller.dart';
@@ -74,7 +72,7 @@ class MainView extends StatelessWidget {
                 child: Image.asset( IconPath.homeIcon,
                     height: 24, color: ColorApp.white,),
               ),
-              label: 'စတုဒိသာ',
+              label: tr('sadudithar'),
             ),
             BottomNavigationBarItem(
               activeIcon: Padding(
@@ -90,7 +88,7 @@ class MainView extends StatelessWidget {
                 child: Image.asset( IconPath.natebanzayIcon,
                     height: 24, color: ColorApp.white),
               ),
-              label: 'နိဗ္ဗာန်စျေး',
+              label: tr('natebanzay'),
             ),
             BottomNavigationBarItem(
               activeIcon: Padding(
@@ -109,7 +107,7 @@ class MainView extends StatelessWidget {
                   color: ColorApp.white.withOpacity(0.7),
                 ),
               ),
-              label: 'ရယူရန်',
+              label: tr('requested'),
             ),
             BottomNavigationBarItem(
               activeIcon: Padding(
@@ -128,7 +126,7 @@ class MainView extends StatelessWidget {
                   color: ColorApp.white.withOpacity(0.7),
                 ),
               ),
-              label: 'မျှဝေရန်',
+              label:  tr('requests'),
             ),
           ],
         ),

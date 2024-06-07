@@ -19,7 +19,12 @@ class ItemNatebanzaysList extends StatelessWidget {
              final filteredNataebanzays = homeController.natebanzays
       .where((natebanzay) => natebanzay.item.name == homeController.selectedItem.name)
       .toList();
-      return filteredNataebanzays.isEmpty?const EmptyWidget():SingleChildScrollView(
+      return filteredNataebanzays.isEmpty?homeController.natebanzays.isEmpty?const EmptyWidget():SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: Row(
+               children:homeController.natebanzays.map((natebanzay) =>    NatebanzayCard(natebanzay: natebanzay,requestNatebanzayController: requestNatebanzayController,detailsController: detailsController,), ).toList()
+          ),
+        ):SingleChildScrollView(
           scrollDirection: Axis.horizontal,
           child: Row(
                children:homeController.natebanzays.map((natebanzay) =>    NatebanzayCard(natebanzay: natebanzay,requestNatebanzayController: requestNatebanzayController,detailsController: detailsController,), ).toList()

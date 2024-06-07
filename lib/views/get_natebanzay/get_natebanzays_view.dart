@@ -5,8 +5,8 @@ import 'package:donation_com_mm_v2/util/app_color.dart';
 import 'package:donation_com_mm_v2/util/app_config.dart';
 import 'package:donation_com_mm_v2/util/toast_helper.dart';
 import 'package:donation_com_mm_v2/views/drawer/drawer_view.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-
 import 'package:get/get.dart';
 
 import '../../util/assets_path.dart';
@@ -25,7 +25,7 @@ class GetNatebanzaysView extends GetView<HomeController> {
       child: Scaffold(
           drawer:  DrawerView(),
           appBar: AppBar(
-            title: const Text("ရယူရန်"),
+            title: const Text("requested").tr(),
           ),
           body:GetBuilder<HomeController>(builder: (controller)=>ListView.builder(
             itemCount: controller.natebanzaysRequests.length,
@@ -260,7 +260,11 @@ final NatebanzayRequest natebanzayRequest;
                                       shape: const RoundedRectangleBorder(
                                           borderRadius: BorderRadius.all(
                                               Radius.circular(30)))),
-                                  onPressed: () {},
+                                  onPressed: () {
+                                            Get.toNamed(Routes.natebanzayComments,arguments: {
+                'natebanzay_id':natebanzayRequest.natebanzay.id,
+              });
+                                  },
                                   child: Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
@@ -353,10 +357,10 @@ final NatebanzayRequest natebanzayRequest;
               height: 150,
               width: 150,
               padding: const EdgeInsets.all(15),
-              decoration: const BoxDecoration(
-                image: DecorationImage(
-                    image: AssetImage(ImagePath.test), fit: BoxFit.cover),
-              ),
+                     decoration:  BoxDecoration(
+              image:
+               natebanzayRequest.natebanzay.photos==null?   const DecorationImage(image: AssetImage(ImagePath.test), fit: BoxFit.cover):   DecorationImage(image: NetworkImage("${AppConfig.baseUrl}/storage/images/natebanzay_photos/${extractPhotos(natebanzayRequest.natebanzay.photos!)[0]}"), fit: BoxFit.cover),
+            ),
             ),
             Padding(
               padding: const EdgeInsets.only(
@@ -373,20 +377,20 @@ final NatebanzayRequest natebanzayRequest;
                     children: [
                       Image.asset(
                      IconPath.dotIcon,
-                        color: ColorApp.secondaryColor,
+                        color: switchColor(natebanzayRequest.status), 
                         height: 14,
                       ),
                       const SizedBox(
                         width: 5,
                       ),
                       Text(
-                        natebanzayRequest.status,
+                     switchStatus(   natebanzayRequest.status),
                         style: Theme.of(context)
                             .textTheme
                             .labelMedium!
                             .copyWith(
                                 fontWeight: FontWeight.w300,
-                               color: ColorApp.secondaryColor,
+                               color:switchColor(natebanzayRequest.status), 
                                 fontFamily: "Myanmar"),
                       ),
                     ],
@@ -439,6 +443,33 @@ final NatebanzayRequest natebanzayRequest;
   final imageUrls = photosWithoutBrackets.split('","');
 
   return imageUrls;
+}
+
+
+String switchStatus(String status){
+  switch (status) {
+    case 'pending':
+      return 'စောင့်ဆိုင်းဆဲ';
+       case 'Accepted':
+      return 'လက်ခံပြီး';
+      case 'Rejected':
+      return 'ငြင်းပယ်ပြီး';
+      
+    default: return '';
+  }
+}
+
+Color switchColor(String status){
+  switch (status) {
+    case 'pending':
+      return ColorApp.secondaryColor;
+       case 'Accepted':
+      return ColorApp.green;
+      case 'Rejected':
+      return ColorApp.redColor;
+      
+    default: return ColorApp.dark;
+  }
 }
 
 }

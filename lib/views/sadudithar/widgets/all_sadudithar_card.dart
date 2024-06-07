@@ -2,6 +2,7 @@ import 'package:donation_com_mm_v2/routes/app_pages.dart';
 import 'package:donation_com_mm_v2/views/sadudithar/widgets/distance_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 
 import '../../../models/sadudithar_response.dart';
 import '../../../util/app_color.dart';
@@ -88,7 +89,7 @@ class AllSaduditarCard extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.only(top: 8.0, left: 10),
             child: Text(
-             sadudithar.eventDate,
+             DateFormat('MMMM d, yyyy').format(DateTime.parse(sadudithar.eventDate)),
               style: Theme.of(context)
                   .textTheme
                   .labelSmall!

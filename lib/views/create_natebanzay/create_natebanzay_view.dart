@@ -44,7 +44,7 @@ class CreateNatebanzayView extends GetView<CreateNatebanzayController> {
             Padding(
               padding: const EdgeInsets.only(top: 20.0),
               child: Center(
-                child: Text("ပစ္စည်းလှုမည်",
+                child: Text("ပစ္စည်းလှူမည်",
                     style: Theme.of(context).textTheme.titleMedium?.copyWith(
                         color: ColorApp.dark,
                         fontWeight: FontWeight.w800,

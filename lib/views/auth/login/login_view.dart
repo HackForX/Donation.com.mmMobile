@@ -1,3 +1,7 @@
+import 'dart:convert';
+import 'dart:io';
+
+import 'package:crypto/crypto.dart';
 import 'package:donation_com_mm_v2/controllers/auth_controller.dart';
 import 'package:donation_com_mm_v2/core/api_call_status.dart';
 import 'package:donation_com_mm_v2/routes/app_pages.dart';
@@ -6,6 +10,7 @@ import 'package:donation_com_mm_v2/util/assets_path.dart';
 import 'package:donation_com_mm_v2/util/button_loader_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
 import '../../forgot_password/forgot_phone_number_view.dart';
 
@@ -34,27 +39,29 @@ class LoginView extends StatelessWidget {
               child: SingleChildScrollView(
                 physics: const AlwaysScrollableScrollPhysics(),
                 child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     const SizedBox(
-                      height: 60,
+                height: 60,
                     ),
                     Image.asset(
                       ImagePath.logo,
-                      height: 80,
+                      
                       width: 100,
                       fit: BoxFit.cover,
                     ),
                     const SizedBox(
                       height: 15,
                     ),
-                     Text(
-                      "Donation.com.mm",
-                      style: TextStyle(
-                          color: ColorApp.secondaryColor,
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold),
-                    ),
+                     Center(
+                       child: Text(
+                        "Donation.com.mm",
+                        style: TextStyle(
+                            color: ColorApp.secondaryColor,
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold),
+                                           ),
+                     ),
                     const SizedBox(
                       height: 15,
                     ),
@@ -193,7 +200,7 @@ class LoginView extends StatelessWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        InkWell(
+                       Platform.isAndroid? InkWell(
                           onTap: () {
                             _authController.signInWithGoogle();
                           },
@@ -202,7 +209,27 @@ class LoginView extends StatelessWidget {
                             backgroundColor: Colors.white,
                             child: Image.asset(IconPath.googleIcon),
                           ),
+                        ):InkWell(
+                        onTap: () async{
+final rawNonce = generateNonce();
+final nonce = sha256ofString(rawNonce);
+final appleCredential = await SignInWithApple.getAppleIDCredential(
+  scopes: [
+    AppleIDAuthorizationScopes.email,
+    AppleIDAuthorizationScopes.fullName,
+  ],
+  nonce: nonce,
+);
+
+await _authController.appleSignInWithCode(appleCredential.authorizationCode);
+
+                        },
+                        child: CircleAvatar(
+                          radius: 25,
+                          backgroundColor: Colors.white,
+                          child: Image.asset('assets/icons/apple.png',height: 35,),
                         ),
+                      ),
                         const SizedBox(
                           width: 20,
                         ),
@@ -221,33 +248,38 @@ class LoginView extends StatelessWidget {
                     const SizedBox(
                       height: 15,
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                         Text(
-                          "Don't have an account?",
-                          style: TextStyle(
-                              color: ColorApp.secondaryColor,
-                              fontSize: 15,
-                              fontWeight: FontWeight.w600),
-                        ),
-                        const SizedBox(
-                          width: 10,
-                        ),
-                        GestureDetector(
-                            onTap: () {
-                              Get.offAllNamed(Routes.register);
-                            },
-                            child:  Center(
-                              child: Text(
-                                "Sign up",
-                                style: TextStyle(
-                                    color: ColorApp.secondaryColor,
-                                    fontSize: 16),
-                              ),
-                            ))
-                      ],
+                    InkWell(
+                      onTap: (){
+                          Get.offAllNamed(Routes.register);
+                      },
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                           Text(
+                            "Don't have an account?",
+                            style: TextStyle(
+                                color: ColorApp.secondaryColor,
+                                fontSize: 15,
+                                fontWeight: FontWeight.w600),
+                          ),
+                          const SizedBox(
+                            width: 10,
+                          ),
+                          InkWell(
+                              onTap: () {
+                                Get.offAllNamed(Routes.register);
+                              },
+                              child:  Center(
+                                child: Text(
+                                  "Sign up",
+                                  style: TextStyle(
+                                      color: ColorApp.secondaryColor,
+                                      fontSize: 16),
+                                ),
+                              ))
+                        ],
+                      ),
                     )
                   ],
                 ),
@@ -256,41 +288,41 @@ class LoginView extends StatelessWidget {
           ),
           // Positioned widgets (not affected by scrolling)
           Positioned(
-            bottom: 0,
+            bottom: 10,
             left: 0,
             child: Image.asset(
              ImagePath.bottomLeft,
-              height: 100,
+       
               width: 100,
               fit: BoxFit.cover,
             ),
           ),
           Positioned(
-            top: 0,
+            top: 20,
             left: 0,
             child: Image.asset(
               ImagePath.topLeft,
-              height: 100,
+    height: 120,
               width: 100,
               fit: BoxFit.cover,
             ),
           ),
           Positioned(
-            bottom: 0,
+            bottom: 10,
             right: 0,
             child: Image.asset(
                 ImagePath.bottomRight,
-              height: 100,
+              
               width: 100,
               fit: BoxFit.cover,
             ),
           ),
           Positioned(
-            top: 0,
+            top: 20,
             right: 0,
             child: Image.asset(
                ImagePath.topRight,
-              height: 100,
+          
               width: 100,
               fit: BoxFit.cover,
             ),
@@ -299,4 +331,11 @@ class LoginView extends StatelessWidget {
       ),)
     );
   }
+
+
+  String sha256ofString(String input) {
+  final bytes = utf8.encode(input);
+  final digest = sha256.convert(bytes);
+  return digest.toString();
+}
 }

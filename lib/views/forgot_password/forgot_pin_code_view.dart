@@ -2,8 +2,6 @@ import 'dart:async';
 
 import 'package:donation_com_mm_v2/util/app_color.dart';
 import 'package:flutter/material.dart';
-
-
 import 'package:get/get.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 
@@ -12,11 +10,11 @@ import '../../controllers/auth_controller.dart';
 
 class ForgotPinCodeView extends StatefulWidget {
   const ForgotPinCodeView({
-    Key? key,
+    super.key,
     required this.token,
     this.requestId,
     this.phoneNumber,
-  }) : super(key: key);
+  });
   final String token;
   final String? requestId;
   final String? phoneNumber;
@@ -80,7 +78,7 @@ class _ForgotPinCodeViewState extends State<ForgotPinCodeView> {
                 ),
               ),
                Padding(
-                padding: EdgeInsets.symmetric(vertical: 8.0),
+                padding: const EdgeInsets.symmetric(vertical: 8.0),
                 child: Text(
                   'Phone Number Verification',
                   style: TextStyle(
@@ -196,18 +194,18 @@ class _ForgotPinCodeViewState extends State<ForgotPinCodeView> {
                   Obx(() => TextButton(
                         onPressed: () {
                           if (_authController.secondsRemaining.value == 0) {
-                            // _authController.resendCOde(
-                            //     widget.name ?? '',
-                            //     widget.phoneNumber ?? '',
-                            //     widget.password ?? '',
-                            //     widget.age ?? 0,
-                            //     widget.gender ?? '');
+                            _authController.resendForgotCode(
+                 widget.token,
+                                widget.phoneNumber ?? ''
+                           );
 
                             _authController.startTimer();
                           } else {}
                         },
                         child: Text(
-                          "RESEND ${_authController.secondsRemaining.value}s",
+_authController.secondsRemaining.value == 0
+    ? "Resend"
+    : "RESEND ${_authController.secondsRemaining.value}s",
                           style:  TextStyle(
                             color: ColorApp.secondaryColor,
                             fontWeight: FontWeight.bold,

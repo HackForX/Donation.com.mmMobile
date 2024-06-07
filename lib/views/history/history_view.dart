@@ -1,5 +1,6 @@
 import 'package:donation_com_mm_v2/controllers/history_controller.dart';
 import 'package:donation_com_mm_v2/views/drawer/drawer_view.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -19,7 +20,7 @@ class HistoryView extends GetView<HistoryController> {
     return Scaffold(
       drawer: DrawerView(),
       appBar: AppBar(
-        title: const Text("လှုဒါန်းမှု မှတ်တမ်း"),
+        title: const Text("history").tr(),
       
       ),
       body: Obx(()=>ListView.builder(

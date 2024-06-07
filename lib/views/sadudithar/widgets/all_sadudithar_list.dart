@@ -14,8 +14,8 @@ class AllSaduditaharList extends StatelessWidget {
     return  Obx(()=>Container(
           padding: const EdgeInsets.all(20),
           decoration:
-              BoxDecoration(color: const Color.fromARGB(255, 37, 8, 8).withOpacity(0.3)),
-          child: controller.sadudithars.isEmpty?EmptyWidget(): SingleChildScrollView(
+              BoxDecoration(color:  ColorApp.dark.withOpacity(0.2)),
+          child: controller.sadudithars.isEmpty?const EmptyWidget(): SingleChildScrollView(
             scrollDirection: Axis.horizontal,
             child: Row(children: controller.sadudithars.map((sadudithar)=>AllSaduditarCard(sadudithar: sadudithar)).toList()),
           ),

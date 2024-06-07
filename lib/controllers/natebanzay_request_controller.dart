@@ -5,6 +5,7 @@ import 'package:donation_com_mm_v2/util/app_config.dart';
 import 'package:donation_com_mm_v2/util/share_pref_helper.dart';
 import 'package:donation_com_mm_v2/util/toast_helper.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 
 class NatebanzayRequestController extends GetxController{
@@ -24,10 +25,13 @@ class NatebanzayRequestController extends GetxController{
       },
 
       onLoading: () {
+            EasyLoading.show(status: "ခေတ္တစောင့်ဆိုင်းပေးပါ") ;
+
         _apiCallStatus.value = ApiCallStatus.loading;
 
       },
       onSuccess: (response) {
+        EasyLoading.dismiss();
         _apiCallStatus.value = ApiCallStatus.success;
 
         NatebanzayRequestFromNatebanzayResponse natebanzayRequestResponse = NatebanzayRequestFromNatebanzayResponse.fromJson(response.data);
@@ -36,6 +40,7 @@ class NatebanzayRequestController extends GetxController{
       },
 
       onError: (error) {
+        EasyLoading.dismiss();
         _apiCallStatus.value = ApiCallStatus.error;
         BaseClient.handleApiError(apiException: error);
        
@@ -54,10 +59,13 @@ class NatebanzayRequestController extends GetxController{
       },
 
       onLoading: () {
+            EasyLoading.show(status: "ခေတ္တစောင့်ဆိုင်းပေးပါ") ;
+
         _apiCallStatus.value = ApiCallStatus.loading;
 
       },
       onSuccess: (response) {
+        EasyLoading.dismiss();
         _apiCallStatus.value = ApiCallStatus.success;
             getRequests(id);
         ToastHelper.showSuccessToast(context,response.data['message'],);
@@ -67,6 +75,7 @@ class NatebanzayRequestController extends GetxController{
       },
 
       onError: (error) {
+        EasyLoading.dismiss();
          if(error.statusCode==422){
         ToastHelper.showErrorToast(context,error.response!.data["message"]);
          }
@@ -89,10 +98,13 @@ class NatebanzayRequestController extends GetxController{
       },
 
       onLoading: () {
+            EasyLoading.show(status: "ခေတ္တစောင့်ဆိုင်းပေးပါ") ;
+
         _apiCallStatus.value = ApiCallStatus.loading;
 
       },
       onSuccess: (response) {
+        EasyLoading.dismiss();
         _apiCallStatus.value = ApiCallStatus.success;
         ToastHelper.showSuccessToast(context,response.data['message'],);
 
@@ -101,6 +113,7 @@ class NatebanzayRequestController extends GetxController{
       },
 
       onError: (error) {
+        EasyLoading.dismiss();
          if(error.statusCode==422){
         ToastHelper.showErrorToast(context,error.response!.data["message"]);
          }

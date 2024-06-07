@@ -5,7 +5,9 @@ import 'package:donation_com_mm_v2/views/sadudithar/widgets/city_dropdown.dart';
 import 'package:donation_com_mm_v2/views/sadudithar/widgets/city_sadudithar_list.dart';
 import 'package:donation_com_mm_v2/views/sadudithar/widgets/donor_list.dart';
 import 'package:donation_com_mm_v2/views/sadudithar/widgets/nearby_sadudithar_list.dart';
+import 'package:donation_com_mm_v2/views/sadudithar/widgets/see_more_donor_list.dart';
 import 'package:donation_com_mm_v2/views/sadudithar/widgets/see_more_sadudithar_list.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -30,16 +32,16 @@ class SaduditharListView extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text("အနီးအနားတွင်ရှိသော",
+              Text("nearby",
                   style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                      fontWeight: FontWeight.w600, fontFamily: "Myanmar")),
+                      fontWeight: FontWeight.w600, fontFamily: "Myanmar")).tr(),
               InkWell(
-                onTap: ()=>Get.to(()=>SeeMoreSaduditharList(title: "အနီးအနားတွင်ရှိသော", sadudithars: controller.nearbySadudithars)),
-                child: Text("အားလုံးကြည့်မည်",
+                onTap: ()=>Get.to(()=>SeeMoreSaduditharList(title: tr("nearby"), sadudithars: controller.nearbySadudithars)),
+                child: Text("seeall",
                     style: Theme.of(context).textTheme.labelMedium!.copyWith(
                         color:  ColorApp.dark,
                         fontWeight: FontWeight.w500,
-                        fontFamily: "Myanmar")),
+                        fontFamily: "Myanmar")).tr(),
               ),
             ],
           ),
@@ -53,9 +55,9 @@ class SaduditharListView extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text("မြို့အလိုက်",
+              Text("bycity",
                   style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                      fontWeight: FontWeight.w600, fontFamily: "Myanmar")),
+                      fontWeight: FontWeight.w600, fontFamily: "Myanmar")).tr(),
               
             CityDropdown(controller: controller),
             ],
@@ -70,14 +72,17 @@ class SaduditharListView extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text("အလှုရှင်များ",
+              Text("donors",
                   style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                      fontWeight: FontWeight.w600, fontFamily: "Myanmar")),
-              Text("အားလုံးကြည့်မည်",
-                  style: Theme.of(context).textTheme.labelMedium!.copyWith(
-                      color: ColorApp.dark,
-                      fontWeight: FontWeight.w500,
-                      fontFamily: "Myanmar")),
+                      fontWeight: FontWeight.w600, fontFamily: "Myanmar")).tr(),
+              InkWell(
+                onTap: ()=>Get.to(()=>SeeMoreDonorListWidget(donors: controller.donors)),
+                child: Text("seeall",
+                    style: Theme.of(context).textTheme.labelMedium!.copyWith(
+                        color: ColorApp.dark,
+                        fontWeight: FontWeight.w500,
+                        fontFamily: "Myanmar")).tr(),
+              ),
             ],
           ),
         ),
@@ -90,16 +95,16 @@ class SaduditharListView extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text("အလှုအားလုံး",
+              Text("allSadudithars",
                   style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                      fontWeight: FontWeight.w600, fontFamily: "Myanmar")),
+                      fontWeight: FontWeight.w600, fontFamily: "Myanmar")).tr(),
               InkWell(
-                onTap: ()=>Get.to(()=>SeeMoreSaduditharList(title: 'အလှုအားလုံး', sadudithars: controller.sadudithars)),
-                child: Text("အားလုံးကြည့်မည်",
+                onTap: ()=>Get.to(()=>SeeMoreSaduditharList(title: tr('allSadudithars'), sadudithars: controller.sadudithars)),
+                child: Text("seeall",
                     style: Theme.of(context).textTheme.labelMedium!.copyWith(
                         color:  ColorApp.dark,
                         fontWeight: FontWeight.w500,
-                        fontFamily: "Myanmar")),
+                        fontFamily: "Myanmar")).tr(),
               ),
             ],
           ),

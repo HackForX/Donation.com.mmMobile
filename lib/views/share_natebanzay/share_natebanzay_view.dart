@@ -5,6 +5,7 @@ import 'package:donation_com_mm_v2/util/app_color.dart';
 import 'package:donation_com_mm_v2/util/app_config.dart';
 import 'package:donation_com_mm_v2/util/assets_path.dart';
 import 'package:donation_com_mm_v2/views/drawer/drawer_view.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -21,7 +22,7 @@ class ShareNatebanzayView extends GetView<HomeController> {
       child: Scaffold(
         drawer:  DrawerView(),
         appBar: AppBar(
-          title: const Text("မျှဝေရန်"),
+          title: const Text("requests").tr(),
         ),
         body: GetBuilder<HomeController>(builder: (controller){
           return ListView.builder(
