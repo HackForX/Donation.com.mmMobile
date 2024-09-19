@@ -16,6 +16,10 @@ class AppConfig {
   static const String forgotPasswordUrl = '$endPoint/forgot-password';
   static const String resetPasswordUrl = '$endPoint/reset-password';
   static const String logOutUrl = '$endPoint/logout';
+  static const String deleteAccountUrl = '$endPoint/deleteAccount';
+  static const String updateIsShowUrl = '$endPoint/update-profile';
+
+
   static const String saduditharsUrl = '$endPoint/sadudithars';
   static const String historyUrl = '$endPoint/sadudithars/history';
   static const String natebanzayUrl = '$endPoint/natebanzay';
@@ -25,6 +29,7 @@ class AppConfig {
   static const String donorsUrl = '$endPoint/donors';
   static const String profileUrl = '$endPoint/me';
   static const String contactUrl = '$endPoint/contacts';
+  
   static const String itemsUrl = '$endPoint/items';
   static const String categoriesUrl = '$endPoint/categories';
   static const String subCategoriesUrl = '$endPoint/categories';

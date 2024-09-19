@@ -75,13 +75,13 @@ final NatebanzayRequest natebanzayRequest;
                                  CircleAvatar(
                                   radius: 40,
                                   backgroundImage:
-                                      const AssetImage(ImagePath.profile),
+                                      const AssetImage(ImagePath.donor),
                                   backgroundColor: ColorApp.mainColor,
                                 ),
                                 Text(
                                natebanzayRequest.uploader.name,
                                   style: Theme.of(context)
-                                      .textTheme
+                                  .textTheme
                                       .bodyMedium
                                       ?.copyWith(
                                           color: ColorApp.dark,

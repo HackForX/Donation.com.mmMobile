@@ -4,6 +4,7 @@ import 'package:donation_com_mm_v2/core/api_call_status.dart';
 import 'package:donation_com_mm_v2/util/app_color.dart';
 import 'package:donation_com_mm_v2/util/assets_path.dart';
 import 'package:donation_com_mm_v2/util/button_loader_widget.dart';
+import 'package:donation_com_mm_v2/util/toast_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -181,7 +182,7 @@ final String name;
                                     //     token,
                                     //       phone, _newPasswordController.text);
                                     // }
-                                                             _authController.checkExist(name, phone, password, '', '');
+                                                             _authController.checkExist(name, phone, password, '__', '__');
                                   },
                                   child:  _authController.apiCallStatus==ApiCallStatus.loading?const ButtonLoaderWidget():Text(
                                     "Skip",
@@ -208,7 +209,14 @@ final String name;
                                     //     token,
                                     //       phone, _newPasswordController.text);
                                     // }
-                                                             _authController.checkExist(name, phone, password, _authController.selectedAge, _authController.selectedGender);
+                                                      if(_authController.selectedAge==""){
+                                                        ToastHelper.showErrorToast(context, "Please select age");
+                                                      }
+                                                      else if(_authController.selectedGender==""){
+                                                        ToastHelper.showErrorToast(context, "Please select gender");
+                                                      }else{
+                                                            _authController.checkExist(name, phone, password, _authController.selectedAge, _authController.selectedGender);
+                                                      }
                                   },
                                   child:  _authController.apiCallStatus==ApiCallStatus.loading?const ButtonLoaderWidget():Text(
                                     "Save",

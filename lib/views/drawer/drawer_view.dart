@@ -4,11 +4,10 @@ import 'package:donation_com_mm_v2/routes/app_pages.dart';
 import 'package:donation_com_mm_v2/util/app_color.dart';
 import 'package:donation_com_mm_v2/util/assets_path.dart';
 import 'package:donation_com_mm_v2/views/drawer/version_widget.dart';
+import 'package:donation_com_mm_v2/views/setting/setting_view.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-// import 'package:google_sign_in/google_sign_in.dart';
-import 'package:share_plus/share_plus.dart';
 
 // import 'package:share_plus/share_plus.dart';
 
@@ -133,59 +132,9 @@ class DrawerView extends GetView<HomeController> {
                   fontWeight: FontWeight.w400),
             ).tr(),
           ),
-          ListTile(
-            onTap: () {
-              Get.offAllNamed(Routes.contact);
-            },
-            leading: Image.asset(
-           IconPath.contactIcon,
-              color: ColorApp.mainColor,
-              height: 24,
-            ),
-            title:  Text(
-              "contact",
-              style: TextStyle(
-                  color: ColorApp.mainColor,
-                  fontSize: 18,
-                  fontWeight: FontWeight.w400),
-            ).tr(),
-          ),
-          ListTile(
-            onTap: () {
-              Get.offAllNamed(Routes.guide);
-            },
-            leading: Image.asset(
-     IconPath.guideIcon,
-              color: ColorApp.mainColor,
-              height: 24,
-            ),
-            title:  Text(
-              "guide",
-              style: TextStyle(
-                  color: ColorApp.mainColor,
-                  fontSize: 18,
-                  fontWeight: FontWeight.w400),
-            ).tr(),
-          ),
-          ListTile(
-            onTap: () async {
-              Share.share(
-                  "https://play.google.com/store/apps/details?id=com.focsaduditar.app");
-            },
-            leading: Image.asset(
-             IconPath.shareIcon,
-              color: ColorApp.mainColor,
-              height: 30,
-            ),
-            title:  Text(
-              "share",
-              style: TextStyle(
-                  color: ColorApp.mainColor,
-                  fontSize: 18,
-                  fontWeight: FontWeight.w400),
-            ).tr()
-          ),
-          ListTile(
+     
+        
+          controller.profile.role=='user'?ListTile(
             onTap: () async {
               Get.offAllNamed(Routes.donorRegister);
 
@@ -202,26 +151,18 @@ class DrawerView extends GetView<HomeController> {
                   fontSize: 18,
                   fontWeight: FontWeight.w400),
             ).tr(),
-          ),
-           ListTile(
-            onTap: () async {
-                Locale currentLocale = context.locale;
-                if (currentLocale == const Locale('en','US')) {
-                  context.setLocale(const Locale('my', 'MM'));
-                   Get.updateLocale(const Locale('my','MM'));
-                } else {
-                      context.setLocale(const Locale('en', 'US'));
-                   Get.updateLocale(const Locale('en','US'));
-
-                }
-
-        
-        
-
+          ):const SizedBox(),
+          ListTile(
+            onTap: ()  {
+           Get.to(()=> SettingView());
             },
-            leading:  Icon(Icons.translate,color: ColorApp.mainColor,),
+            leading: Image.asset(
+              IconPath.settingIcon,
+              color: ColorApp.mainColor,
+              height: 24,
+            ),
             title:  Text(
-             "language",
+              "setting",
               style: TextStyle(
                   color: ColorApp.mainColor,
                   fontSize: 18,
@@ -255,13 +196,13 @@ class DrawerView extends GetView<HomeController> {
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Donation.com.mm'),
-        content: const Text('အကောင့်မှထွက်မာသေချာပီလား?'),
+        content: const Text('logoutMessage').tr(),
         actions: [
           TextButton(
             onPressed: () {
               Get.back();
             },
-            child: const Text('မလုပ်တော့ပါ'),
+            child: const Text('no').tr(),
           ),
           TextButton(
             onPressed: () async {
@@ -269,7 +210,7 @@ class DrawerView extends GetView<HomeController> {
              
 
             },
-            child: const Text('လုပ်မည်'),
+            child: const Text('yes').tr(),
           ),
         ],
       ),

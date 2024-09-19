@@ -1,6 +1,5 @@
-import 'dart:io';
-
 import 'package:dio/dio.dart';
+import 'package:donation_com_mm_v2/controllers/home_controller.dart';
 import 'package:donation_com_mm_v2/core/api_call_status.dart';
 import 'package:donation_com_mm_v2/core/base_client.dart';
 import 'package:donation_com_mm_v2/util/app_config.dart';
@@ -9,8 +8,7 @@ import 'package:donation_com_mm_v2/util/toast_helper.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get_state_manager/src/simple/get_controllers.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:share_plus/share_plus.dart';
+import 'package:get/instance_manager.dart';
 
 
 class RequestNatebanzayController extends GetxController{
@@ -19,6 +17,7 @@ class RequestNatebanzayController extends GetxController{
 
   ApiCallStatus apiCallStatus = ApiCallStatus.holding;
   final BaseClient _baseClient = BaseClient();
+  final HomeController _homeController=Get.find<HomeController>();
 
 
 
@@ -48,6 +47,7 @@ class RequestNatebanzayController extends GetxController{
       onSuccess: (response) {
         EasyLoading.dismiss();
         apiCallStatus=ApiCallStatus.success;
+        _homeController.getNatebanzaysRequests();
         ToastHelper.showSuccessToast(context,"Requested Successfully");
         update();
       },

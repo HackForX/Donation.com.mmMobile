@@ -16,7 +16,7 @@ publish_to: "none" # Remove this line if you wish to publish to pub.dev
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
 # In Windows, build-name is used as the major, minor, and patch parts
 # of the product and file versions while build-number is used as the build suffix.
-version: 1.0.2+7
+version: 1.0.5+1
 
 environment:
   sdk: ">=3.3.4 <4.0.0"
@@ -45,7 +45,7 @@ dependencies:
   shared_preferences: ^2.2.3
   flutter_easyloading: ^3.0.5
   cached_network_image_plus: ^0.0.3
-  share_plus: ^9.0.0
+  share_plus:
   flutter_screenutil: ^5.9.0
   upgrader: ^10.2.0
   pin_code_fields: ^8.0.1
@@ -71,6 +71,7 @@ dependencies:
   crypto: ^3.0.3
   flutter_map_geojson: ^1.0.8
   latlong2: ^0.9.1
+  cached_network_image: ^3.4.0
   # pusher_client_fixed: ^0.0.4
   # laravel_echo_null: ^0.0.6
   # pusher_client_fixed: ^0.0.4

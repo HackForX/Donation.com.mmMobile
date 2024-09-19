@@ -1,12 +1,8 @@
-import 'package:donation_com_mm_v2/controllers/create_natebanzay_controller.dart';
 import 'package:donation_com_mm_v2/controllers/create_sadudithar_controller.dart';
-import 'package:donation_com_mm_v2/controllers/home_controller.dart';
 import 'package:donation_com_mm_v2/core/api_call_status.dart';
 import 'package:donation_com_mm_v2/util/app_color.dart';
 import 'package:donation_com_mm_v2/util/button_loader_widget.dart';
-import 'package:donation_com_mm_v2/util/share_pref_helper.dart';
 import 'package:donation_com_mm_v2/util/toast_helper.dart';
-import 'package:donation_com_mm_v2/views/create_natebanzay/widgets/item_dropdown.dart';
 import 'package:donation_com_mm_v2/views/create_sadudithar/widgets/category_dropdown.dart';
 import 'package:donation_com_mm_v2/views/create_sadudithar/widgets/city_dropdown.dart';
 import 'package:donation_com_mm_v2/views/create_sadudithar/widgets/map_view.dart';
@@ -329,6 +325,12 @@ initialTime: TimeOfDay.now()
           GetBuilder<CreateSaduditharController>(builder: (controller)=>controller.pickedImage==null?  const Padding(
                padding: EdgeInsets.only(top: 20.0,left: 10),
               child: Text("ပုံလိုအပ်ပါသည်",style: TextStyle(color: ColorApp.lipstick,fontSize: 12,fontWeight: FontWeight.w200,fontFamily: "Myanmar"),)
+            ):const SizedBox()),
+             GetBuilder<CreateSaduditharController>(builder: (controller)=>controller.pickedImage!=null?   Padding(
+               padding: const EdgeInsets.only(top: 20.0,left: 10),
+              child: SizedBox(height: 150,width: double.infinity,child: ClipRRect(
+                borderRadius: const BorderRadius.all(Radius.circular(15)),
+                child: Image.file(controller.pickedImage!,fit: BoxFit.cover,)),)
             ):const SizedBox()),
              Padding(
               padding: const EdgeInsets.only(top: 20.0),

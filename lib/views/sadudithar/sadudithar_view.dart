@@ -20,8 +20,9 @@ class SaduditharView extends GetView<HomeController> {
     return RefreshIndicator(
       onRefresh: () async {
         controller.getCities();
-
+      controller.getDonors();
         controller.getSadudithars();
+        controller.checkLocationPermission();
 
 
       },

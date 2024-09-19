@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:donation_com_mm_v2/core/api_call_status.dart';
 import 'package:donation_com_mm_v2/core/base_client.dart';
 import 'package:donation_com_mm_v2/models/category_response.dart';
@@ -13,7 +15,6 @@ import 'package:donation_com_mm_v2/util/app_config.dart';
 import 'package:donation_com_mm_v2/util/share_pref_helper.dart';
 import 'package:donation_com_mm_v2/util/toast_helper.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
@@ -27,6 +28,9 @@ class  HomeController extends GetxController{
 
   final RxList<Sadudithar> _nearbySadudithars = RxList.empty();
   List<Sadudithar> get nearbySadudithars => _nearbySadudithars.toList();
+
+    final RxList<Sadudithar> _historySadudithars = RxList.empty();
+  List<Sadudithar> get historySadudithars => _historySadudithars.toList();
     final RxList<Natebanzay> _natebanzays = RxList.empty();
   List<Natebanzay> get natebanzays => _natebanzays.toList();
       final RxList<Natebanzay> _natebanzaysRequested = RxList.empty();
@@ -35,7 +39,7 @@ class  HomeController extends GetxController{
   List<NatebanzayRequest> get natebanzaysRequests => _natebanzaysRequests.toList();
     final RxList<Donor> _donors = RxList.empty();
   List<Donor> get donors => _donors.toList();
-     final Rx<Profile> _profile = Profile(id: 0,name: "--",phone: "--",role: "--",createdAt: DateTime.now(),updatedAt: DateTime.now()).obs;
+     final Rx<Profile> _profile = Profile(id: 0,name: "--",phone: "--",role: "--",createdAt: DateTime.now(),updatedAt: DateTime.now(),isShow: 1).obs;
   Profile get profile => _profile.value;
       final RxList<Item> _items = RxList.empty();
   List<Item> get items => _items.toList();
@@ -45,7 +49,7 @@ class  HomeController extends GetxController{
   List<SaduditharCity> get cities => _cities.toList();
        final RxList<Township> _townships = RxList.empty();
   List<Township> get townships => _townships.toList();
-  final RxString _selectedCity=RxString("chooseCity");
+  final RxString _selectedCity=RxString("Choose City");
   String get selectedCity=> _selectedCity.value;
   final Rx<Item> _selectedItem=Item(
     id: 0,
@@ -58,7 +62,8 @@ class  HomeController extends GetxController{
      final Rx<Position?> _currentPosition = Rx<Position?>(null);
    Position? get currentPositon => _currentPosition.value;
 
-
+final RxBool _isLocationEnabled=RxBool(false);
+bool get isLocationEnabled=> _isLocationEnabled.value;
 
 
   final BaseClient _baseClient = BaseClient();
@@ -184,6 +189,46 @@ for (var sadudithar in _sadudithars) {
       },
     );
   }
+
+
+  Future<void> getHistory() async {
+    await _baseClient.safeApiCall(
+      AppConfig.historyUrl, // url
+      RequestType.get,
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Authorization': "Bearer ${MySharedPref.getToken()}",
+      },
+
+      onLoading: () {
+        apiCallStatus = ApiCallStatus.loading;
+            EasyLoading.show(status: "ခေတ္တစောင့်ဆိုင်းပေးပါ") ;
+
+            update();
+
+
+      },
+      onSuccess: (response) {
+        EasyLoading.dismiss();
+        apiCallStatus = ApiCallStatus.success;
+
+        SaduditharResponse saduditharResponse = SaduditharResponse.fromJson(response.data);
+        _historySadudithars.value = saduditharResponse.data;
+        
+
+  update();
+      },
+
+      onError: (error) {
+        EasyLoading.dismiss();
+    apiCallStatus=ApiCallStatus.error;
+        BaseClient.handleApiError(apiException: error);
+  update();
+      },
+    );
+  }
+
 
 
   Future<void> requestLocationPermisson() async {
@@ -490,7 +535,7 @@ void showPermissionDialog() {
       content: Column(
         children: [
           const Text(
-            "Donation.com.mm collects location data to enable location tracking service for users to find posts by location nearby",
+          "Donation.com.mm collects location data to help users find nearby donation posts.",
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: 20),
@@ -500,7 +545,7 @@ void showPermissionDialog() {
               TextButton(
                 onPressed: () {
                  Get.back();
-                 EasyLoading.showError("Location permission is required to find nearby donations. Please enable location permissions ");
+                 EasyLoading.showError("We noticed you denied location access. Enabling location permissions will help us show you nearby donation posts, making it easier for you to support local causes ");
                 },
                 child: const Text("Cancel"),
               ),
@@ -564,32 +609,50 @@ void showPermissionDialog() {
   }
 
 
+    Future<void> checkLocationPermission() async {
+    PermissionStatus status = await Permission.location.request();
+    if (status.isGranted) {
+      _isLocationEnabled.value=true;
+    } else if (status.isPermanentlyDenied) {
+      _isLocationEnabled.value=false;
+    } else {
+    _isLocationEnabled.value=false;
+    }
+  }
+
+
 
 
   @override
   void onInit() async{
-    // if (MySharedPref.getIsFirstRun()==true) {
-    //   WidgetsBinding.instance.addPostFrameCallback((_) => showDialog());
-    // }
+    checkLocationPermission();
+    if (MySharedPref.getIsFirstRun()==true) {
+      if(Platform.isAndroid){
+         WidgetsBinding.instance.addPostFrameCallback((_) => showPermissionDialog());
+      }
+    }else{
+         await requestLocationPermission();
+    }
+      await MySharedPref.setFirstRun(false);
     //  await getCurrentLocation();
     // Check location permission status
-    LocationPermission permission = await Geolocator.checkPermission();
-    if (permission == LocationPermission.denied ||
-        permission == LocationPermission.deniedForever) {
-      WidgetsBinding.instance.addPostFrameCallback((_) => showPermissionDialog());
-    } else {
-      await requestLocationPermission();
-    }
+    // LocationPermission permission = await Geolocator.checkPermission();
+    // if (permission == LocationPermission.denied ||
+    //     permission == LocationPermission.deniedForever) {
+    //   WidgetsBinding.instance.addPostFrameCallback((_) => showPermissionDialog());
+    // } else {
+    //   await requestLocationPermission();
+    // }
 
     getSadudithars();
     getProfile();
-
     getDonors();
     getNatebanzays();
     getNatebanzaysRequested();
     getNatebanzaysRequests();
     getItems();
     getCities();
+    getHistory()  ;
 
 
     super.onInit();

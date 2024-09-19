@@ -38,6 +38,7 @@ class _ForgotPinCodeViewState extends State<ForgotPinCodeView> {
 
   @override
   void initState() {
+    _authController.startTimer();
     errorController = StreamController<ErrorAnimationType>();
     super.initState();
   }

@@ -69,15 +69,13 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
-    <key>NSLocationWhenInUseUsageDescription</key>
-    <string>This app needs access to location when open.</string>
-    <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-    <string>Your clear and concise description of why your app needs location access.</string>
-    <key>NSPhotoLibraryUsageDescription</key>
-    <string>This app requires access to the photo library.</string>
-    <key>NSMicrophoneUsageDescription</key>
-    <string>This app does not require access to the microphone.</string>
-    <key>NSCameraUsageDescription</key>
-    <string>This app requires access to the camera.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Donation.com.mm collects your location data to show you donation posts and opportunities nearby, helping you to support local causes more easily.</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>Donation.com.mm collects your location data to show you donation posts and opportunities nearby, helping you to support local causes more easily.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>This app requires access to the photo library.</string>
+	<key>NSCameraUsageDescription</key>
+	<string>This app requires access to the camera.</string>
 </dict>
 </plist>

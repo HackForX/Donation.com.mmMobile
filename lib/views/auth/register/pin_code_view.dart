@@ -44,6 +44,7 @@ class _PinCodeVerificationScreenState extends State<PinCodeVerificationScreen> {
 
   @override
   void initState() {
+    _authController.startTimer()  ;
     errorController = StreamController<ErrorAnimationType>();
     super.initState();
   }
@@ -246,8 +247,8 @@ class _PinCodeVerificationScreenState extends State<PinCodeVerificationScreen> {
                           widget.name ?? '',
                           widget.phoneNumber ?? '',
                           widget.password ?? '',
-                          widget.age ?? '',
-                          widget.gender ?? '',
+                          widget.age ?? '__',
+                          widget.gender ?? '__',
                           _authController.requestId ?? '',
                           _authController.pin);
                     },

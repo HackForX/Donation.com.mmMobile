@@ -28,6 +28,7 @@ class MainView extends StatelessWidget {
           children:   [
             // HomeAppBarWidget(),
             const SaduditharView(),
+            // const HistoryView(),
             NateBanZayView(),
            const GetNatebanzaysView(),
         const ShareNatebanzayView(),
@@ -74,6 +75,7 @@ class MainView extends StatelessWidget {
               ),
               label: tr('sadudithar'),
             ),
+           
             BottomNavigationBarItem(
               activeIcon: Padding(
                 padding: const EdgeInsets.only(bottom: 4, top: 4),

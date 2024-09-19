@@ -136,6 +136,7 @@ class CreateNatebanzayView extends GetView<CreateNatebanzayController> {
             Padding(
               padding: const EdgeInsets.only(top: 14.0),
               child: TextFormField(
+                textInputAction: TextInputAction.done,
                   validator: (value){
                   if(value==null||value.isEmpty){
                     return "မှတ်ချက်လိုအပ်ပါသည်";

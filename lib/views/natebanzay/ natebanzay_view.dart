@@ -40,6 +40,8 @@ class NateBanZayView extends GetView<HomeController> {
                 if(Get.find<HomeController>().profile.role=="user"){
             ToastHelper.showErrorToast(context, "အလှူရှင်အကောင့်ဖြစ်မှသာ တင်လို့ရပါမည်");
             Get.toNamed(Routes.donorRegister);
+
+
             }else if (Get.find<HomeController>().profile.role=="donor"){
                     Get.toNamed(Routes.createNatebanzay);
             }
@@ -416,62 +418,49 @@ List<String> extractPhotos(String jsonString) {
                                             fontFamily: "Myanmar")),
                               ),
                               const SizedBox(height: 10,),
-                              Row(children: [
-                                      Image.asset(
-                                    IconPath.viewIcon,
-                                        color: ColorApp.mainColor,
-                                        height: 15,
-                                      ),
-                                      const SizedBox(
-                                        width: 5,
-                                      ),
-                                      Text(detailsController.natebanzay!.viewCount.toString(),
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .bodySmall!
-                                              .copyWith(
-                                                color: ColorApp.mainColor,
-                                                fontFamily: "English",
-                                              )),
-                                  const SizedBox(
-                                    width: 5,
-                                  ),
-                              Image.asset(
-                                      IconPath.likeIcon,
-                                        color: ColorApp.mainColor,
-                                        height: 15,
-                                      ),
-                                      const SizedBox(
-                                        width: 5,
-                                      ),
-                                      Text(detailsController.natebanzay!.likeCount.toString(),
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .bodySmall!
-                                              .copyWith(
-                                                color: ColorApp.mainColor,
-                                                fontFamily: "English",
-                                              )),
-                                  const SizedBox(
-                                    width: 5,
-                                  ),
-                                 Image.asset(
-                                      IconPath.commentIcon,
-                                        color: ColorApp.mainColor,
-                                        height: 15,
-                                      ),
-                                      const SizedBox(
-                                        width: 5,
-                                      ),
-                                      Text(detailsController.natebanzay!.commentCount.toString(),
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .bodySmall!
-                                              .copyWith(
-                                                color: ColorApp.mainColor,
-                                                fontFamily: "English",
-                                              ))
-                              ],)
+                         Wrap(
+  alignment: WrapAlignment.center,
+  crossAxisAlignment: WrapCrossAlignment.center,
+  spacing: 10.0,
+  children: [
+    Image.asset(
+      IconPath.viewIcon,
+      color: ColorApp.mainColor,
+      height: 20,
+    ),
+    Text(
+      detailsController.natebanzay!.viewCount.toString(),
+      style: Theme.of(context).textTheme.bodySmall!.copyWith(
+            color: ColorApp.mainColor,
+            fontFamily: "English",
+          ),
+    ),
+    Image.asset(
+      IconPath.likeIcon,
+      color: ColorApp.mainColor,
+      height: 20,
+    ),
+    Text(
+      detailsController.natebanzay!.likeCount.toString(),
+      style: Theme.of(context).textTheme.bodySmall!.copyWith(
+            color: ColorApp.mainColor,
+            fontFamily: "English",
+          ),
+    ),
+    Image.asset(
+      IconPath.commentIcon,
+      color: ColorApp.mainColor,
+      height: 20,
+    ),
+    Text(
+      detailsController.natebanzay!.commentCount.toString(),
+      style: Theme.of(context).textTheme.bodySmall!.copyWith(
+            color: ColorApp.mainColor,
+            fontFamily: "English",
+          ),
+    ),
+  ],
+)
                             ],
                           ),
                         ),

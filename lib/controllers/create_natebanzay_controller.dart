@@ -4,7 +4,6 @@ import 'package:dio/dio.dart';
 import 'package:donation_com_mm_v2/controllers/home_controller.dart';
 import 'package:donation_com_mm_v2/core/api_call_status.dart';
 import 'package:donation_com_mm_v2/core/base_client.dart';
-import 'package:donation_com_mm_v2/models/natebanzay_response.dart';
 import 'package:donation_com_mm_v2/util/app_config.dart';
 import 'package:donation_com_mm_v2/util/share_pref_helper.dart';
 import 'package:donation_com_mm_v2/util/toast_helper.dart';
@@ -89,6 +88,9 @@ List<File> get pickedPhotos=> _pickedPhotos.toList();
         _apiCallStatus.value=ApiCallStatus.success;
 
         _homeController.getNatebanzays();
+        _homeController.getNatebanzaysRequested();
+        
+
 
         ToastHelper.showSuccessToast(context,"အလှူကိုအောင်မြင်စွာတင်ပီးပါပီ");
 

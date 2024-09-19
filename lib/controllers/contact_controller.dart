@@ -23,7 +23,7 @@ class ContactController extends GetxController{
   final BaseClient _baseClient = BaseClient();
 
   
-  Future<void> getProfile() async {
+  Future<void> getContact() async {
     await _baseClient.safeApiCall(
       AppConfig.contactUrl, // url
       RequestType.get,
@@ -56,7 +56,7 @@ class ContactController extends GetxController{
 
   @override
   void onInit() {
-    getProfile()  ;
+    getContact()  ;
     super.onInit();
   }
 

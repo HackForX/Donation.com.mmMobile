@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:donation_com_mm_v2/controllers/home_controller.dart';
 import 'package:donation_com_mm_v2/models/login_response.dart';
 import 'package:donation_com_mm_v2/models/register_response.dart';
 import 'package:donation_com_mm_v2/util/app_config.dart';
@@ -44,19 +45,19 @@ class AuthController extends GetxController {
   late Timer timer;
 
    void startTimer() {
-    const int resendTimeout = 60;
-    secondsRemaining.value = resendTimeout;
+  
+    
 
     timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       if (secondsRemaining.value > 0) {
-        secondsRemaining.value--;
+        secondsRemaining.value=secondsRemaining.value-1;
       } else {
         timer.cancel(); // Cancel the timer when it reaches zero
       }
     });
   }
 
-  login(
+login(
     String phone, String password, BuildContext context) async {
     await _baseClient.safeApiCall(
       AppConfig.signInUrl, // url
@@ -375,6 +376,7 @@ _apiCallStatus.value=ApiCallStatus.loading;
         EasyLoading.showToast("Failed");
       }
     } on FirebaseAuthException catch (e) {
+      print("Error ${e.toString()}");
       if (e.code == "account-exists-with-different-credential") {
         EasyLoading.showToast("Account Exists With Different Method");
       } else {
@@ -412,6 +414,7 @@ _apiCallStatus.value=ApiCallStatus.loading;
       },
 
       onError: (error) {
+        print(error.message);
         _apiCallStatus.value = ApiCallStatus.error;
   
         EasyLoading.dismiss();
@@ -697,6 +700,98 @@ _apiCallStatus.value=ApiCallStatus.loading;
         Get.offAllNamed(Routes.login);
 
         ToastHelper.showSuccessToast(context, "Succesfully logout");
+
+        // Get.offNamed(Routes.LOGIN);
+        // *) indicate success state
+        _apiCallStatus.value = ApiCallStatus.success;
+
+        
+      },
+      // if you don't pass this method base client
+      // will automaticly handle error and show message to user
+      onError: (error) {
+        // show error message to user
+        BaseClient.handleApiError(apiException: error);
+
+        // *) indicate error status
+        _apiCallStatus.value = ApiCallStatus.error;
+     
+      },
+    );
+  }
+
+
+  updateIsShow(BuildContext context,bool isShow) async {
+    // *) perform api call
+    await _baseClient.safeApiCall(
+      AppConfig.updateIsShowUrl, // url
+      RequestType.post,
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Authorization': "Bearer ${MySharedPref.getToken()}",
+      },
+      data: {
+        "is_show":isShow?1:0
+      },
+      onLoading: () {
+        // *) indicate loading state
+
+        _apiCallStatus.value = ApiCallStatus.loading;
+       
+      },
+      onSuccess: (response) {
+
+        ToastHelper.showSuccessToast(context, "Succes");
+
+
+        Get.find<HomeController>().getProfile();
+        Get.find<HomeController>().getDonors();
+
+
+        // Get.offNamed(Routes.LOGIN);
+        // *) indicate success state
+        _apiCallStatus.value = ApiCallStatus.success;
+
+        
+      },
+      // if you don't pass this method base client
+      // will automaticly handle error and show message to user
+      onError: (error) {
+        // show error message to user
+        BaseClient.handleApiError(apiException: error);
+
+        // *) indicate error status
+        _apiCallStatus.value = ApiCallStatus.error;
+     
+      },
+    );
+  }
+
+
+  deleteAccount(BuildContext context) async {
+    // *) perform api call
+    await _baseClient.safeApiCall(
+      AppConfig.deleteAccountUrl, // url
+      RequestType.post,
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Authorization': "Bearer ${MySharedPref.getToken()}",
+      },
+      onLoading: () {
+        // *) indicate loading state
+
+        _apiCallStatus.value = ApiCallStatus.loading;
+       
+      },
+      onSuccess: (response) {
+        // api done successfully
+        MySharedPref.clear();
+
+        Get.offAllNamed(Routes.login);
+
+        ToastHelper.showSuccessToast(context, "Succesfully deleted");
 
         // Get.offNamed(Routes.LOGIN);
         // *) indicate success state

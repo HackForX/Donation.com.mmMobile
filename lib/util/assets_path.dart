@@ -55,6 +55,12 @@ class IconPath {
   static const requestsIcon = '$_folderPath/requests.png';
   static const pinIcon = '$_folderPath/pin.png';
   static const deleteIcon = '$_folderPath/delete.png';
+  static const trashIcon = '$_folderPath/trash.png';
+  static const locationIcon = '$_folderPath/location.png';
+  static const settingIcon = '$_folderPath/setting.png';
+
+
+
 
 
 

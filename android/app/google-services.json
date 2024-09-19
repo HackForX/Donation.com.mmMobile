@@ -39,10 +39,54 @@
               "client_type": 3
             },
             {
-              "client_id": "268293076947-mqam2553ig7hjkvlthj7a4u9amhvvjva.apps.googleusercontent.com",
+              "client_id": "268293076947-c20mr6lguqvnb429975a4j6irglcaf7s.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.donationcommm.app"
+                "bundle_id": "com.donationcommm.foc.app"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:268293076947:android:303fa9e1b48f2157ffa126",
+        "android_client_info": {
+          "package_name": "com.natebanzay.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "268293076947-fhs6fmclnu7m9jnu944uvev3l1b60mcu.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.natebanzay.app",
+            "certificate_hash": "ae387278f0fd8cc102345ca83b1aa1275d6f02c4"
+          }
+        },
+        {
+          "client_id": "268293076947-e0fadat7uf5cgt2bt5bl2cfe3gk642lt.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAgUpUyZhSU9Lkgu_b3GN7pE8LpJMC0nDQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "268293076947-e0fadat7uf5cgt2bt5bl2cfe3gk642lt.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "268293076947-c20mr6lguqvnb429975a4j6irglcaf7s.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.donationcommm.foc.app"
               }
             }
           ]

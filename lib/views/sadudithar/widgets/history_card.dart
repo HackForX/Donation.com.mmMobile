@@ -11,9 +11,9 @@ import '../../../util/app_config.dart';
 import '../../../util/assets_path.dart';
 
 
-class AllSaduditarCard extends StatelessWidget {
+class HistoryCard extends StatelessWidget {
   final Sadudithar sadudithar;
-  const AllSaduditarCard({
+  const HistoryCard({
     super.key,
     required this.sadudithar
   });
@@ -26,17 +26,17 @@ class AllSaduditarCard extends StatelessWidget {
       }),
       child: Container(
         margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-        decoration: BoxDecoration(
-          borderRadius: const BorderRadius.all(Radius.circular(15)),
+        decoration: const BoxDecoration(
+          borderRadius: BorderRadius.all(Radius.circular(15)),
           color:  ColorApp.white,
-          boxShadow: [
-            BoxShadow(
-              color: const Color.fromARGB(255, 255, 180, 193).withOpacity(0.2),
-              spreadRadius: 1,
-              blurRadius: 1,
-              offset: const Offset(1, 1), // changes position of shadow
-            ),
-          ],
+          // boxShadow: [
+          //   BoxShadow(
+          //     color: const Color.fromARGB(255, 255, 180, 193).withOpacity(0.2),
+          //     spreadRadius: 1,
+          //     blurRadius: 1,
+          //     offset: const Offset(1, 1), // changes position of shadow
+          //   ),
+          // ],
         ),
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           Stack(

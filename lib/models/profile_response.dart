@@ -1,6 +1,7 @@
 class ProfileResponse {
   final bool status;
   final String message;
+  
   final Profile data;
 
   const ProfileResponse({
@@ -23,6 +24,7 @@ class Profile {
   final String role;
   final dynamic profile; // Can be null
   final dynamic document; // Can be null
+  final dynamic isShow;
   final DateTime createdAt;
   final DateTime updatedAt;
 
@@ -34,6 +36,7 @@ class Profile {
     this.profile,
     this.document,
     required this.createdAt,
+    required this.isShow,
     required this.updatedAt,
   });
 
@@ -44,6 +47,7 @@ class Profile {
         role: json['role'],
         profile: json['profile'],
         document: json['document'],
+        isShow: json['is_show'],
         createdAt: DateTime.parse(json['created_at'] as String),
         updatedAt: DateTime.parse(json['updated_at'] as String),
       );

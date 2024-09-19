@@ -2,6 +2,7 @@ import 'package:donation_com_mm_v2/controllers/donor_register_controller.dart';
 import 'package:donation_com_mm_v2/core/api_call_status.dart';
 import 'package:donation_com_mm_v2/util/app_color.dart';
 import 'package:donation_com_mm_v2/util/button_loader_widget.dart';
+import 'package:donation_com_mm_v2/util/toast_helper.dart';
 import 'package:donation_com_mm_v2/views/drawer/drawer_view.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -137,7 +138,11 @@ class DonorRegisterView extends GetView<DonorRegisterController> {
                           fontFamily: "English"),
                     ),
                     onPressed: () {
-                      controller.register(_nameController.text, _addressController.text, _phoneController.text,_companyNameController.text,_positionController.text, int.parse(_documentNumberController.text), context);
+                    if(controller.pickedDocumentImage==null){
+                      ToastHelper.showErrorToast(context, "Please upload NRC image");
+                    }else{
+                        controller.register(_nameController.text, _addressController.text, _phoneController.text,_companyNameController.text,_positionController.text, int.parse(_documentNumberController.text), context);
+                    }
                     },
                   ),
                 )),
