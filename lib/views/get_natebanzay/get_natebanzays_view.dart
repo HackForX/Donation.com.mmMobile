@@ -3,6 +3,7 @@ import 'package:donation_com_mm_v2/models/natebanay_request_response.dart';
 import 'package:donation_com_mm_v2/routes/app_pages.dart';
 import 'package:donation_com_mm_v2/util/app_color.dart';
 import 'package:donation_com_mm_v2/util/app_config.dart';
+import 'package:donation_com_mm_v2/util/share_pref_helper.dart';
 import 'package:donation_com_mm_v2/util/toast_helper.dart';
 import 'package:donation_com_mm_v2/views/drawer/drawer_view.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -27,7 +28,19 @@ class GetNatebanzaysView extends GetView<HomeController> {
           appBar: AppBar(
             title: const Text("requested").tr(),
           ),
-          body:GetBuilder<HomeController>(builder: (controller)=>ListView.builder(
+          body:MySharedPref.getUserId()==null&&MySharedPref.getToken()==null?Center(child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+            Text("unauthorized",style: TextStyle(color: ColorApp.mainColor,fontWeight: FontWeight.w700),).tr(),
+            const SizedBox(height: 10,),
+              SizedBox(
+                width: double.infinity,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 40.0,vertical: 10),
+                  child: ElevatedButton(style: ElevatedButton.styleFrom(backgroundColor: ColorApp.mainColor,foregroundColor: ColorApp.secondaryColor),onPressed: (){}, child: const Text("login").tr()),
+                )),
+            ],
+          )):GetBuilder<HomeController>(builder: (controller)=>ListView.builder(
             itemCount: controller.natebanzaysRequests.length,
             itemBuilder: (BuildContext context, int index) {
               return    RequestedItemCardWidget(

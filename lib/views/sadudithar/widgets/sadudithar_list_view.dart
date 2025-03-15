@@ -1,5 +1,6 @@
 import 'package:donation_com_mm_v2/controllers/home_controller.dart';
 import 'package:donation_com_mm_v2/util/app_color.dart';
+import 'package:donation_com_mm_v2/views/history/history_view.dart';
 import 'package:donation_com_mm_v2/views/sadudithar/widgets/all_sadudithar_list.dart';
 import 'package:donation_com_mm_v2/views/sadudithar/widgets/city_dropdown.dart';
 import 'package:donation_com_mm_v2/views/sadudithar/widgets/city_sadudithar_list.dart';
@@ -12,6 +13,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+
 class SaduditharListView extends StatelessWidget {
   const SaduditharListView({
     super.key,
@@ -22,52 +24,87 @@ class SaduditharListView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListView(
-      children: [
-        // Nearby section
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 20), // Consistent padding
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                "nearby",
-                style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                      fontWeight: FontWeight.w600,
-                      fontFamily: "Myanmar",
-                    ),
-              ).tr(),
-              InkWell(
-                onTap: () => Get.to(
-                  () => SeeMoreSaduditharList(
-                    title: tr("nearby"),
+    return ListView.builder(
+      physics: const BouncingScrollPhysics(),
+      padding: const EdgeInsets.only(bottom: 16),
+      itemCount: 5, // Fixed number of sections
+      itemBuilder: (context, index) {
+        switch (index) {
+          case 0:
+            return _buildSection(
+              context,
+              title: 'nearby',
+              onSeeAll: () => Get.to(() => SeeMoreSaduditharList(
+                    title: tr('nearby'),
                     sadudithars: controller.nearbySadudithars,
-                  ),
-                ),
-                child: Text(
-                  "seeall",
-                  style: Theme.of(context).textTheme.labelMedium!.copyWith(
-                        color: ColorApp.dark,
-                        fontWeight: FontWeight.w500,
-                        fontFamily: "Myanmar",
-                      ),
-                ).tr(),
-              ),
-            ],
-          ),
-        ),
-        const SizedBox(height: 10),
-        NearbySaduditharList(controller: controller),
+                  )),
+              child: NearbySaduditharList(controller: controller),
+            );
+          case 1:
+            return _buildCitySection(context);
+          case 2:
+            return _buildSection(
+              context,
+              title: 'history',
+              onSeeAll: () => Get.to(() => const HistoryView()),
+              child: HistoryList(controller: controller),
+            );
+          case 3:
+            return _buildSection(
+              context,
+              title: 'allSadudithars',
+              onSeeAll: () => Get.to(() => SeeMoreSaduditharList(
+                    title: tr('allSadudithars'),
+                    sadudithars: controller.sadudithars,
+                  )),
+              child: AllSaduditaharList(controller: controller),
+            );
+          case 4:
+            return _buildSection(
+              context,
+              title: 'donors',
+              onSeeAll: () => Get.to(() => SeeMoreDonorListWidget(
+                    donors: controller.donors,
+                  )),
+              child: DonorList(controller: controller),
+            );
+          default:
+            return const SizedBox.shrink();
+        }
+      },
+    );
+  }
 
-        // By City section
+  Widget _buildSection(
+    BuildContext context, {
+    required String title,
+    required VoidCallback onSeeAll,
+    required Widget child,
+  }) {
+    return Column(
+      children: [
+        _buildSectionHeader(
+          context,
+          title: title,
+          onSeeAll: onSeeAll,
+        ),
+        child,
+        const SizedBox(height: 16),
+      ],
+    );
+  }
+
+  Widget _buildCitySection(BuildContext context) {
+    return Column(
+      children: [
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 20), // Consistent padding
+          padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                "bycity",
-                style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+                'bycity',
+                style: Theme.of(context).textTheme.titleMedium?.copyWith(
                       fontWeight: FontWeight.w600,
                       fontFamily: "Myanmar",
                     ),
@@ -76,113 +113,47 @@ class SaduditharListView extends StatelessWidget {
             ],
           ),
         ),
-        const SizedBox(height: 10),
         CitySaduditharList(controller: controller),
-
-        // Donors section
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 20), // Consistent padding
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                "donors",
-                style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                      fontWeight: FontWeight.w600,
-                      fontFamily: "Myanmar",
-                    ),
-              ).tr(),
-              InkWell(
-                onTap: () => Get.to(
-                  () => SeeMoreDonorListWidget(donors: controller.donors),
-                ),
-                child: Text(
-                  "seeall",
-                  style: Theme.of(context).textTheme.labelMedium!.copyWith(
-                        color: ColorApp.dark,
-                        fontWeight: FontWeight.w500,
-                        fontFamily: "Myanmar",
-                      ),
-                ).tr(),
-              ),
-            ],
-          ),
-        ),
-        const SizedBox(height: 10),
-        DonorList(controller: controller),
-
-        // All Sadudithars section
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 20), // Consistent padding
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                "allSadudithars",
-                style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                      fontWeight: FontWeight.w600,
-                      fontFamily: "Myanmar",
-                    ),
-              ).tr(),
-              InkWell(
-                onTap: () => Get.to(
-                  () => SeeMoreSaduditharList(
-                    title: tr('allSadudithars'),
-                    sadudithars: controller.sadudithars,
-                  ),
-                ),
-                child: Text(
-                  "seeall",
-                  style: Theme.of(context).textTheme.labelMedium!.copyWith(
-                        color: ColorApp.dark,
-                        fontWeight: FontWeight.w500,
-                        fontFamily: "Myanmar",
-                      ),
-                ).tr(),
-              ),
-            ],
-          ),
-        ),
-        const SizedBox(height: 10),
-        AllSaduditaharList(controller: controller),
-
-        // History section
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 20), // Consistent padding
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                "history",
-                style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                      fontWeight: FontWeight.w600,
-                      fontFamily: "Myanmar",
-                    ),
-              ).tr(),
-              InkWell(
-                onTap: () => Get.to(
-                  () => SeeMoreSaduditharList(
-                    title: tr('allSadudithars'),
-                    sadudithars: controller.sadudithars,
-                  ),
-                ),
-                child: Text(
-                  "seeall",
-                  style: Theme.of(context).textTheme.labelMedium!.copyWith(
-                        color: ColorApp.dark,
-                        fontWeight: FontWeight.w500,
-                        fontFamily: "Myanmar",
-                      ),
-                ).tr(),
-              ),
-            ],
-          ),
-        ),
-        const SizedBox(height: 10),
-        HistoryList(controller: controller),
-
-        const SizedBox(height: 20), // Slight increase in bottom padding
+        const SizedBox(height: 16),
       ],
+    );
+  }
+
+  Widget _buildSectionHeader(
+    BuildContext context, {
+    required String title,
+    required VoidCallback onSeeAll,
+  }) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            title,
+            style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.w600,
+                  fontFamily: "Myanmar",
+                ),
+          ).tr(),
+          TextButton(
+            onPressed: onSeeAll,
+            style: TextButton.styleFrom(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+              minimumSize: Size.zero,
+              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+            ),
+            child: Text(
+              'seeall',
+              style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                    color: ColorApp.mainColor,
+                    fontWeight: FontWeight.w500,
+                    fontFamily: "Myanmar",
+                  ),
+            ).tr(),
+          ),
+        ],
+      ),
     );
   }
 }

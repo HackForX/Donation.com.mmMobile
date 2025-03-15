@@ -68,7 +68,7 @@ class NatebanzayRequestController extends GetxController{
         EasyLoading.dismiss();
         _apiCallStatus.value = ApiCallStatus.success;
             getRequests(id);
-        ToastHelper.showSuccessToast(context,response.data['message'],);
+       EasyLoading.showSuccess(response.data['message'],);
 
   
 
@@ -106,7 +106,7 @@ class NatebanzayRequestController extends GetxController{
       onSuccess: (response) {
         EasyLoading.dismiss();
         _apiCallStatus.value = ApiCallStatus.success;
-        ToastHelper.showSuccessToast(context,response.data['message'],);
+      EasyLoading.showSuccess(response.data['message'],);
 
       getRequests(id);
 

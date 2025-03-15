@@ -2,22 +2,18 @@
 
 import 'dart:async';
 
-
 import 'package:dio/dio.dart';
 import 'package:donation_com_mm_v2/routes/app_pages.dart';
 import 'package:donation_com_mm_v2/util/app_config.dart';
 import 'package:donation_com_mm_v2/util/share_pref_helper.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get_state_manager/src/simple/get_controllers.dart';
 import 'package:get/instance_manager.dart';
 import 'package:get/route_manager.dart';
 
-
 import '../core/api_call_status.dart';
 import '../core/base_client.dart';
-import '../util/toast_helper.dart';
 
 
 class SplashController extends GetxController {
@@ -43,7 +39,7 @@ class SplashController extends GetxController {
     } else {
       // User is not authenticated, navigate to registration page
       _timer = Timer.periodic(const Duration(seconds: 2), (timer) {
-        Get.offNamed(Routes.login);
+        Get.offNamed(Routes.main);
         _timer?.cancel(); // Cancel the timer
         Get.delete<SplashController>();
       });

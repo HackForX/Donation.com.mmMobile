@@ -1,17 +1,12 @@
 import 'package:donation_com_mm_v2/controllers/create_natebanzay_controller.dart';
-import 'package:donation_com_mm_v2/controllers/home_controller.dart';
-import 'package:donation_com_mm_v2/core/api_call_status.dart';
 import 'package:donation_com_mm_v2/util/app_color.dart';
-import 'package:donation_com_mm_v2/util/button_loader_widget.dart';
 import 'package:donation_com_mm_v2/util/share_pref_helper.dart';
 import 'package:donation_com_mm_v2/util/toast_helper.dart';
 import 'package:donation_com_mm_v2/views/create_natebanzay/widgets/item_dropdown.dart';
 import 'package:donation_com_mm_v2/views/drawer/drawer_view.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
-import '../../routes/app_pages.dart';
-import '../../util/assets_path.dart';
+import 'package:panara_dialogs/panara_dialogs.dart';
 
 class CreateNatebanzayView extends GetView<CreateNatebanzayController> {
    CreateNatebanzayView({super.key});
@@ -64,7 +59,7 @@ class CreateNatebanzayView extends GetView<CreateNatebanzayController> {
             
                 decoration: InputDecoration(
                   
-                    hintText: "ပစ္စည်းအမည်",
+                    hintText: "ပစ္စည်းအမည် *",
                 
                     hintStyle: Theme.of(context).textTheme.bodyLarge!.copyWith(
                         fontWeight: FontWeight.w500, fontFamily: "Myanmar")),
@@ -84,7 +79,7 @@ class CreateNatebanzayView extends GetView<CreateNatebanzayController> {
                   return null;
                 },
                 decoration: InputDecoration(
-                    hintText: "အရေအတွက်",
+                    hintText: "အရေအတွက် *",
                     hintStyle: Theme.of(context).textTheme.bodyLarge!.copyWith(
                         fontWeight: FontWeight.w500, fontFamily: "Myanmar")),
               ),
@@ -109,7 +104,7 @@ class CreateNatebanzayView extends GetView<CreateNatebanzayController> {
                 },
                 controller: _addressController,
                 decoration: InputDecoration(
-                    hintText: "လိပ်စာ",
+                    hintText: "လိပ်စာ *",
                     hintStyle: Theme.of(context).textTheme.bodyLarge!.copyWith(
                         fontWeight: FontWeight.w500, fontFamily: "Myanmar")),
               ),
@@ -128,7 +123,7 @@ class CreateNatebanzayView extends GetView<CreateNatebanzayController> {
 
               controller: _phoneController,
                 decoration: InputDecoration(
-                    hintText: "ဖုန်းနံပတ်",
+                    hintText: "ဖုန်းနံပတ် *",
                     hintStyle: Theme.of(context).textTheme.bodyLarge!.copyWith(
                         fontWeight: FontWeight.w500, fontFamily: "Myanmar")),
               ),
@@ -146,7 +141,7 @@ class CreateNatebanzayView extends GetView<CreateNatebanzayController> {
                 controller: _noteController,
                 maxLines: 5,
                 decoration: InputDecoration(
-                    hintText: "မှတ်ချက်",
+                    hintText: "မှတ်ချက် *",
                     hintStyle: Theme.of(context).textTheme.bodyLarge!.copyWith(
                         fontWeight: FontWeight.w500, fontFamily: "Myanmar")),
               ),
@@ -164,10 +159,21 @@ class CreateNatebanzayView extends GetView<CreateNatebanzayController> {
                 
                     borderRadius: BorderRadius.all(Radius.circular(15))
                   ),
-                  child: const Text("ပုံတင်မည်"),),
+                  child: const Text("ပုံတင်မည် *"),),
               )
             ),
             Padding(
+               padding: const EdgeInsets.only(top: 14.0,left: 10),
+              child: controller.pickedPhotos.isEmpty?const SizedBox():SingleChildScrollView(scrollDirection: Axis.horizontal,child: Row(children: controller.pickedPhotos.map((e) => ClipRRect(
+                borderRadius: const BorderRadius.all(Radius.circular(15)),
+                child: Padding(
+                  padding: const EdgeInsets.only(left:8.0),
+                  child: SizedBox(
+                    height: 120,
+                    width: 200,
+                    child: Image.file(e,fit: BoxFit.cover,)),
+                ))).toList(),),)),
+              Padding(
                padding: const EdgeInsets.only(top: 14.0,left: 10),
               child: controller.pickedPhotos.isEmpty?const Text("ပုံလိုအပ်ပါသည်",style: TextStyle(color: ColorApp.lipstick,fontSize: 12,fontWeight: FontWeight.w200,fontFamily: "Myanmar"),):const SizedBox(),
             ),
@@ -214,10 +220,19 @@ class CreateNatebanzayView extends GetView<CreateNatebanzayController> {
                     if(_formKey.currentState!.validate()&&controller.selectedItem.name!='အမျိုးအစားရွေးပါ'){
                       controller.createNatebanzay(_nameController.text, _quantityController.text, _addressController.text, MySharedPref.getUserId()??11,controller.selectedItem.id, _phoneController.text, "pending",_noteController.text,context);
                     }else{
-                      ToastHelper.showErrorToast(context, "လိုအပ်များရှိနေပါသည်");
+                   PanaraInfoDialog.showAnimatedGrow(
+                  context,
+                  // title: "Donation.com.mm",
+                  message: "Incomplete Info",
+                  buttonText: "Okay",
+                  onTapDismiss: () {
+                    Navigator.pop(context);
+                  },
+                  panaraDialogType: PanaraDialogType.warning,
+                );
                     }
                   },
-                  child: controller.apiCallStatus==ApiCallStatus.loading?const ButtonLoaderWidget():Text(
+                  child: Text(
                     "Save",
                     style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                         fontWeight: FontWeight.w700,

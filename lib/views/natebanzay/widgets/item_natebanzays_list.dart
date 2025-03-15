@@ -3,8 +3,11 @@ import 'package:donation_com_mm_v2/controllers/natebanzay_details_controller.dar
 import 'package:donation_com_mm_v2/controllers/request_natebanzay_controller.dart';
 import 'package:donation_com_mm_v2/util/empty_widget.dart';
 import 'package:donation_com_mm_v2/views/natebanzay/%20natebanzay_view.dart';
+import 'package:donation_com_mm_v2/views/natebanzay/widgets/natebanzay_card.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+
+import '../see_more_natebanzay_list_widget.dart';
 
 class ItemNatebanzaysList extends StatelessWidget {
   final HomeController homeController;

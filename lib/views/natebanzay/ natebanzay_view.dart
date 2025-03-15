@@ -7,8 +7,8 @@ import 'package:donation_com_mm_v2/routes/app_pages.dart';
 import 'package:donation_com_mm_v2/util/app_color.dart';
 import 'package:donation_com_mm_v2/util/app_config.dart';
 import 'package:donation_com_mm_v2/util/assets_path.dart';
-import 'package:donation_com_mm_v2/views/natebanzay/see_more_natebanzay_list_widget.dart';
-import 'package:donation_com_mm_v2/views/natebanzay/widgets/item_natebanzays_list.dart';
+import 'package:donation_com_mm_v2/util/share_pref_helper.dart';
+
 import 'package:donation_com_mm_v2/views/natebanzay/widgets/item_widget.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -17,272 +17,570 @@ import 'package:get/get.dart';
 import '../../util/toast_helper.dart';
 import '../drawer/drawer_view.dart';
 import '../share_natebanzay/share_natebanzay_view.dart';
-
-class NateBanZayView extends GetView<HomeController> {
-    final RequestNatebanzayController _requestNatebanzayController=Get.put(RequestNatebanzayController()) ;
-    final NatebanzayDetailsController _natebanzayDetailsController=Get.put(NatebanzayDetailsController()) ;
-
-   NateBanZayView({super.key});
+import 'see_more_natebanzay_list_widget.dart';
+import 'widgets/natebanzay_card.dart';
 
 
 
-  @override
-  Widget build(BuildContext context) {
-    return RefreshIndicator(
-        onRefresh: () async{
-        controller.getNatebanzays();
-      },
-      child: Scaffold(
-             floatingActionButton: FloatingActionButton.extended(
-            backgroundColor: ColorApp.mainColor,
-            elevation: 1,
-            onPressed: () {
-                if(Get.find<HomeController>().profile.role=="user"){
-            ToastHelper.showErrorToast(context, "အလှူရှင်အကောင့်ဖြစ်မှသာ တင်လို့ရပါမည်");
-            Get.toNamed(Routes.donorRegister);
+List<String> extractPhotos(String jsonString) {
+  try {
+    // Handle empty or null string
+    if (jsonString.isEmpty) {
+      return [];
+    }
 
+    // Remove escape sequences and whitespace
+    final cleanString = jsonString.replaceAll('\\', '').trim();
 
-            }else if (Get.find<HomeController>().profile.role=="donor"){
-                    Get.toNamed(Routes.createNatebanzay);
-            }
-         
-            },
-            label: Text("createNatebanzay",
-                style: Theme.of(context).textTheme.titleMedium!.copyWith(
-                    color: ColorApp.white,
-                    fontWeight: FontWeight.w500,
-                    fontFamily: "Myanmar")).tr(),
-            icon: Padding(
-                padding: const EdgeInsets.all(5.0),
-                child: Image.asset(
-                 IconPath.editIcon,
-                  height: 22,
-                  color: ColorApp.white,
-                ))),
-        floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-        drawer:  DrawerView(),
-        appBar: AppBar(
-          title: const Text("natebanzay").tr(),
-        ),
-        body: Obx(()=>ListView(children: [
-          // Padding(
-          //   padding: const EdgeInsets.only(left: 16.0, top: 20, right: 16),
-          //   child: Row(
-          //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          //     children: [
-          //       Text("အနီးအနားတွင်ရှိသော",
-          //           style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-          //               fontWeight: FontWeight.w600, fontFamily: "Myanmar")),
-          //       Text("အားလုံးကြည့်မည်",
-          //           style: Theme.of(context).textTheme.labelMedium!.copyWith(
-          //               color: ColorApp.dark,
-          //               fontWeight: FontWeight.w500,
-          //               fontFamily: "Myanmar")),
-          //     ],
-          //   ),
-          // ),
-          // const SizedBox(
-          //   height: 10,
-          // ),
-          //  SingleChildScrollView(
-          //   scrollDirection: Axis.horizontal,
-          //   child: Row(
-          //     children:controller.natebanzays.map((natebanzay) =>    NatebanzayCard(natebanzay: natebanzay,requestNatebanzayController: _requestNatebanzayController,detailsController: _natebanzayDetailsController,), ).toList()
-          //   ),
-          // ),
-          Padding(
-            padding: const EdgeInsets.only(left: 16.0, top: 20, right: 16),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text("byCategory",
-                    style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                        fontWeight: FontWeight.w600, fontFamily: "Myanmar")).tr(),
-                InkWell(
-                  onTap: () {
-                       final filteredNataebanzays = controller.natebanzays
-      .where((natebanzay) => natebanzay.item.name == controller.selectedItem.name)
-      .toList();
-                    Get.to(()=>SeeMoreNatebanzayList(title: tr("byCategory"), natebanzays: filteredNataebanzays, requestNatebanzayController: _requestNatebanzayController, detailsController: _natebanzayDetailsController));
-                  },
-                  child: Text("seeall",
-                      style: Theme.of(context).textTheme.labelMedium!.copyWith(
-                          color: ColorApp.dark,
-                          fontWeight: FontWeight.w500,
-                          fontFamily: "Myanmar")).tr(),
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(
-            height: 10,
-          ),
-           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10.0),
-            child: SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: Row(
-                
-                children: controller.items.map((item) =>   InkWell(
-                onTap: (){
-                  controller.setItem(item);
-                },
-                child: ItemWidget(
-                    name: item.name,
-                    isSelected: item==controller.selectedItem,
-                  ),
-              ), ).toList()),
-            ),
-          ),
-          
-      
-          const SizedBox(
-            height: 10,
-          ),
-          ItemNatebanzaysList(homeController:controller, requestNatebanzayController: _requestNatebanzayController,detailsController: _natebanzayDetailsController,),
-          Padding(
-            padding: const EdgeInsets.only(left: 16.0, top: 20, right: 16),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text("byPlace",
-                    style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                        fontWeight: FontWeight.w600, fontFamily: "Myanmar")).tr(),
-                GestureDetector(
-                  onTap: ()=>Get.to(()=>SeeMoreNatebanzayList(title: tr("byPlace"), natebanzays: controller.natebanzays, requestNatebanzayController: _requestNatebanzayController, detailsController: _natebanzayDetailsController)),
-                  child: Text("seeall",
-                      style: Theme.of(context).textTheme.labelMedium!.copyWith(
-                          color: ColorApp.dark,
-                          fontWeight: FontWeight.w500,
-                          fontFamily: "Myanmar")).tr(),
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(
-            height: 10,
-          ),
-           SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: Row(
-                   children:controller.natebanzays.map((natebanzay) =>    NatebanzayCard(natebanzay: natebanzay,requestNatebanzayController: _requestNatebanzayController,detailsController: _natebanzayDetailsController,), ).toList()
-            ),
-          ),
-          const SizedBox(height: 20,),
-        ]),)
-      ),
-    );
+    // Remove leading/trailing brackets and quotes
+    final strippedString = cleanString
+        .replaceAll(RegExp(r'^\["|"\]$'), '')
+        .replaceAll(RegExp(r'^"|"$'), '');
+
+    // Split the string into array and filter empty entries
+    final imageUrls = strippedString
+        .split('","')
+        .where((url) => url.isNotEmpty)
+        .toList();
+
+    return imageUrls;
+  } catch (e) {
+    print('Error extracting photos: $e');
+    return [];
   }
 }
 
-class NatebanzayCard extends StatelessWidget {
-  final Natebanzay natebanzay;
-  final RequestNatebanzayController requestNatebanzayController;
-  final NatebanzayDetailsController detailsController;
+  void showItemDetailsDialog(BuildContext context, NatebanzayDetailsController detailsController, RequestNatebanzayController requestNatebanzayController) {
+    showModalBottomSheet(
+      isScrollControlled: true,
+      backgroundColor: Colors.white,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      context: context,
+      builder: (context) {
+        return Obx(() {
+          if (detailsController.apiCallStatus == ApiCallStatus.loading || 
+              detailsController.natebanzay == null) {
+            return const FractionallySizedBox(
+              heightFactor: 0.9,
+              child: Center(child: CircularProgressIndicator()),
+            );
+          }
 
-  const NatebanzayCard({
-    super.key, required this.natebanzay, required this.requestNatebanzayController,required this.detailsController
-  });
+          return FractionallySizedBox(
+            heightFactor: 0.9,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Header with user info
+                Container(
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    border: Border(
+                      bottom: BorderSide(color: Colors.grey.shade100),
+                    ),
+                  ),
+                  child: Row(
+                    children: [
+                      CircleAvatar(
+                        radius: 32,
+                        backgroundImage: const AssetImage(ImagePath.donor),
+                        backgroundColor: ColorApp.mainColor.withOpacity(0.1),
+                      ),
+                      const SizedBox(width: 16),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              detailsController.natebanzay!.user!.name,
+                              style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                                fontWeight: FontWeight.w600,
+                                fontFamily: "Myanmar",
+                              ),
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              "${detailsController.natebanzay!.name} (${detailsController.natebanzay!.quantity}ခု)",
+                              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                color: Colors.grey[600],
+                                fontFamily: "Myanmar",
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      IconButton(
+                        icon: Icon(
+                          detailsController.natebanzay!.like != null 
+                              ? Icons.favorite 
+                              : Icons.favorite_outline,
+                          color: ColorApp.mainColor,
+                        ),
+                        onPressed: () => detailsController.like(detailsController.natebanzay!.id),
+                      ),
+                    ],
+                  ),
+                ),
+
+                // Stats row
+                Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      _buildStatItem(
+                        context: context,
+                        icon: IconPath.viewIcon,
+                        value: detailsController.natebanzay!.viewCount.toString(),
+                        label: 'Views',
+                      ),
+                      _buildStatItem(
+                        context: context,
+                        icon: IconPath.likeIcon,
+                        value: detailsController.natebanzay!.likeCount.toString(),
+                        label: 'Likes',
+                      ),
+                      _buildStatItem(
+                        context: context,
+                        icon: IconPath.commentIcon,
+                        value: detailsController.natebanzay!.commentCount.toString(),
+                        label: 'Comments',
+                      ),
+                    ],
+                  ),
+                ),
+
+                // Content
+                Expanded(
+                  child: SingleChildScrollView(
+                    padding: const EdgeInsets.all(16),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        if (detailsController.natebanzay!.note?.isNotEmpty ?? false) ...[
+                          Text(
+                            detailsController.natebanzay!.note!,
+                            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                              color: Colors.grey[800],
+                              height: 1.5,
+                              fontFamily: "Myanmar",
+                            ),
+                          ),
+                          const SizedBox(height: 24),
+                        ],
+
+                        // Photos
+                        if (detailsController.natebanzay!.photos != null) ...[
+                          Text(
+                            'Photos',
+                            style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          const SizedBox(height: 12),
+        GridView.builder(
+  shrinkWrap: true,
+  physics: const NeverScrollableScrollPhysics(),
+  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+    crossAxisCount: 2,
+    mainAxisSpacing: 8,
+    crossAxisSpacing: 8,
+    childAspectRatio: 1,
+  ),
+  itemCount: extractPhotos(detailsController.natebanzay!.photos!).length,
+  itemBuilder: (context, index) {
+    final photo = extractPhotos(detailsController.natebanzay!.photos!)[index];
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(12),
+      child: Image.network(
+        "${AppConfig.baseUrl}/storage/images/natebanzay_photos/$photo",
+        fit: BoxFit.cover,
+        errorBuilder: (context, error, stackTrace) => Container(
+          decoration: BoxDecoration(
+            color: Colors.grey.shade50,
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                Icons.broken_image_rounded,
+                size: 32,
+                color: ColorApp.mainColor.withOpacity(0.3),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                'Image not available',
+                style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                  color: Colors.grey.shade600,
+                  fontSize: 10,
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ],
+          ),
+        ),
+        loadingBuilder: (context, child, loadingProgress) {
+          if (loadingProgress == null) return child;
+          return Container(
+            decoration: BoxDecoration(
+              color: Colors.grey.shade50,
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Center(
+              child: CircularProgressIndicator(
+                value: loadingProgress.expectedTotalBytes != null
+                    ? loadingProgress.cumulativeBytesLoaded / 
+                      loadingProgress.expectedTotalBytes!
+                    : null,
+                strokeWidth: 2,
+                color: ColorApp.mainColor,
+              ),
+            ),
+          );
+        },
+      ),
+    );
+  },
+),
+                        ],
+                      ],
+                    ),
+                  ),
+                ),
+
+                // Action buttons
+                Container(
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    border: Border(
+                      top: BorderSide(color: Colors.grey.shade100),
+                    ),
+                  ),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: OutlinedButton.icon(
+                          style: OutlinedButton.styleFrom(
+                            padding: const EdgeInsets.all(16),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            side: BorderSide(color: ColorApp.mainColor),
+                          ),
+                          onPressed: () {
+                            Get.toNamed(Routes.natebanzayComments, arguments: {
+                              'natebanzay_id': detailsController.natebanzay!.id,
+                            });
+                          },
+                          icon: const Icon(Icons.comment_outlined,color: Colors.black,),
+                          label: const Text('Comment',style: TextStyle(color: Colors.black),),
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: ElevatedButton.icon(
+                          style: ElevatedButton.styleFrom(
+                            padding: const EdgeInsets.all(16),
+                            backgroundColor: ColorApp.mainColor,
+                            foregroundColor: ColorApp.white,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                          ),
+                          onPressed: () => requestNatebanzayController.request(
+                            detailsController.natebanzay!.id,
+                            context,
+                          ),
+                          icon: const Icon(Icons.send_rounded,color: Colors.white,),
+                          label: const Text('Request'),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          );
+        });
+      },
+    );
+  }
+
+  Widget _buildStatItem({
+    required BuildContext context,
+    required String icon,
+    required String value,
+    required String label,
+  }) {
+    return Column(
+      children: [
+        Image.asset(
+          icon,
+          color: ColorApp.mainColor,
+          height: 20,
+        ),
+        const SizedBox(height: 4),
+        Text(
+          value,
+          style: Theme.of(context).textTheme.titleMedium?.copyWith(
+            fontWeight: FontWeight.w600,
+            color: ColorApp.mainColor,
+          ),
+        ),
+        Text(
+          label,
+          style: Theme.of(context).textTheme.bodySmall?.copyWith(
+            color: Colors.grey[600],
+          ),
+        ),
+      ],
+    );
+  }
+
+
+class NateBanZayView extends GetView<HomeController> {
+  final RequestNatebanzayController _requestNatebanzayController = Get.put(RequestNatebanzayController());
+  final NatebanzayDetailsController _natebanzayDetailsController = Get.put(NatebanzayDetailsController());
+
+  NateBanZayView({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: () {
-        detailsController.getDetails(natebanzay.id);
-        detailsController.view(natebanzay.id);
+    return Scaffold(
+      appBar: AppBar(
+        elevation: 0,
+        backgroundColor: ColorApp.mainColor,
+        title: Text(
+          "natebanzay",
+          style: Theme.of(context).textTheme.titleLarge?.copyWith(
+            color: ColorApp.secondaryColor,
+            fontWeight: FontWeight.w600,
+            fontFamily: "Myanmar",
+          ),
+        ).tr(),
+      ),
+      drawer:  DrawerView(),
+      body: RefreshIndicator(
+        color: ColorApp.mainColor,
+        onRefresh: () => controller.getNatebanzays(),
+        child: CustomScrollView(
+          slivers: [
+            SliverToBoxAdapter(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _buildCategorySection(context),
+                  _buildFilteredList(context),
+                ],
+              ),
+            ),
+            // _buildAllNatebanzays(context),
+          ],
+        ),
+      ),
+      floatingActionButton: _buildFloatingActionButton(context),
+    );
+  }
 
-        showItemDetailsDialog(context,detailsController,requestNatebanzayController);
-      },
-      child: Container(
-        margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-        decoration: BoxDecoration(
-          color: ColorApp.white,
-          borderRadius: const BorderRadius.all(Radius.circular(9)),
-          boxShadow: [
-            BoxShadow(
-              color: const Color.fromARGB(255, 255, 180, 193).withOpacity(0.2),
-              spreadRadius: 1,
-              blurRadius: 1,
-              offset: const Offset(1, 1), // changes position of shadow
+  Widget _buildCategorySection(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                "byCategory",
+                style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.w600,
+                  fontFamily: "Myanmar",
+                ),
+              ).tr(),
+              TextButton(
+                onPressed: () {
+                  final filteredNataebanzays = controller.natebanzays
+                      .where((n) => n.item.name == controller.selectedItem.name)
+                      .toList();
+                  Get.to(() => SeeMoreNatebanzayList(
+                    title: tr("byCategory"),
+                    natebanzays: filteredNataebanzays,
+                    requestNatebanzayController: _requestNatebanzayController,
+                    detailsController: _natebanzayDetailsController,
+                  ));
+                },
+                child: Text(
+                  "seeall",
+                  style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                    color: ColorApp.mainColor,
+                    fontWeight: FontWeight.w500,
+                    fontFamily: "Myanmar",
+                  ),
+                ).tr(),
+              ),
+            ],
+          ),
+        ),
+        SizedBox(
+          height: 48,
+          child: ListView.builder(
+            scrollDirection: Axis.horizontal,
+            padding: const EdgeInsets.symmetric(horizontal: 12),
+            itemCount: controller.items.length,
+            itemBuilder: (context, index) {
+              final item = controller.items[index];
+              return Obx(() => Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 4),
+                child: FilterChip(
+                  selected: item == controller.selectedItem,
+                  onSelected: (_) => controller.setItem(item),
+                  label: Text(item.name),
+                  labelStyle: TextStyle(
+                    color: item == controller.selectedItem 
+                        ? Colors.white 
+                        : ColorApp.dark,
+                    fontFamily: "Myanmar",
+                  ),
+                  backgroundColor: Colors.transparent,
+                  selectedColor: ColorApp.mainColor,
+                  shape: StadiumBorder(
+                    side: BorderSide(
+                      color: item == controller.selectedItem 
+                          ? ColorApp.mainColor 
+                          : Colors.grey.shade300,
+                    ),
+                  ),
+                ),
+              ));
+            },
+          ),
+        ),
+      ],
+    );
+  }
+
+
+
+
+
+  
+Widget _buildFilteredList(BuildContext context) {
+  return Obx(() {
+    final size = MediaQuery.of(context).size;
+    final filteredNatebanzays = controller.natebanzays
+        .where((natebanzay) => natebanzay.item.name == controller.selectedItem.name)
+        .toList();
+
+    if (filteredNatebanzays.isEmpty) {
+      return _buildEmptyState(context);
+    }
+
+    // Calculate card width based on screen size
+    final cardWidth = size.width * 0.7;
+    final cardHeight = size.height * 0.5;
+
+    return SizedBox(
+      height: cardHeight,
+      child: ListView.builder(
+        scrollDirection: Axis.horizontal,
+        padding: EdgeInsets.symmetric(
+          horizontal: size.width * 0.04,
+          vertical: size.height * 0.01,
+        ),
+        itemCount: filteredNatebanzays.length,
+        itemBuilder: (context, index) {
+          final natebanzay = filteredNatebanzays[index];
+          return Padding(
+            padding: EdgeInsets.only(right: size.width * 0.03),
+            child: SizedBox(
+              width: cardWidth,
+              child: NatebanzayCard(
+                natebanzay: natebanzay,
+                requestNatebanzayController: _requestNatebanzayController,
+                detailsController: _natebanzayDetailsController,
+              ),
+            ),
+          );
+        },
+      ),
+    );
+  });
+}
+
+  
+  Widget _buildEmptyState(BuildContext context) {
+    return Container(
+      height: 280,
+      padding: const EdgeInsets.all(16),
+      child: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.inbox_rounded,
+              size: 48,
+              color: Colors.grey.shade400,
+            ),
+            const SizedBox(height: 16),
+            Text(
+              'No natebbanzays found in this category',
+              style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                color: Colors.grey.shade600,
+                fontFamily: "Myanmar",
+              ),
+              textAlign: TextAlign.center,
             ),
           ],
         ),
-        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          natebanzay.photos==null?const SizedBox(
-                     height: 150,
-               width: 200,
-          ): SingleChildScrollView(scrollDirection: Axis.horizontal,child: Container(
-               height: 150,
-               width: 200,
-               padding: const EdgeInsets.all(15),
-               decoration: const BoxDecoration(
-                 borderRadius: BorderRadius.only(
-                   topLeft: Radius.circular(
-                     10,
-                   ),
-                   topRight: Radius.circular(
-                     10,
-                   ),
-                 ),
-               
-               ),
-             child: SingleChildScrollView(
-               scrollDirection: Axis.horizontal,
-               child: Row(
-                 crossAxisAlignment: CrossAxisAlignment.center,
-                 children: extractPhotos(natebanzay.photos!).map((e) {
-                   print("Image $e");
-                   return Padding(
-                     padding: const EdgeInsets.only(left:8.0),
-                     child: ClipRRect(
-                      borderRadius: const BorderRadius.all(Radius.circular(8)),
-                       child: Image.network("${AppConfig.baseUrl}/storage/images/natebanzay_photos/$e",height: 160,width: 140,fit: BoxFit.cover ,errorBuilder: (context,object,stack) {
-                         print(stack);
-                         print(object);
-                       
-                         return const Icon(Icons.error);
-                       },),
-                     ),
-                   );
-                 }, ).toList(),),
-             ),
-             ),),
-          Padding(
-            padding: const EdgeInsets.only(top: 8.0, left: 10),
-            child: Text(
-             natebanzay.name,
-              style: Theme.of(context)
-                  .textTheme
-                  .bodyMedium!
-                  .copyWith(fontFamily: "Myanmar", fontWeight: FontWeight.w600),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(top: 4.0, left: 10),
-            child: Text(
-             natebanzay.address,
-              style: Theme.of(context)
-                  .textTheme
-                  .bodySmall!
-                  .copyWith(fontFamily: "Myanmar", fontWeight: FontWeight.w600),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(left: 10.0, top: 4,bottom: 15),
-            child: Text(
-              "${natebanzay.viewCount}views    ${natebanzay.likeCount}likes",
-              style: Theme.of(context)
-                  .textTheme
-                  .labelLarge!
-                  .copyWith(fontFamily: "Myanmar", fontWeight: FontWeight.w500),
-            ),
-          ),
-        ]),
       ),
     );
   }
 
-List<String> extractPhotos(String jsonString) {
+  Widget _buildFloatingActionButton(BuildContext context) {
+    return FloatingActionButton.extended(
+      backgroundColor: ColorApp.mainColor,
+      elevation: 2,
+      onPressed: () => _handleCreateNatebanzay(context),
+      icon: Image.asset(
+        IconPath.editIcon,
+        height: 24,
+        color: Colors.white,
+      ),
+      label: Text(
+        "createNatebanzay",
+        style: const TextStyle(
+          color: Colors.white,
+          fontFamily: "Myanmar",
+        ),
+      ).tr(),
+    );
+  }
+
+  void _handleCreateNatebanzay(BuildContext context) {
+    if (MySharedPref.getUserId() == null || MySharedPref.getToken() == null) {
+      Get.toNamed(Routes.login);
+      return;
+    }
+
+    final role = Get.find<HomeController>().profile.role;
+    if (role == "user") {
+      ToastHelper.showErrorToast(
+        context, 
+        "အလှူရှင်အကောင့်ဖြစ်မှသာ တင်လို့ရပါမည်"
+      );
+      Get.toNamed(Routes.donorRegister);
+    } else if (role == "donor") {
+      Get.toNamed(Routes.createNatebanzay);
+    }
+  }
+
+  List<String> extractPhotos(String jsonString) {
 
   final photosWithoutEscape = jsonString.replaceAll('\\', '');
 
@@ -293,310 +591,4 @@ List<String> extractPhotos(String jsonString) {
   return imageUrls;
 }
 
-
-
-
 }
-
-
-  void showItemDetailsDialog(BuildContext context,NatebanzayDetailsController detailsController,RequestNatebanzayController requestNatebanzayController) {
-    showModalBottomSheet(
-        isScrollControlled: true,
-        shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(15), topRight: Radius.circular(15))),
-        context: context,
-        builder: (context) {
-          return Obx(() {
-            // print("Like ${detailsController.natebanzay!.like!.userId}");
-            return detailsController.apiCallStatus==ApiCallStatus.loading||detailsController.natebanzay==null?const FractionallySizedBox(
-              heightFactor: 0.9,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Center(child: CircularProgressIndicator()),
-                ],
-              )):FractionallySizedBox(
-            heightFactor: 0.9,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.max,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(top: 10.0, left: 10),
-                  child: Row(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(
-                            left: 10.0, top: 12, bottom: 8, right: 10),
-                        child: Column(
-                          children: [
-                             CircleAvatar(
-                              radius: 40,
-                              backgroundImage:
-                                  const AssetImage(ImagePath.donor),
-                              backgroundColor: ColorApp.mainColor,
-                            ),
-                            Text(
-                              detailsController.natebanzay!.user!.name,
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodyMedium
-                                  ?.copyWith(
-                                      color: ColorApp.dark,
-                                      fontWeight: FontWeight.w600),
-                            )
-                          ],
-                        ),
-                      ),
-                      const SizedBox(
-                        width: 20,
-                      ),
-                      Expanded(
-                        child: Padding(
-                          padding:  const EdgeInsets.only(
-                            top: 8.0,
-                          ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
-                                children: [
-                                  Expanded(
-                                    child: Text("${  detailsController.natebanzay!.name} (${  detailsController.natebanzay!.quantity.toString()}ခု)",
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .titleLarge
-                                            ?.copyWith(
-                                                fontWeight: FontWeight.w700,
-                                                color: ColorApp.dark,
-                                                fontFamily: "Myanmar")),
-                                  ),
-                                  const SizedBox(
-                                    width: 5,
-                                  ),
-                              Padding(
-                                padding: const EdgeInsets.only(right:15),
-                                child: GestureDetector(
-                                                  child: Icon(
-                                                detailsController.natebanzay!.like!=null?Icons.favorite:Icons.favorite_outline,
-                                                    color:ColorApp.mainColor,
-                                                    size: 23,
-                                                  ),
-                                                  onTap: () {
-                                                      detailsController.like(detailsController.natebanzay!.id,);
-                                                  },
-                                                ),
-                              )
-                                ],
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(
-                                  top: 2.0,
-                                ),
-                                child: Text(  detailsController.natebanzay!.item.name,
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .bodySmall
-                                        ?.copyWith(
-                                            fontWeight: FontWeight.w400,
-                                            color: ColorApp.dark,
-                                            fontFamily: "Myanmar")),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(
-                                  top: 4.0,
-                                ),
-                                child: Text(  detailsController.natebanzay!.address,
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .labelSmall
-                                        ?.copyWith(
-                                            fontWeight: FontWeight.w400,
-                                            color: ColorApp.dark,
-                                            fontFamily: "Myanmar")),
-                              ),
-                              const SizedBox(height: 10,),
-                         Wrap(
-  alignment: WrapAlignment.center,
-  crossAxisAlignment: WrapCrossAlignment.center,
-  spacing: 10.0,
-  children: [
-    Image.asset(
-      IconPath.viewIcon,
-      color: ColorApp.mainColor,
-      height: 20,
-    ),
-    Text(
-      detailsController.natebanzay!.viewCount.toString(),
-      style: Theme.of(context).textTheme.bodySmall!.copyWith(
-            color: ColorApp.mainColor,
-            fontFamily: "English",
-          ),
-    ),
-    Image.asset(
-      IconPath.likeIcon,
-      color: ColorApp.mainColor,
-      height: 20,
-    ),
-    Text(
-      detailsController.natebanzay!.likeCount.toString(),
-      style: Theme.of(context).textTheme.bodySmall!.copyWith(
-            color: ColorApp.mainColor,
-            fontFamily: "English",
-          ),
-    ),
-    Image.asset(
-      IconPath.commentIcon,
-      color: ColorApp.mainColor,
-      height: 20,
-    ),
-    Text(
-      detailsController.natebanzay!.commentCount.toString(),
-      style: Theme.of(context).textTheme.bodySmall!.copyWith(
-            color: ColorApp.mainColor,
-            fontFamily: "English",
-          ),
-    ),
-  ],
-)
-                            ],
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 12.0, top: 10),
-                  child: Text(
-                       detailsController.natebanzay!.note??"",
-                      style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                          fontWeight: FontWeight.w300,
-                          color: ColorApp.dark,
-                          fontFamily: "Myanmar")),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 12.0, top: 10),
-                  child: Text("Photos",
-                      style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                          fontWeight: FontWeight.w300,
-                          color: ColorApp.dark,
-                          fontFamily: "English")),
-                ),
-                SizedBox(
-                  height: 200,
-                  child: SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: Row(
-                        children:   detailsController.natebanzay!.photos!=null?extractPhotos(  detailsController.natebanzay!.photos??"").map((e) =>   Container(
-                            height: 150,
-                            width: 200,
-                            margin: const EdgeInsets.all(10),
-                            padding: const EdgeInsets.all(15),
-                            decoration:  BoxDecoration(
-                              borderRadius:
-                                  const BorderRadius.all(Radius.circular(10)),
-                              image: DecorationImage(
-                                  image:NetworkImage("${AppConfig.baseUrl}/storage/images/natebanzay_photos/$e"),
-                                  fit: BoxFit.cover),
-                            ),
-                          ),).toList():[const SizedBox()]
-                      )),
-                ),
-                const Spacer(),
-                Container(
-                  margin:
-                      const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                  height: 60,
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: SizedBox(
-                          height: 48,
-                          child: ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                  backgroundColor: ColorApp.dark,
-                                  shape: const RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.all(
-                                          Radius.circular(30)))),
-                              onPressed: () {
-                                  Get.toNamed(Routes.natebanzayComments,arguments: {
-                'natebanzay_id':detailsController.natebanzay!.id,
-              });
-                              },
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Text(
-                                    "Comment",
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .bodySmall!
-                                        .copyWith(
-                                            fontWeight: FontWeight.w700,
-                                            fontFamily: 'English',
-                                            color: ColorApp.white),
-                                  ),
-                                  const SizedBox(
-                                    width: 5,
-                                  ),
-                                  Image.asset(
-                               IconPath.commentIcon,
-                                    color: ColorApp.white,
-                                    height: 18,
-                                  ),
-                                ],
-                              )),
-                        ),
-                      ),
-                      const SizedBox(
-                        width: 13,
-                      ),
-                      Expanded(
-                        child: SizedBox(
-                          height: 48,
-                          child: ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                  backgroundColor: ColorApp.mainColor,
-                                  shape: const RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.all(
-                                          Radius.circular(30)))),
-                              onPressed: () {
-                                requestNatebanzayController.request(  detailsController.natebanzay!.id, context);
-                              },
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Text(
-                                    "Request",
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .bodySmall!
-                                        .copyWith(
-                                            fontWeight: FontWeight.w300,
-                                            fontFamily: 'English',
-                                            color: ColorApp.white),
-                                  ),
-                                  const SizedBox(
-                                    width: 5,
-                                  ),
-                                  Image.asset(
-                                  IconPath.natebanzayIcon,
-                                    color: ColorApp.white,
-                                    height: 20,
-                                  ),
-                                ],
-                              )),
-                        ),
-                      )
-                    ],
-                  ),
-                )
-              ],
-            ),
-          );
-          });
-        });
-  }

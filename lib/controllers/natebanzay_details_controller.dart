@@ -5,9 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:get/get_state_manager/src/simple/get_controllers.dart';
+import 'package:get/route_manager.dart';
 
 import '../core/api_call_status.dart';
 import '../core/base_client.dart';
+import '../routes/app_pages.dart';
 import '../util/app_config.dart';
 import '../util/share_pref_helper.dart';
 import '../util/toast_helper.dart';
@@ -122,7 +124,7 @@ class NatebanzayDetailsController extends GetxController{
       onSuccess: (response) {
         _apiCallStatus.value=ApiCallStatus.success;
         getComments(natebanzayId);
-        ToastHelper.showSuccessToast(context,"Commented");
+       EasyLoading.showSuccess("Commented");
        
       },
 
@@ -131,6 +133,9 @@ class NatebanzayDetailsController extends GetxController{
         if(error.statusCode==422){
         ToastHelper.showErrorToast(context,error.response!.data["message"]);
           
+        }
+               if(error.statusCode==401){
+          Get.toNamed(Routes.login) ;
         }
         _apiCallStatus.value = ApiCallStatus.error;
   
@@ -170,6 +175,9 @@ EasyLoading.showSuccess("${response.data['message']} ပေးပီးပါပ
         if(error.statusCode==422){
         // ToastHelper.showErrorToast(context,error.response!.data["message"]);
           
+        }
+               if(error.statusCode==401){
+          Get.toNamed(Routes.login) ;
         }
         _apiCallStatus.value = ApiCallStatus.error;
   

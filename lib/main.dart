@@ -19,24 +19,36 @@ void main() async {
    await EasyLocalization.ensureInitialized();
   SystemChrome.setPreferredOrientations(
   [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
-  
-  
  final sharedPreferences = await SharedPreferences.getInstance();
   Get.lazyPut(() => sharedPreferences);
   await MySharedPref.init(sharedPreferences);
+
+  
   if(Platform.isAndroid){
-    await  Firebase.initializeApp(
-    options: const FirebaseOptions(apiKey: "AIzaSyDhnpbNHv-NFZzimqcoPv14o1l9a1GBO28",
-  authDomain: "donationcommm.firebaseapp.com",
-  projectId: "donationcommm",
-  storageBucket: "donationcommm.appspot.com",
-  messagingSenderId: "268293076947",
-  appId: "1:268293076947:web:3bdad36b74331854ffa126",
-  measurementId: "G-8ZVT039D82")
-  );
-  }else{
-    await Firebase.initializeApp();
+    try {
+      await Firebase.initializeApp(
+        options: const FirebaseOptions(
+          apiKey: "AIzaSyDhnpbNHv-NFZzimqcoPv14o1l9a1GBO28",
+          authDomain: "donationcommm.firebaseapp.com",
+          projectId: "donationcommm",
+          storageBucket: "donationcommm.appspot.com",
+          messagingSenderId: "268293076947",
+          appId: "1:268293076947:web:3bdad36b74331854ffa126",
+          measurementId: "G-8ZVT039D82"
+        )
+      );
+    } catch(e) {
+      Firebase.app(); // Get the existing initialized app instead
+    }
+  } else {
+    try {
+      await Firebase.initializeApp();
+    } catch(e) {
+      Firebase.app();
+    }
   }
+  
+
   configLoading();
   await FirebaseMessaging.instance.getInitialMessage();
   FirebaseMessaging.onBackgroundMessage(_firebaseMessageBackgound);
@@ -56,7 +68,6 @@ Future<void> _firebaseMessageBackgound(RemoteMessage message) async {
   Firebase.initializeApp();
   print(message.notification!.title.toString());
 }
-
 void configLoading() {
   EasyLoading.instance
     ..displayDuration = const Duration(milliseconds: 2500)

@@ -6,6 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
+import '../../routes/app_pages.dart';
+
 class SaduditharCommentsView extends GetView<SaduditharDetailsController> {
    SaduditharCommentsView({super.key});
 
@@ -119,9 +121,13 @@ class SaduditharCommentsView extends GetView<SaduditharDetailsController> {
                 ),
                 Expanded(child: GestureDetector(onTap: (){
                if(_formKey.currentState!.validate()){
-                 controller.comment(saduditharId, MySharedPref.getUserId()!, _commentController.text, context);
+                if(MySharedPref.getUserId()==null){
+                  Get.toNamed(Routes.login);
+                }else{
+                     controller.comment(saduditharId, MySharedPref.getUserId()!, _commentController.text, context);
                  _commentController.clear() ;
-               }
+                }
+               } 
                 },child: Image.asset(IconPath.sendIcon,height: 25,color: ColorApp.kDarkGray,),))
               ],
             )

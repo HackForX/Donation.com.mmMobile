@@ -4,18 +4,23 @@ class GuideItem extends StatelessWidget {
   final String image;
 
   const GuideItem(
-      {Key? key,
+      {super.key,
       required this.image,
-     })
-      : super(key: key);
+     });
 
   @override
   Widget build(BuildContext context) {
-    return Image.asset(
-      image,
-      height: MediaQuery.of(context).size.height,
-      width: MediaQuery.of(context).size.width,
-      fit: BoxFit.cover,
+    return Padding(
+      padding: const EdgeInsets.only(bottom:80.0),
+      child: ClipRRect(
+        borderRadius: const BorderRadius.all(Radius.circular(10)),
+        child: Image.asset(
+          image,
+          height: 300,
+          width: MediaQuery.of(context).size.width,
+          fit: BoxFit.fitHeight,
+        ),
+      ),
     );
   }
 }

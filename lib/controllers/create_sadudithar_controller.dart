@@ -17,6 +17,11 @@ import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:get/get_state_manager/src/simple/get_controllers.dart';
 import 'package:get/route_manager.dart';
 import 'package:image_picker/image_picker.dart';
+// import 'package:open_apps_settings_fork/open_apps_settings.dart';
+// import 'package:open_apps_settings_fork/settings_enum.dart';
+import 'package:panara_dialogs/panara_dialogs.dart';
+
+// import 'package:location/location.dart';
 
 import '../models/city_response.dart';
 import '../models/township_response.dart';
@@ -36,13 +41,17 @@ ApiCallStatus get apiCallStatus => _apiCallStatus.value;
        final RxList<Township> _townships = RxList.empty();
   List<Township> get townships => _townships.toList();
 
-    final Rx<String> _selectedCategory=RxString("အမျိုးအစားရွေးပါ");
+    final Rx<String> _selectedCategory=RxString("အမျိုးအစားရွေးပါ *");
 
   String get selectedCategory => _selectedCategory.value;
 
+  final RxBool isLocationDisabled=RxBool(false);
+
+
+
     final Rx<SaduditharCategory> _selectedSubCategory=SaduditharCategory(
     id: 0,
-    name: "အမျိုးအစားခွဲရွေးပါ",
+    name: "အမျိုးအစားခွဲရွေးပါ *",
     type: "",
  
     createdAt: DateTime.now(),
@@ -53,7 +62,7 @@ ApiCallStatus get apiCallStatus => _apiCallStatus.value;
 
     final Rx<SaduditharCity> _selectedCity=SaduditharCity(
     id: 0,
-    name: "မြို့ရွေးပါ",
+    name: "မြို့ရွေးပါ *",
 
 
 
@@ -65,7 +74,7 @@ ApiCallStatus get apiCallStatus => _apiCallStatus.value;
   SaduditharCity get selectedCity=>_selectedCity.value;
       final Rx<Township> _selectedTownship=Township(
     id: 0,
-    name: "မြို့နယ်ရွေးပါ",
+    name: "မြို့နယ်ရွေးပါ *",
 
 
 cityId: 1,
@@ -120,7 +129,7 @@ cityName: "",
         "actual_end_time":createSaduditharModel.actualEndTime,
         "address":createSaduditharModel.address,
         "phone":createSaduditharModel.phone,
-        "status":createSaduditharModel.status,
+      "status":createSaduditharModel.status,
         "event_date":createSaduditharModel.eventDate,
         "longitude":createSaduditharModel.longitude==0?null:createSaduditharModel.longitude,
         "latitude":createSaduditharModel.latitude==0?null:createSaduditharModel.latitude,
@@ -139,9 +148,17 @@ cityName: "",
         EasyLoading.dismiss();
         _apiCallStatus.value=ApiCallStatus.success;
         Get.find<HomeController>().getSadudithars() ;
-        EasyLoading.showSuccess("အလှူကိုအောင်မြင်စွာတင်ပီးပါပီ");
-        Get.back();
-      
+          PanaraInfoDialog.showAnimatedGrow(
+                  context, 
+                  // title: "Donation.com.mm",
+                  message: "အလှူကိုအောင်မြင်စွာတင်ပီးပါပီ",
+                  buttonText: "Okay",
+                  onTapDismiss: () {
+                    Navigator.pop(context);
+                  },
+                  panaraDialogType: PanaraDialogType.success,
+                );
+
         
       },
 
@@ -315,52 +332,56 @@ cityName: "",
     print("Postition $position");
     _currentPosition.value = position; // Update Rx variable
     print("Current ${_currentPosition.value!.latitude}");
+    update();
   } catch (e) {
     print(e); // Handle errors
   }
 }
 
-
 Future<Position> _determinePosition() async {
-  bool serviceEnabled;
-  LocationPermission permission;
+    bool serviceEnabled;
+    LocationPermission permission;
 
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    isLocationDisabled.value = !serviceEnabled;
 
-  serviceEnabled = await Geolocator.isLocationServiceEnabled();
-  if (!serviceEnabled) {
- 
-    return Future.error('Location services are disabled.');
-  }
-
-  permission = await Geolocator.checkPermission();
-  if (permission == LocationPermission.denied) {
-    permission = await Geolocator.requestPermission();
-    if (permission == LocationPermission.denied) {
-      // Permissions are denied, next time you could try
-      // requesting permissions again (this is also where
-      // Android's shouldShowRequestPermissionRationale 
-      // returned true. According to Android guidelines
-      // your App should show an explanatory UI now.
-      return Future.error('Location permissions are denied');
+    if (!serviceEnabled) {
+      return Future.error('Location services are disabled.');
     }
-  }
-  
-  if (permission == LocationPermission.deniedForever) {
-    // Permissions are denied forever, handle appropriately. 
-    return Future.error(
-      'Location permissions are permanently denied, we cannot request permissions.');
-  } 
 
-  // When we reach here, permissions are granted and we can
-  // continue accessing the position of the device.
-  return await Geolocator.getCurrentPosition();
-}
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        return Future.error('Location permissions are denied.');
+      }
+    }
+
+    if (permission == LocationPermission.deniedForever) {
+      return Future.error(
+          'Location permissions are permanently denied, we cannot request permissions.');
+    }
+
+    return await Geolocator.getCurrentPosition();
+  }
+
+  void openLocationSetting() async{
+      // OpenAppsSettings.openAppsSettings(
+      //                         settingsCode: SettingsCode.LOCATION,);
+    // isLocationDisabled.value = !(await Geolocator.isLocationServiceEnabled());
+
+    print("Location Disabled ${isLocationDisabled.value}");
+    
+  }
+
+
 
 
 
 @override
-  void onInit() async{
-    await getCurrentLocation();
+  void onInit() {
+      getCurrentLocation();
+    // openLocationSetting();
     super.onInit();
   }
 

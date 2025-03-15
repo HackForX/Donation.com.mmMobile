@@ -1,20 +1,30 @@
 class ImagePath {
   static const _folderPath = 'assets/images';
+  static const _previewPath = 'assets/preview';
+
   static const logo = '$_folderPath/logo.png';
   static const bottomLeft = '$_folderPath/bottom-left.png';
   static const bottomRight = '$_folderPath/bottom-right.png';
   static const topLeft = '$_folderPath/top-left.png';
   static const topRight = '$_folderPath/top-right.png';
-  static const image1 = '$_folderPath/1.png';
-  static const image2 = '$_folderPath/2.png';
-  static const image3 = '$_folderPath/3.png';
-  static const image4 = '$_folderPath/4.png';
-  static const image5 = '$_folderPath/5.png';
-  static const image6 = '$_folderPath/6.png';
-  static const image7 = '$_folderPath/7.png';
-  static const image8 = '$_folderPath/8.png';
-  static const image9 = '$_folderPath/9.png';
-  static const image10 = '$_folderPath/10.png';
+  static const image1 = '$_previewPath/1.jpg';
+  static const image2 = '$_previewPath/2.jpg';
+  static const image3 = '$_previewPath/3.jpg';
+  static const image4 = '$_previewPath/4.jpg';
+  static const image5 = '$_previewPath/5.jpg';
+  static const image6 = '$_previewPath/6.jpg';
+  static const image7 = '$_previewPath/7.jpg';
+  static const image8 = '$_previewPath/8.jpg';
+  static const image9 = '$_previewPath/9.jpg';
+  static const image10 = '$_previewPath/10.jpg';
+  static const image11 = '$_previewPath/11.jpg';
+  static const image12 = '$_previewPath/12.jpg';
+  static const image13 = '$_previewPath/13.jpg';
+  static const image14 = '$_previewPath/14.jpg';
+  static const image15 = '$_previewPath/15.jpg';
+  static const image16 = '$_previewPath/16.jpg';
+
+
   static const test = '$_folderPath/test.png';
   static const test1 = '$_folderPath/test1.png';
   static const profile = '$_folderPath/profile.png';

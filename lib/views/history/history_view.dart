@@ -64,7 +64,9 @@ class HistoryView extends GetView<HistoryController> {
       // height: 100,
       image: NetworkImage("${AppConfig.baseUrl}/storage/${sadudithar.image}"),
       placeholder: const AssetImage(ImagePath.logo),  // Your placeholder image path
-      imageErrorBuilder: (context, error, stackTrace) =>  Image.asset(ImagePath.logo), // Placeholder on error
+      imageErrorBuilder: (context, error, stackTrace) =>ClipRRect(
+      borderRadius: const BorderRadius.all(Radius.circular(10)),
+      child: Image.asset('assets/images/empty2.png',fit: BoxFit.cover,)),
       fit: BoxFit.cover,
     ),
   ),

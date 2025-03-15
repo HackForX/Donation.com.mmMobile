@@ -1,0 +1,2 @@
+/Users/kooo/My Projects/Donation.com.mm/donation_com_mm_v2/donation_com_mm_v2/android/app/.cxx/Debug/3t5e1r26/armeabi-v7a/CMakeFiles/edit_cache.dir
+/Users/kooo/My Projects/Donation.com.mm/donation_com_mm_v2/donation_com_mm_v2/android/app/.cxx/Debug/3t5e1r26/armeabi-v7a/CMakeFiles/rebuild_cache.dir

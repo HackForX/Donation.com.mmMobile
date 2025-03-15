@@ -1,11 +1,10 @@
+import 'package:donation_com_mm_v2/routes/app_pages.dart';
 import 'package:donation_com_mm_v2/util/app_color.dart';
 import 'package:donation_com_mm_v2/util/assets_path.dart';
 import 'package:donation_com_mm_v2/util/dot_indicator.dart';
 import 'package:donation_com_mm_v2/util/guide_item.dart';
 import 'package:flutter/material.dart';
-
 import 'package:get/get.dart';
-
 
 import '../drawer/drawer_view.dart';
 
@@ -90,18 +89,19 @@ class _GuideViewState extends State<GuideView> {
                     style: ElevatedButton.styleFrom(
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(30)),
-                        backgroundColor: ColorApp.secondaryColor),
+                        backgroundColor: ColorApp.mainColor),
                     onPressed: () async {
-                      if (_pageIndex != 9) {
+                      if (_pageIndex != 15) {
                         _pageController.nextPage(
                             duration: const Duration(milliseconds: 300),
                             curve: Curves.ease);
                       } else {
-                        Get.back();
+                        print("called");
+                        Get.offNamed(Routes.main);
                       }
                     },
                     child: Text(
-                      _pageIndex != 9 ? "Next" : "Ok,Understand",
+                      _pageIndex != 15 ? "Next" : "Ok,Understand",
                       style: const TextStyle(
                           color: Colors.white,
                           fontSize: 15,
@@ -153,5 +153,23 @@ final List<Onboard> demoData = [
   ),
   Onboard(
     image:  ImagePath.image10
+  ),
+   Onboard(
+    image:  ImagePath.image11
+  ),
+   Onboard(
+    image:  ImagePath.image12
+  ),
+   Onboard(
+    image:  ImagePath.image13
+  ),
+    Onboard(
+    image:  ImagePath.image14
+  ),
+    Onboard(
+    image:  ImagePath.image15
+  ),
+  Onboard(
+    image:  ImagePath.image16
   ),
 ];

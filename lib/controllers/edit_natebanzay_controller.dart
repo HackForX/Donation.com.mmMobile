@@ -91,7 +91,7 @@ List<File> get pickedPhotos=> _pickedPhotos.toList();
         _homeController.getNatebanzays();
         _homeController.getNatebanzaysRequested();
 
-        ToastHelper.showSuccessToast(context,"အလှူကိုအောင်မြင်စွာပြင်ဆင်ပီးပါပီ");
+    EasyLoading.showSuccess("အလှူကိုအောင်မြင်စွာပြင်ဆင်ပီးပါပီ");
 
       },
 

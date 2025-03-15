@@ -1,4 +1,5 @@
 import 'package:donation_com_mm_v2/controllers/natebanzay_details_controller.dart';
+import 'package:donation_com_mm_v2/routes/app_pages.dart';
 import 'package:donation_com_mm_v2/util/app_color.dart';
 import 'package:donation_com_mm_v2/util/assets_path.dart';
 import 'package:donation_com_mm_v2/util/share_pref_helper.dart';
@@ -119,8 +120,12 @@ class NatebanzayCommentsView extends GetView<NatebanzayDetailsController> {
                 ),
                 Expanded(child: GestureDetector(onTap: (){
                if(_formKey.currentState!.validate()){
-                 controller.comment(natebanzayId, MySharedPref.getUserId()!, _commentController.text, context);
+                if(MySharedPref.getUserId()==null&&MySharedPref.getToken()==null){
+                    Get.toNamed(Routes.login);
+                }else{
+                     controller.comment(natebanzayId, MySharedPref.getUserId()!, _commentController.text, context);
                  _commentController.clear() ;
+                }
                }
                 },child: Image.asset(IconPath.sendIcon,height: 25,color: ColorApp.kDarkGray,),))
               ],

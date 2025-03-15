@@ -31,7 +31,7 @@ class _SettingViewState extends State<SettingView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Setting"),),
+      appBar: AppBar(title: const Text("setting").tr(),),
       body: ListView(
         children: [
            
@@ -63,7 +63,7 @@ class _SettingViewState extends State<SettingView> {
               Get.offAllNamed(Routes.guide);
             },
             leading: Image.asset(
-     IconPath.guideIcon,
+   "assets/icons/guide.png",
               color: ColorApp.mainColor,
               height: 24,
             ),

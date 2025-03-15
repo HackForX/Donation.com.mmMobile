@@ -13,6 +13,7 @@ import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:get/get_state_manager/src/simple/get_controllers.dart';
 import 'package:get/instance_manager.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:panara_dialogs/panara_dialogs.dart';
 
 import '../models/item_response.dart';
 
@@ -29,7 +30,7 @@ final HomeController _homeController=Get.find();
   List<Item> get items => _items.toList();
 final Rx<Item> _selectedItem=Item(
     id: 0,
-    name: "အမျိုးအစားရွေးပါ",
+    name: "အမျိုးအစားရွေးပါ *",
     createdAt: DateTime.now(),
     updatedAt: DateTime.now()
   ).obs;
@@ -85,6 +86,16 @@ List<File> get pickedPhotos=> _pickedPhotos.toList();
       
       onSuccess: (response) {
         EasyLoading.dismiss();
+         PanaraInfoDialog.showAnimatedGrow(
+                  context,
+                  // title: "Donation.com.mm",
+                  message: "အလှူကိုအောင်မြင်စွာတင်ပီးပါပီ",
+                  buttonText: "Okay",
+                  onTapDismiss: () {
+                    Navigator.pop(context);
+                  },
+                  panaraDialogType: PanaraDialogType.success,
+                );
         _apiCallStatus.value=ApiCallStatus.success;
 
         _homeController.getNatebanzays();
@@ -92,7 +103,7 @@ List<File> get pickedPhotos=> _pickedPhotos.toList();
         
 
 
-        ToastHelper.showSuccessToast(context,"အလှူကိုအောင်မြင်စွာတင်ပီးပါပီ");
+    //  Get.back();
 
       },
 

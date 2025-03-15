@@ -73,7 +73,7 @@ login(
         MySharedPref.setUserName(loginResponse.user.name);
           MySharedPref.setToken(loginResponse.token);
         MySharedPref.setUserId(loginResponse.user.id);
-        ToastHelper.showSuccessToast(context, "Successfully logined as ${loginResponse.user.name}");
+            EasyLoading.showSuccess("Successfully logined as ${loginResponse.user.name}");
         Get.offAllNamed(Routes.main);
         _apiCallStatus.value= ApiCallStatus.success;
       
@@ -369,8 +369,8 @@ _apiCallStatus.value=ApiCallStatus.loading;
           await facebookAuth.login(permissions: ["public_profile", "email"]);
       if (result.status == LoginStatus.success) {
         AccessToken? token = await facebookAuth.accessToken;
-    print("Access TOken ${token!.token}");
-    await socialSignInWithToken("facebook", token.token);
+    // print("Access TOken ${token!.token}");
+    await socialSignInWithToken("facebook", token!.tokenString);
         EasyLoading.dismiss();
       } else {
         EasyLoading.showToast("Failed");
@@ -691,15 +691,17 @@ _apiCallStatus.value=ApiCallStatus.loading;
         // *) indicate loading state
 
         _apiCallStatus.value = ApiCallStatus.loading;
+        EasyLoading.show(status: "Loading..");
        
       },
       onSuccess: (response) {
+         EasyLoading.showSuccess("Succesfully logout");
         // api done successfully
         MySharedPref.clear();
 
         Get.offAllNamed(Routes.login);
 
-        ToastHelper.showSuccessToast(context, "Succesfully logout");
+       
 
         // Get.offNamed(Routes.LOGIN);
         // *) indicate success state
@@ -742,7 +744,7 @@ _apiCallStatus.value=ApiCallStatus.loading;
       },
       onSuccess: (response) {
 
-        ToastHelper.showSuccessToast(context, "Succes");
+        EasyLoading.showSuccess("Succes");
 
 
         Get.find<HomeController>().getProfile();
@@ -760,7 +762,9 @@ _apiCallStatus.value=ApiCallStatus.loading;
       onError: (error) {
         // show error message to user
         BaseClient.handleApiError(apiException: error);
-
+       if(error.statusCode==401){
+          Get.toNamed(Routes.login) ;
+        }
         // *) indicate error status
         _apiCallStatus.value = ApiCallStatus.error;
      
@@ -791,7 +795,7 @@ _apiCallStatus.value=ApiCallStatus.loading;
 
         Get.offAllNamed(Routes.login);
 
-        ToastHelper.showSuccessToast(context, "Succesfully deleted");
+        EasyLoading.showSuccess("Succesfully deleted");
 
         // Get.offNamed(Routes.LOGIN);
         // *) indicate success state
@@ -802,6 +806,10 @@ _apiCallStatus.value=ApiCallStatus.loading;
       // if you don't pass this method base client
       // will automaticly handle error and show message to user
       onError: (error) {
+
+        if(error.statusCode==401){
+          Get.toNamed(Routes.login) ;
+        }
         // show error message to user
         BaseClient.handleApiError(apiException: error);
 

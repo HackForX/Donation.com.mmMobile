@@ -3,6 +3,7 @@ import 'package:donation_com_mm_v2/controllers/home_controller.dart';
 import 'package:donation_com_mm_v2/routes/app_pages.dart';
 import 'package:donation_com_mm_v2/util/app_color.dart';
 import 'package:donation_com_mm_v2/util/assets_path.dart';
+import 'package:donation_com_mm_v2/util/share_pref_helper.dart';
 import 'package:donation_com_mm_v2/views/drawer/version_widget.dart';
 import 'package:donation_com_mm_v2/views/setting/setting_view.dart';
 import 'package:easy_localization/easy_localization.dart';
@@ -100,7 +101,7 @@ class DrawerView extends GetView<HomeController> {
             ).tr(),
           ),
           ListTile(
-            onTap: () => Get.offAllNamed(Routes.notification),
+            onTap: () => MySharedPref.getToken()==null?Get.toNamed(Routes.login):Get.offAllNamed(Routes.notification),
             leading: Image.asset(
          IconPath.notiIcon,
               color: ColorApp.mainColor,
@@ -154,7 +155,7 @@ class DrawerView extends GetView<HomeController> {
           ):const SizedBox(),
           ListTile(
             onTap: ()  {
-           Get.to(()=> SettingView());
+           Get.to(()=> const SettingView());
             },
             leading: Image.asset(
               IconPath.settingIcon,
@@ -171,7 +172,11 @@ class DrawerView extends GetView<HomeController> {
           ),
           ListTile(
             onTap: () async {
-              showLogoutDialog(context);
+              if(MySharedPref.getToken()==null&&MySharedPref.getUserId()==null){
+                Get.toNamed(Routes.login);
+              }else{
+                        showLogoutDialog(context);
+              }
             },
             leading: Image.asset(
               IconPath.logoutIcon,
@@ -179,7 +184,7 @@ class DrawerView extends GetView<HomeController> {
               height: 24,
             ),
             title:  Text(
-              "logout",
+           MySharedPref.getToken()==null&&MySharedPref.getUserId()==null?"login":   "logout",
               style: TextStyle(
                   color: ColorApp.mainColor,
                   fontSize: 18,

@@ -1,7 +1,5 @@
 import 'package:donation_com_mm_v2/controllers/create_sadudithar_controller.dart';
-import 'package:donation_com_mm_v2/core/api_call_status.dart';
 import 'package:donation_com_mm_v2/util/app_color.dart';
-import 'package:donation_com_mm_v2/util/button_loader_widget.dart';
 import 'package:donation_com_mm_v2/util/toast_helper.dart';
 import 'package:donation_com_mm_v2/views/create_sadudithar/widgets/category_dropdown.dart';
 import 'package:donation_com_mm_v2/views/create_sadudithar/widgets/city_dropdown.dart';
@@ -9,9 +7,11 @@ import 'package:donation_com_mm_v2/views/create_sadudithar/widgets/map_view.dart
 import 'package:donation_com_mm_v2/views/create_sadudithar/widgets/sub_category_dropdown.dart';
 import 'package:donation_com_mm_v2/views/create_sadudithar/widgets/township_dropdown.dart';
 import 'package:donation_com_mm_v2/views/drawer/drawer_view.dart';
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
-import 'package:intl/intl.dart';
+import 'package:panara_dialogs/panara_dialogs.dart';
 
 class CreateSaduditharView extends GetView<CreateSaduditharController> {
    CreateSaduditharView({super.key});
@@ -67,7 +67,7 @@ class CreateSaduditharView extends GetView<CreateSaduditharController> {
             
                 decoration: InputDecoration(
                   
-                    hintText: "အလှူအမည်",
+                    hintText: "အလှူအမည် *",
                 
                     hintStyle: Theme.of(context).textTheme.bodyLarge!.copyWith(
                         fontWeight: FontWeight.w500, fontFamily: "Myanmar")),
@@ -85,7 +85,7 @@ class CreateSaduditharView extends GetView<CreateSaduditharController> {
                   return null;
                 },
                 decoration: InputDecoration(
-                    hintText: "အကြောင်းအရာ",
+                    hintText: "အကြောင်းအရာ *",
                     hintStyle: Theme.of(context).textTheme.bodyLarge!.copyWith(
                         fontWeight: FontWeight.w500, fontFamily: "Myanmar")),
               ),
@@ -102,7 +102,7 @@ class CreateSaduditharView extends GetView<CreateSaduditharController> {
                   return null;
                 },
                 decoration: InputDecoration(
-                    hintText: "နေရာ",
+                    hintText: "နေရာ *",
                     hintStyle: Theme.of(context).textTheme.bodyLarge!.copyWith(
                         fontWeight: FontWeight.w500, fontFamily: "Myanmar")),
               ),
@@ -111,7 +111,7 @@ class CreateSaduditharView extends GetView<CreateSaduditharController> {
               padding: const EdgeInsets.only(top:20.0),
               child: CategoryDropDown(controller: controller),
             ),
-           controller.selectedCategory=='အမျိုးအစားရွေးပါ'?   const Padding(
+           controller.selectedCategory=='အမျိုးအစားရွေးပါ *'?   const Padding(
                padding: EdgeInsets.only(top: 20.0,left: 10),
               child:   Text("အမျိုးအစားလိုအပ်ပါသည်",style: TextStyle(color: ColorApp.lipstick,fontSize: 12,fontWeight: FontWeight.w200,fontFamily: "Myanmar"),)
              ):const SizedBox(),
@@ -137,7 +137,7 @@ class CreateSaduditharView extends GetView<CreateSaduditharController> {
                 },
                 controller: _estimatedQuantityController,
                 decoration: InputDecoration(
-                    hintText: "အရေအတွက်",
+                    hintText: "အရေအတွက် *",
                     hintStyle: Theme.of(context).textTheme.bodyLarge!.copyWith(
                         fontWeight: FontWeight.w500, fontFamily: "Myanmar")),
               ),
@@ -155,7 +155,7 @@ class CreateSaduditharView extends GetView<CreateSaduditharController> {
                 },
                 controller: _estimatedAmountController,
                 decoration: InputDecoration(
-                    hintText: "ခန့်မှန်းကုန်ကျငွေ",
+                    hintText: "ခန့်မှန်းကုန်ကျငွေ *",
                     hintStyle: Theme.of(context).textTheme.bodyLarge!.copyWith(
                         fontWeight: FontWeight.w500, fontFamily: "Myanmar")),
               ),
@@ -172,7 +172,7 @@ class CreateSaduditharView extends GetView<CreateSaduditharController> {
                 },
                 controller: _estimatedTimeController,
                 decoration: InputDecoration(
-                    hintText: "အလှူအချိန်",
+                    hintText: "အလှူအချိန် *",
                     hintStyle: Theme.of(context).textTheme.bodyLarge!.copyWith(
                         fontWeight: FontWeight.w500, fontFamily: "Myanmar")),
               ),
@@ -183,13 +183,13 @@ class CreateSaduditharView extends GetView<CreateSaduditharController> {
               child: TextFormField(
                  validator: (value){
                   if(value==null||value.isEmpty){
-                    return "ဖုန်းနံပတ်လိုအပ်ပါသည်";
+                    return "ဖုန်းနံပါတ်လိုအပ်ပါသည်";
                   }
                   return null;
                 },
               controller: _phoneController,
                 decoration: InputDecoration(
-                    hintText: "ဖုန်းနံပတ်",
+                    hintText: "ဖုန်းနံပါတ် *",
                     hintStyle: Theme.of(context).textTheme.bodyLarge!.copyWith(
                         fontWeight: FontWeight.w500, fontFamily: "Myanmar")),
               ),
@@ -216,8 +216,8 @@ class CreateSaduditharView extends GetView<CreateSaduditharController> {
               var date= await showDatePicker(
   context: context,
   initialDate: DateTime.now(),
-  firstDate: DateTime(2024),
-  lastDate: DateTime(2025),
+  firstDate: DateTime(2025),
+  lastDate: DateTime(2027),
 );
 //  String formattedDate = DateFormat('MMM d, y').format(date!);
  controller.setEventDate(date!);
@@ -230,7 +230,7 @@ class CreateSaduditharView extends GetView<CreateSaduditharController> {
                 
                     borderRadius: BorderRadius.all(Radius.circular(15))
                   ),
-                  child:  Text(controller.eventDate==null?"နေ့ရက်":DateFormat('MMM d,y').format(controller.eventDate!)),),
+                  child:  Text(controller.eventDate==null?"နေ့ရက် *":DateFormat('MMM d,y').format(controller.eventDate!)),),
               )
             ),
                 controller.eventDate==null?   const Padding(
@@ -262,7 +262,7 @@ initialTime: TimeOfDay.now()
                 
                     borderRadius: BorderRadius.all(Radius.circular(15))
                   ),
-                  child:  Text(controller.selectedStartTime==null?"စတင်မည့်အချိန်":DateFormat("h:mm a").format(controller.selectedStartTime!)),),
+                  child:  Text(controller.selectedStartTime==null?"စတင်မည့်အချိန် *":DateFormat("h:mm a").format(controller.selectedStartTime!)),),
               )
             ),
                 controller.selectedStartTime==null?   const Padding(
@@ -299,7 +299,7 @@ initialTime: TimeOfDay.now()
                 
                     borderRadius: BorderRadius.all(Radius.circular(15))
                   ),
-                  child:  Text(controller.selectedEndTime==null?"ပြီးဆုံးမည့်အချိန်":DateFormat("h:mm a").format(controller.selectedEndTime!)),),
+                  child:  Text(controller.selectedEndTime==null?"ပြီးဆုံးမည့်အချိန် *":DateFormat("h:mm a").format(controller.selectedEndTime!)),),
               )
             ),
                 controller.selectedEndTime==null?   const Padding(
@@ -319,7 +319,7 @@ initialTime: TimeOfDay.now()
                 
                     borderRadius: BorderRadius.all(Radius.circular(15))
                   ),
-                  child: const Text("ပုံတင်မည်"),),
+                  child: const Text("ပုံတင်မည် *"),),
               )
             ),
           GetBuilder<CreateSaduditharController>(builder: (controller)=>controller.pickedImage==null?  const Padding(
@@ -335,8 +335,40 @@ initialTime: TimeOfDay.now()
              Padding(
               padding: const EdgeInsets.only(top: 20.0),
               child: InkWell(
-                onTap: (){
-                  Get.to(()=>const MapView());
+                onTap: ()async{
+                  if(await Geolocator.isLocationServiceEnabled()){
+                    
+                      Get.to(()=> MapView());
+
+   
+                  }else{
+                     showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Donation.com.mm'),
+        content: const Text('openLocation').tr(),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Get.back();
+            },
+            child: const Text('no').tr(),
+          ),
+          TextButton(
+            onPressed: () async {
+       controller.openLocationSetting();
+       await controller.getCurrentLocation();
+    Get.back();
+             
+
+            },
+            child: const Text('yes').tr(),
+          ),
+        ],
+      ),
+    );
+
+                  }
                 },
                 child: Container(
                   padding: const EdgeInsets.all(16),
@@ -390,10 +422,21 @@ initialTime: TimeOfDay.now()
                   onPressed: () {
                     if(_formKey.currentState!.validate()&&controller.eventDate!=null&&controller.selectedStartTime!=null&&controller.selectedEndTime!=null){
                          controller.createSadudithar(CreateSaduditharModel(title: _titleController.text, description: _descriptionController.text, categoryId: controller.selectedSubCategory.id, cityId: controller.selectedCity.id, townshipId: controller.selectedTownship.id, type: controller.selectedCategory, estimatedAmount:int.parse( _estimatedAmountController.text), estimatedTime: _estimatedTimeController.text, estimatedQuantity: _estimatedQuantityController.text, actualStartTime: controller.selectedStartTime!, actualEndTime: controller.selectedEndTime!, address: _addressController.text, phone: _phoneController.text, status: "pending", eventDate: controller.eventDate!, latitude:controller.pickedLat, longitude: controller.pickedLong), context);
+                    }else{
+                      PanaraInfoDialog.showAnimatedGrow(
+                  context,
+                  // title: "Donation.com.mm",
+                  message: "Incomplete Info",
+                  buttonText: "Okay",
+                  onTapDismiss: () {
+                    Navigator.pop(context);
+                  },
+                  panaraDialogType: PanaraDialogType.warning,
+                );
                     }
                   },
                   
-                  child: controller.apiCallStatus==ApiCallStatus.loading?const ButtonLoaderWidget():Text(
+                  child: Text(
                     "Save",
                     style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                         fontWeight: FontWeight.w700,

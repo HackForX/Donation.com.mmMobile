@@ -75,7 +75,7 @@ bool get isLocationEnabled=> _isLocationEnabled.value;
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
-        'Authorization': "Bearer ${MySharedPref.getToken()}",
+        // 'Authorization': "Bearer ${MySharedPref.getToken()}",
       },
 
       onLoading: () {
@@ -136,7 +136,7 @@ for (var sadudithar in _sadudithars) {
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
-        'Authorization': "Bearer ${MySharedPref.getToken()}",
+        // 'Authorization': "Bearer ${MySharedPref.getToken()}",
       },
 
       onLoading: () {
@@ -198,7 +198,7 @@ for (var sadudithar in _sadudithars) {
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
-        'Authorization': "Bearer ${MySharedPref.getToken()}",
+        // 'Authorization': "Bearer ${MySharedPref.getToken()}",
       },
 
       onLoading: () {
@@ -320,7 +320,7 @@ for (var sadudithar in _sadudithars) {
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
-        'Authorization': "Bearer ${MySharedPref.getToken()}",
+        // 'Authorization': "Bearer ${MySharedPref.getToken()}",
       },
 
       onLoading: () {
@@ -383,7 +383,7 @@ for (var sadudithar in _sadudithars) {
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
-        'Authorization': "Bearer ${MySharedPref.getToken()}",
+        // 'Authorization': "Bearer ${MySharedPref.getToken()}",
       },
 
       onLoading: () {
@@ -506,7 +506,7 @@ for (var sadudithar in _sadudithars) {
         apiCallStatus=ApiCallStatus.success;
         getNatebanzaysRequested();
         getNatebanzays();
-        ToastHelper.showSuccessToast(context,"အလှူကိုအောင်မြင်စွာဖျက်ပီးပါပီ");
+       EasyLoading.showSuccess("အလှူကိုအောင်မြင်စွာဖျက်ပီးပါပီ");
         update();
       },
 

@@ -9,6 +9,9 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get_state_manager/src/simple/get_controllers.dart';
 import 'package:get/instance_manager.dart';
+import 'package:get/route_manager.dart';
+
+import '../routes/app_pages.dart';
 
 
 class RequestNatebanzayController extends GetxController{
@@ -48,7 +51,7 @@ class RequestNatebanzayController extends GetxController{
         EasyLoading.dismiss();
         apiCallStatus=ApiCallStatus.success;
         _homeController.getNatebanzaysRequests();
-        ToastHelper.showSuccessToast(context,"Requested Successfully");
+        EasyLoading.showSuccess("Requested Successfully");
         update();
       },
 
@@ -57,6 +60,9 @@ class RequestNatebanzayController extends GetxController{
         if(error.statusCode==422){
         ToastHelper.showErrorToast(context,error.response!.data["message"]);
           
+        }
+        if(error.statusCode==401){
+          Get.toNamed(Routes.login) ;
         }
         apiCallStatus = ApiCallStatus.error;
   

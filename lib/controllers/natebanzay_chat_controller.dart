@@ -67,7 +67,7 @@ class NatebanzayChatController extends GetxController{
       },
       onSuccess: (response) {
         _apiCallStatus.value = ApiCallStatus.success;
-      ToastHelper.showSuccessToast(context, response.data['message']);
+   EasyLoading.showSuccess(response.data['message']);
      
       },
 

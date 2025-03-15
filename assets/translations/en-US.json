@@ -11,7 +11,6 @@
   "donorRegister": "Register a donor account",
   "language": "Change to burmese",
   "logout": "Log out",
-  "sadudithar": "Sadudithar",
   "natebanzay": "Natebanzay",
   "requested": "Requested",
   "requests": "Requests ",
@@ -19,6 +18,8 @@
   "bycity": "By City",
   "donors": "Donors",
   "allSadudithars": "All Sadudithars",
+  "allNatebanzays": "All Natebanzays",
+
   "seeall": "See all",
   "chooseCity": "Choose city",
   "byCategory": "By Category",
@@ -28,7 +29,9 @@
   "deleteAccontMessage": "Are you sure want to delete this account?",
   "logoutMessage": "Are you sure want to logout this account?",
   "showProfile": "Show Profile?",
-
+  "login": "Login",
+  "unauthorized": "Please login to your account first",
+  "openLocation": "Please open location to use map",
   "yes": "Ok",
   "no": "Cancel"
 }

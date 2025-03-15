@@ -3,6 +3,7 @@ import 'package:donation_com_mm_v2/core/api_call_status.dart';
 import 'package:donation_com_mm_v2/core/base_client.dart';
 import 'package:donation_com_mm_v2/models/sadudithar_comment_response.dart';
 import 'package:donation_com_mm_v2/models/sadudithar_response.dart';
+import 'package:donation_com_mm_v2/routes/app_pages.dart';
 import 'package:donation_com_mm_v2/util/app_config.dart';
 import 'package:donation_com_mm_v2/util/share_pref_helper.dart';
 import 'package:donation_com_mm_v2/util/toast_helper.dart';
@@ -10,6 +11,9 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:get/get_state_manager/src/simple/get_controllers.dart';
+import 'package:get/route_manager.dart';
+// import 'package:open_apps_settings_fork/open_apps_settings.dart';
+// import 'package:open_apps_settings_fork/settings_enum.dart';
 
 
 class SaduditharDetailsController extends GetxController{
@@ -123,7 +127,7 @@ class SaduditharDetailsController extends GetxController{
         EasyLoading.dismiss();
         _apiCallStatus.value=ApiCallStatus.success;
         getComments(saduditharId);
-        ToastHelper.showSuccessToast(context,"Commented");
+     EasyLoading.showSuccess("Commented");
        
       },
 
@@ -132,6 +136,9 @@ class SaduditharDetailsController extends GetxController{
         if(error.statusCode==422){
         ToastHelper.showErrorToast(context,error.response!.data["message"]);
           
+        }
+        if(error.statusCode==401){
+          Get.toNamed(Routes.login);
         }
         _apiCallStatus.value = ApiCallStatus.error;
   
@@ -164,7 +171,7 @@ class SaduditharDetailsController extends GetxController{
       
         getDetails(saduditharId);
 
-        ToastHelper.showSuccessToast(context,response.data['message']);
+      EasyLoading.showSuccess(response.data['message']);
        
       },
 
@@ -172,6 +179,9 @@ class SaduditharDetailsController extends GetxController{
         if(error.statusCode==422){
         ToastHelper.showErrorToast(context,error.response!.data["message"]);
           
+        }
+        if(error.statusCode==401){
+          Get.toNamed(Routes.login);
         }
         _apiCallStatus.value = ApiCallStatus.error;
   
@@ -216,6 +226,16 @@ class SaduditharDetailsController extends GetxController{
       },
     );
   }
+
+
+
+void openLocationSetting() async{
+    // OpenAppsSettings.openAppsSettings(
+    //                         settingsCode: SettingsCode.LOCATION,);
+
+  
+}
+
 
 
 }

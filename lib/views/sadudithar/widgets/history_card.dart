@@ -25,6 +25,8 @@ class HistoryCard extends StatelessWidget {
         'sadudithar':sadudithar
       }),
       child: Container(
+        // height: 250,
+        width: 320,
         margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
         decoration: const BoxDecoration(
           borderRadius: BorderRadius.all(Radius.circular(15)),
@@ -57,9 +59,9 @@ class HistoryCard extends StatelessWidget {
     placeholder: (context, url) => const Center(
       child: CircularProgressIndicator(), // Placeholder while the image is loading
     ),
-    errorWidget: (context, url, error) =>  Center(
-      child:Image.asset(ImagePath.logo,height: 65,)
-    ),
+    errorWidget: (context, url, error) =>  ClipRRect(
+      borderRadius: const BorderRadius.all(Radius.circular(10)),
+      child: Image.asset('assets/images/empty2.png',fit: BoxFit.cover,)),
   ),
 ),
               sadudithar.latitude!=null&&sadudithar.latitude!=0.0&&sadudithar.longitude!=null&&sadudithar.longitude!=0.0?Positioned(
@@ -94,17 +96,21 @@ class HistoryCard extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.only(top: 8.0, left: 10),
             child: Text(
-             DateFormat('MMMM d, yyyy').format(DateTime.parse(sadudithar.eventDate)),
+         "${DateFormat('MMMM d, yyyy').format(DateTime.parse(sadudithar.eventDate))} ${formatTime(sadudithar.actualStartTime)} - ${formatTime(sadudithar.actualEndTime)}",
               style: Theme.of(context)
                   .textTheme
                   .labelSmall!
                   .copyWith(fontFamily: "English", fontWeight: FontWeight.w600),
             ),
           ),
-          Padding(
+          Container(
+                  // constraints: const BoxConstraints(maxWidth: 200),
             padding: const EdgeInsets.only(top: 8.0, left: 10),
             child: Text(
               sadudithar.title ,
+                // maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+              
               style: Theme.of(context)
                   .textTheme
                   .bodyMedium!
@@ -146,5 +152,18 @@ class HistoryCard extends StatelessWidget {
     );
   }
 
+  String formatTime(String time) {
+    final now = DateTime.now();
+    final timeParts = time.split(':');
+    final dateTime = DateTime(
+      now.year,
+      now.month,
+      now.day,
+      int.parse(timeParts[0]), // Hours
+      int.parse(timeParts[1]), // Minutes
+      int.parse(timeParts[2]), // Seconds
+    );
 
+    return DateFormat.jm().format(dateTime); // Formats to '6:59 PM'
+  }
 }

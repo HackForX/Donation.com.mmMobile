@@ -4,6 +4,7 @@ import 'package:donation_com_mm_v2/routes/app_pages.dart';
 import 'package:donation_com_mm_v2/util/app_color.dart';
 import 'package:donation_com_mm_v2/util/app_config.dart';
 import 'package:donation_com_mm_v2/util/assets_path.dart';
+import 'package:donation_com_mm_v2/util/share_pref_helper.dart';
 import 'package:donation_com_mm_v2/views/drawer/drawer_view.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
@@ -24,7 +25,19 @@ class ShareNatebanzayView extends GetView<HomeController> {
         appBar: AppBar(
           title: const Text("requests").tr(),
         ),
-        body: GetBuilder<HomeController>(builder: (controller){
+        body: MySharedPref.getUserId()==null&&MySharedPref.getToken()==null?Center(child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+            Text("unauthorized",style: TextStyle(color: ColorApp.mainColor,fontWeight: FontWeight.w700),).tr(),
+            const SizedBox(height: 10,),
+              SizedBox(
+                width: double.infinity,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 40.0,vertical: 10),
+                  child: ElevatedButton(style: ElevatedButton.styleFrom(backgroundColor: ColorApp.mainColor,foregroundColor: ColorApp.secondaryColor),onPressed: (){}, child: const Text("login").tr()),
+                )),
+            ],
+          )):GetBuilder<HomeController>(builder: (controller){
           return ListView.builder(
             itemCount: controller.natebanzaysRequested.length,
             itemBuilder: (BuildContext context, int index) {
@@ -41,6 +54,8 @@ class ShareNatebanzayView extends GetView<HomeController> {
   }
 }
 
+
+
 class RequestsItemCardWidget extends StatelessWidget {
   final HomeController controller;
   final Natebanzay natebanzay;
@@ -53,178 +68,204 @@ class RequestsItemCardWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-      decoration: const BoxDecoration(
-        borderRadius: BorderRadius.all(Radius.circular(10)),
-        color: ColorApp.white,
-        boxShadow: [
-          BoxShadow(
-            color: ColorApp.white,
-            spreadRadius: 1,
-            blurRadius: 1,
-            offset: Offset(1, 1), // changes position of shadow
-          ),
-        ],
+    final size = MediaQuery.of(context).size;
+    
+    return Card(
+      margin: EdgeInsets.symmetric(
+        horizontal: size.width * 0.04,
+        vertical: size.height * 0.01,
       ),
-      child: Row(
+      elevation: 2,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Container(
-            height: 220,
-            width: 170,
-            padding: const EdgeInsets.all(15),
-            decoration:  BoxDecoration(
-              image:
-               natebanzay.photos==null?   const DecorationImage(image: AssetImage(ImagePath.test), fit: BoxFit.cover):   DecorationImage(image: NetworkImage("${AppConfig.baseUrl}/storage/images/natebanzay_photos/${extractPhotos(natebanzay.photos!)[0]}"), fit: BoxFit.cover),
+          // Image Section
+          ClipRRect(
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
+            child: AspectRatio(
+              aspectRatio: 16 / 9,
+              child: natebanzay.photos == null
+                  ? Image.asset(
+                      ImagePath.test,
+                      fit: BoxFit.cover,
+                    )
+                  : Image.network(
+                      "${AppConfig.baseUrl}/storage/images/natebanzay_photos/${extractPhotos(natebanzay.photos!)[0]}",
+                      fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) => Container(
+          decoration: BoxDecoration(
+            color: Colors.grey.shade50,
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                Icons.broken_image_rounded,
+                size: 32,
+                color: ColorApp.mainColor.withOpacity(0.3),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                'Image not available',
+                style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                  color: Colors.grey.shade600,
+                  fontSize: 10,
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ],
+          ),
+        ),
+        loadingBuilder: (context, child, loadingProgress) {
+          if (loadingProgress == null) return child;
+          return Container(
+            decoration: BoxDecoration(
+              color: Colors.grey.shade50,
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Center(
+              child: CircularProgressIndicator(
+                value: loadingProgress.expectedTotalBytes != null
+                    ? loadingProgress.cumulativeBytesLoaded / 
+                      loadingProgress.expectedTotalBytes!
+                    : null,
+                strokeWidth: 2,
+                color: ColorApp.mainColor,
+              ),
+            ),
+          );
+        },
+                    ),
             ),
           ),
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.only(
-                left: 13.0,
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  const SizedBox(
-                    height: 14,
+
+          // Content Section
+          Padding(
+            padding: EdgeInsets.all(size.width * 0.04),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Title and Quantity
+                Text(
+                  "${natebanzay.name} (${natebanzay.quantity}ခု)",
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.w600,
+                    color: ColorApp.dark,
+                    fontFamily: "Myanmar",
                   ),
-                  const SizedBox(
-                    height: 4,
-                  ),
-                  Text(
-                    "${natebanzay.name} (${natebanzay.quantity}ခု)",
-                    style: Theme.of(context).textTheme.titleMedium!.copyWith(
-                        fontWeight: FontWeight.w600,
-                        color: ColorApp.dark,
-                        fontFamily: "Myanmar"),
-                  ),
-                  const SizedBox(
-                    height: 4,
-                  ),
-                  Text(
-                    "${natebanzay.requestedCount.toString()}ဦး မှ တောင်းခံထားသည်",
-                    style: Theme.of(context).textTheme.labelMedium!.copyWith(
-                        fontWeight: FontWeight.w400,
-                        color: ColorApp.dark,
-                        fontFamily: "Myanmar"),
-                  ),
-                  const SizedBox(
-                    height: 8,
-                  ),
-                  Row(
-                    children: [
-                      Image.asset(
-                     IconPath.pinIcon,
-                        height: 20,
-                        width: 20,
-                        color: ColorApp.dark,
+                ),
+                SizedBox(height: size.height * 0.01),
+
+                // Request Count
+                Row(
+                  children: [
+                    Icon(Icons.people_outline, 
+                      size: 18, 
+                      color: ColorApp.dark.withOpacity(0.7)
+                    ),
+                    SizedBox(width: size.width * 0.02),
+                    Text(
+                      "${natebanzay.requestedCount}ဦး မှ တောင်းခံထားသည်",
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        color: ColorApp.dark.withOpacity(0.7),
+                        fontFamily: "Myanmar",
                       ),
-                      const SizedBox(
-                        width: 4,
-                      ),
-                      Expanded(
-                        child: Text(
-                          natebanzay.address,
-                          style: Theme.of(context)
-                              .textTheme
-                              .labelMedium!
-                              .copyWith(
-                                  fontFamily: "Myanmar",
-                                  color: ColorApp.dark,
-                                  fontWeight: FontWeight.w400),
+                    ),
+                  ],
+                ),
+                SizedBox(height: size.height * 0.01),
+
+                // Address
+                Row(
+                  children: [
+                    Icon(Icons.location_on_outlined, 
+                      size: 18, 
+                      color: ColorApp.dark.withOpacity(0.7)
+                    ),
+                    SizedBox(width: size.width * 0.02),
+                    Expanded(
+                      child: Text(
+                        natebanzay.address,
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          color: ColorApp.dark.withOpacity(0.7),
+                          fontFamily: "Myanmar",
                         ),
                       ),
-                    ],
-                  ),
-                  const SizedBox(
-                    height: 24,
-                  ),
-                  Row(
-                    children: [
-                      Expanded(
-                          child: InkWell(
-                            onTap: ()=>Get.toNamed(Routes.viewNatebanzayRequests,arguments: {
-                              "natebanzay_id":natebanzay.id
-                            }),
-                            child: Container(
-                                                    padding: const EdgeInsets.only(
-                              top: 8, left: 4, right: 4, bottom: 8),
-                                                    decoration: BoxDecoration(
-                              color: ColorApp.dark.withOpacity(0.9),
-                              borderRadius:
-                                  const BorderRadius.all(Radius.circular(15))),
-                                                    child: Image.asset(
-                                        IconPath.viewIcon,
-                            
-                            height: 20,
-                            width: 20,
-                            color: ColorApp.white,
-                                                    ),
-                                                  ),
-                          )),
-                      const SizedBox(
-                        width: 10,
+                    ),
+                  ],
+                ),
+
+                // Action Buttons
+                SizedBox(height: size.height * 0.02),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    _buildActionButton(
+                      onTap: () => Get.toNamed(
+                        Routes.viewNatebanzayRequests,
+                        arguments: {"natebanzay_id": natebanzay.id}
                       ),
-                      Expanded(
-                          child: InkWell(
-                            onTap: ()=>Get.toNamed(Routes.editNatebanzay,arguments: {
-                              "natebanzay":natebanzay
-                            }),
-                            child: Container(
-                                                    padding: const EdgeInsets.only(
-                              top: 8, left: 4, right: 4, bottom: 8),
-                                                    decoration: BoxDecoration(
-                              color: ColorApp.blue.withOpacity(0.9),
-                              borderRadius:
-                                  const BorderRadius.all(Radius.circular(15))),
-                                                    child: Image.asset(
-                                                IconPath.editIcon,
-                            
-                            height: 20,
-                            width: 20,
-                            color: ColorApp.white,
-                                                    ),
-                                                  ),
-                          )),
-                      const SizedBox(
-                        width: 10,
+                      icon: Icons.visibility_outlined,
+                      color: ColorApp.dark,
+                      context: context,
+                    ),
+                    _buildActionButton(
+                      onTap: () => Get.toNamed(
+                        Routes.editNatebanzay,
+                        arguments: {"natebanzay": natebanzay}
                       ),
-                      Expanded(
-                          child: InkWell(
-                            onTap: (){
-                              showDeleteDialog(context, controller,natebanzay.id);
-                            },
-                            child: Container(
-                                                    padding: const EdgeInsets.only(
-                              top: 8, left: 4, right: 4, bottom: 8),
-                                                    decoration: BoxDecoration(
-                              color: ColorApp.lipstick.withOpacity(0.9),
-                              borderRadius:
-                                  const BorderRadius.all(Radius.circular(15))),
-                                                    child: Image.asset(
-                                                    IconPath.deleteIcon,
-                            height: 20,
-                            width: 20,
-                            color: ColorApp.white,
-                                                    ),
-                                                  ),
-                          )),
-                    ],
-                  )
-                ],
-              ),
+                      icon: Icons.edit_outlined,
+                      color: ColorApp.blue,
+                      context: context,
+                    ),
+                    _buildActionButton(
+                      onTap: () => showDeleteDialog(context, controller, natebanzay.id),
+                      icon: Icons.delete_outline,
+                      color: ColorApp.lipstick,
+                      context: context,
+                    ),
+                  ],
+                ),
+              ],
             ),
-          )
+          ),
         ],
       ),
     );
   }
 
+  Widget _buildActionButton({
+    required VoidCallback onTap,
+    required IconData icon,
+    required Color color,
+    required BuildContext context,
+  }) {
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(8),
+        child: Container(
+          padding: const EdgeInsets.all(12),
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(8),
+            border: Border.all(color: color.withOpacity(0.3)),
+          ),
+          child: Icon(
+            icon,
+            size: 20,
+            color: color,
+          ),
+        ),
+      ),
+    );
+  }
 
-}
+ 
 
 void showDeleteDialog(BuildContext context,HomeController controller,int id){
 showDialog(
@@ -249,19 +290,31 @@ showDialog(
         );
 }
 
-  List<String> extractPhotos(String jsonString) {
-  // Parse the JSON string
+List<String> extractPhotos(String jsonString) {
+  try {
+    // Handle empty or null string
+    if (jsonString.isEmpty) {
+      return [];
+    }
 
-  // Remove escape sequences (if any)
-  final photosWithoutEscape = jsonString.replaceAll('\\', '');
+    // Remove escape sequences and whitespace
+    final cleanString = jsonString.replaceAll('\\', '').trim();
 
-  // Remove leading and trailing quotes and square brackets
-  final photosWithoutBrackets = photosWithoutEscape.substring(2, photosWithoutEscape.length - 2);
+    // Remove leading/trailing brackets and quotes
+    final strippedString = cleanString
+        .replaceAll(RegExp(r'^\["|"\]$'), '')
+        .replaceAll(RegExp(r'^"|"$'), '');
 
-  // Split the string into a list of image URLs
-  final imageUrls = photosWithoutBrackets.split('","');
+    // Split the string into array and filter empty entries
+    final imageUrls = strippedString
+        .split('","')
+        .where((url) => url.isNotEmpty)
+        .toList();
 
-  return imageUrls;
+    return imageUrls;
+  } catch (e) {
+    print('Error extracting photos: $e');
+    return [];
+  }
 }
-
-
+}
